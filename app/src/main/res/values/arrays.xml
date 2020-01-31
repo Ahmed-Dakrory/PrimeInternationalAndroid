@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="states_vehicals">
+        <item>All</item>
+        <item>Warehouse </item>
+        <item>Dry Cargo</item>
+        <item>Fright In Transit</item>
+        <item>Sent For Payment</item>
+    </string-array>
+</resources>

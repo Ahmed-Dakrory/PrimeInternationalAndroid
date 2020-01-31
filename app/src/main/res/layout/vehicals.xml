@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ffffrrmain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainApp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerVehicalStateLayout">
+            <Spinner
+                android:id="@+id/spinnerVehicalState"
+                android:layout_width="match_parent"
+                android:background="#f9f9f9"
+                android:dropDownVerticalOffset="11dp"
+                android:overlapAnchor="false"
+                android:layout_height="50dp"
+                android:entries="@array/states_vehicals"
+                android:dropDownWidth="match_parent"
+                android:spinnerMode="dropdown" />
+            <ImageView
+                android:contentDescription="@string/arrowImage"
+                android:padding="13dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/spinnerVehicalState"
+                android:layout_alignRight="@+id/spinnerVehicalState"
+                android:src="@android:drawable/arrow_down_float"
+                android:layout_alignTop="@id/spinnerVehicalState"
+                android:layout_alignBottom="@+id/spinnerVehicalState"/>
+        </RelativeLayout>
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_margin="2dp"
+       android:layout_below="@+id/spinnerVehicalStateLayout"
+       android:layout_above="@+id/progBar"
+       android:id="@+id/recyclerViewVehicals"
+       android:background="#eef1f5">
+
+   </androidx.recyclerview.widget.RecyclerView>
+
+    <ImageView
+        android:contentDescription="@string/emptyImagePlaceHolder"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/emptybox"
+        android:id="@+id/emptyImage"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/progBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+</RelativeLayout>
