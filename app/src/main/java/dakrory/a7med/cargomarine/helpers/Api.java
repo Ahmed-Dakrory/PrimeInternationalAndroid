@@ -3,6 +3,7 @@ package dakrory.a7med.cargomarine.helpers;
 import com.google.gson.JsonObject;
 
 import dakrory.a7med.cargomarine.Models.vehicalsData;
+import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -35,5 +36,11 @@ public interface Api {
     @FormUrlEncoded
     @POST("Api.php?apicall=getAllCarsForMainAccount")
     Call<vehicalsData> getAllCarsForMainUser(@Field("mainId") int mainId, @Field("page") int page, @Field("N_items") int N_items, @Field("type") int type);
+
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getCarData")
+    Call<vehicalsDetails> getAllDetailsForCar(@Field("id") int id);
+
+
 }
 

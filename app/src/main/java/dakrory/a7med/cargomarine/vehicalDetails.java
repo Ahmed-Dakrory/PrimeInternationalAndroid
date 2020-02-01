@@ -1,22 +1,11 @@
 package dakrory.a7med.cargomarine;
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
-import android.os.StrictMode;
-import android.provider.MediaStore;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,13 +18,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -43,11 +26,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.json.JSONObject;
 
 import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
 import dakrory.a7med.cargomarine.CustomViews.MyImageAdapter;
@@ -64,7 +44,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class vehicalDetails extends AppCompatActivity implements View.OnClickListener {
 
 
     private Button buttonChoose;
@@ -211,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onCanceled(EasyImage.ImageSource source, int type) {
                         //Cancel handling, you might wanna remove taken photo if it was canceled
                         if (source == EasyImage.ImageSource.CAMERA_IMAGE) {
-                            File photoFile = EasyImage.lastlyTakenButCanceledPhoto(MainActivity.this);
+                            File photoFile = EasyImage.lastlyTakenButCanceledPhoto(vehicalDetails.this);
                             if (photoFile != null) photoFile.delete();
                         }
                     }
@@ -232,10 +212,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myImageData.add(new MyImageData(file.getPath(), file.getPath(), file.getPath(), MyImageData.TYPE_FILE, new CallBackViewChanger() {
             @Override
             public void setViewToPercentage(final AdCircleProgress loader,final TextView overlayView,final TextView markView) {
-                new FileUploader().uploadFile(file.getPath(), "My Image", MainActivity.this, new FileUploader.FileUploaderCallback() {
+                new FileUploader().uploadFile(file.getPath(), "My Image", vehicalDetails.this, new FileUploader.FileUploaderCallback() {
                     @Override
                     public void onError(Throwable t) {
-                        Toast.makeText(MainActivity.this, "Some error occurred...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(vehicalDetails.this, "Some error occurred...", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -243,9 +223,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.v("AhmedDakrory:", "Finish");
                         loader.setVisibility(View.GONE);
                         overlayView.setVisibility(View.GONE);
-                        markView.setTextColor(MainActivity.this.getResources().getColor(R.color.colorGreenSign));
+                        markView.setTextColor(vehicalDetails.this.getResources().getColor(R.color.colorGreenSign));
 
-                        Toast.makeText(MainActivity.this, "File Uploaded Successfully...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(vehicalDetails.this, "File Uploaded Successfully...", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -350,14 +330,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void captureImage() {
 
-        if(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED&&ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if(ContextCompat.checkSelfPermission(vehicalDetails.this,Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED&&ContextCompat.checkSelfPermission(vehicalDetails.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(MainActivity.this,
+            ActivityCompat.requestPermissions(vehicalDetails.this,
                     new String[]{Manifest.permission.CAMERA},
                     2);
 
-            ActivityCompat.requestPermissions(MainActivity.this,
+            ActivityCompat.requestPermissions(vehicalDetails.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     3);
         }else {

@@ -129,7 +129,7 @@ public class vehicals extends Fragment {
         recyclerView.setHasFixedSize(true);
         layoutManager =new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new vehicalsAdapter(vehicalItems,vehicalItemsFull);
+        adapter = new vehicalsAdapter(vehicalItems,vehicalItemsFull,getActivity());
         recyclerView.setAdapter(adapter);
 
 
@@ -186,7 +186,6 @@ public class vehicals extends Fragment {
             }
         });
 
-        PerformPagination(stateSelected);
 
     }
 
@@ -214,7 +213,7 @@ public class vehicals extends Fragment {
                         adapter.notifyDataSetChanged();
                         loaderRecy.setVisibility(View.GONE);
 
-                        Log.v("AhmedDakrory","SizeOfList: "+stateSelected+" is "+vehicalItemsFull.size());
+                        Log.v("AhmedDakrory","page: "+page+"SizeOfList: "+stateSelected+" is "+vehicalItemsFull.size());
 
                     }
 

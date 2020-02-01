@@ -28,7 +28,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="rightDoulbe">\\u2713\\u2713</string>
+    <string name="rightDoulbe">\u2713\u2713</string>
     <string name="Import">Import</string>
     <string name="Share">Share</string>
     <string name="Send">Send</string>

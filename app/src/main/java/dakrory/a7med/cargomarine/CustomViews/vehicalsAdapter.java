@@ -1,5 +1,7 @@
 package dakrory.a7med.cargomarine.CustomViews;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,15 +25,19 @@ import dakrory.a7med.cargomarine.Models.vehicalsData;
 import dakrory.a7med.cargomarine.Models.vehicalsData.vehicalItem;
 import dakrory.a7med.cargomarine.R;
 import dakrory.a7med.cargomarine.helpers.Constants;
+import dakrory.a7med.cargomarine.vehicalDetails;
+import dakrory.a7med.cargomarine.vehicalView;
 
 public class vehicalsAdapter extends RecyclerView.Adapter<vehicalsAdapter.ViewHolder> implements Filterable {
 
     private List<vehicalItem> vehicalsData;
     private List<vehicalItem> vehicalsDataFull;
 
-    public vehicalsAdapter(List<vehicalItem> vehicalsData,List<vehicalItem> vehicalsDataFull) {
+    Activity activity;
+    public vehicalsAdapter(List<vehicalItem> vehicalsData,List<vehicalItem> vehicalsDataFull,Activity activity) {
         this.vehicalsData = vehicalsData;
         this.vehicalsDataFull=vehicalsDataFull;
+        this.activity=activity;
     }
 
 
@@ -58,6 +65,16 @@ public class vehicalsAdapter extends RecyclerView.Adapter<vehicalsAdapter.ViewHo
         } else {
             Picasso.get().load(R.mipmap.ok).into(holder.stateImage);
         }
+
+        holder.carItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("AhmedDakrory","Car Selected: "+vItem.getId());
+                Intent openCarDetails=new Intent(activity,vehicalView.class);
+                openCarDetails.putExtra(Constants.CarIdData,vItem.getId());
+                activity.startActivity(openCarDetails);
+            }
+        });
     }
 
     @Override
@@ -111,12 +128,14 @@ public class vehicalsAdapter extends RecyclerView.Adapter<vehicalsAdapter.ViewHo
         public TextView makeModel;
         public TextView shipperName;
         public TextView lastUpdate;
+        public LinearLayout carItem;
         public ViewHolder(View itemView) {
             super(itemView);
             this.carImage = (ImageView) itemView.findViewById(R.id.carImage);
             this.stateImage = (ImageView) itemView.findViewById(R.id.stateImage);
             this.makeModel = (TextView) itemView.findViewById(R.id.makeModel);
             this.uuid = (TextView) itemView.findViewById(R.id.vehicalUUID);
+            this.carItem = (LinearLayout) itemView.findViewById(R.id.caritem);
             this.shipperName = (TextView) itemView.findViewById(R.id.ShipperName);
             this.lastUpdate = (TextView) itemView.findViewById(R.id.lastUpdate);
 
