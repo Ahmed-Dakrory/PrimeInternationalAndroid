@@ -10,10 +10,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.app.adprogressbarlib.AdCircleProgress;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,20 +19,20 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import dakrory.a7med.cargomarine.Models.vehicalsData;
-import dakrory.a7med.cargomarine.Models.vehicalsData.vehicalItem;
+
+import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
+import dakrory.a7med.cargomarine.Models.vehicalsDataAllList.vehicalItemOfAllList;
 import dakrory.a7med.cargomarine.R;
 import dakrory.a7med.cargomarine.helpers.Constants;
-import dakrory.a7med.cargomarine.vehicalDetails;
 import dakrory.a7med.cargomarine.vehicalView;
 
 public class vehicalsAdapter extends RecyclerView.Adapter<vehicalsAdapter.ViewHolder> implements Filterable {
 
-    private List<vehicalItem> vehicalsData;
-    private List<vehicalItem> vehicalsDataFull;
+    private List<vehicalItemOfAllList> vehicalsData;
+    private List<vehicalItemOfAllList> vehicalsDataFull;
 
     Activity activity;
-    public vehicalsAdapter(List<vehicalItem> vehicalsData,List<vehicalItem> vehicalsDataFull,Activity activity) {
+    public vehicalsAdapter(List<vehicalItemOfAllList> vehicalsData,List<vehicalItemOfAllList> vehicalsDataFull,Activity activity) {
         this.vehicalsData = vehicalsData;
         this.vehicalsDataFull=vehicalsDataFull;
         this.activity=activity;
@@ -53,7 +51,7 @@ public class vehicalsAdapter extends RecyclerView.Adapter<vehicalsAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        final vehicalItem vItem = vehicalsData.get(position);
+        final vehicalItemOfAllList vItem = vehicalsData.get(position);
         Picasso.get().load(Constants.ImageBaseUrl + vItem.getUrl()).placeholder(R.mipmap.car).into(holder.carImage);
         holder.uuid.setText(String.valueOf("Vin: " + vItem.getUuid()));
         holder.makeModel.setText(String.valueOf(vItem.getMake() + " " + vItem.getModel() + " " + vItem.getYear()));
@@ -90,12 +88,12 @@ public class vehicalsAdapter extends RecyclerView.Adapter<vehicalsAdapter.ViewHo
     public Filter filter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<vehicalItem> filterData = new ArrayList<>();
+            List<vehicalItemOfAllList> filterData = new ArrayList<>();
             if (constraint.length() == 0 || constraint == null) {
                 filterData.addAll(vehicalsDataFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
-                for (vehicalItem item : vehicalsDataFull) {
+                for (vehicalItemOfAllList item : vehicalsDataFull) {
                     if (item.getLastName().toLowerCase().trim().contains(filterPattern)
                             || item.getFirstName().toLowerCase().trim().contains(filterPattern)
                             || item.getYear().toLowerCase().trim().contains(filterPattern)

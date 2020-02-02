@@ -29,6 +29,19 @@ public class vehicalsDetails {
         @SerializedName("url")
         private String url;
 
+
+        @SerializedName("type")
+        private int type;
+
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
         public String getUrl() {
             return url;
         }
@@ -39,7 +52,7 @@ public class vehicalsDetails {
     }
 
 
-    public class carDetails{
+    public static class carDetails{
 
 
         @SerializedName("id")
@@ -47,115 +60,121 @@ public class vehicalsDetails {
 
 
         @SerializedName("userfirstName")
-        private String userfirstName;
+        private String userfirstName="";
 
 
         @SerializedName("userlastName")
-        private String userlastName;
+        private String userlastName="";
 
 
         @SerializedName("mainTwofirstName")
-        private String mainTwofirstName;
+        private String mainTwofirstName="";
 
 
         @SerializedName("mainTwolastName")
-        private String mainTwolastName;
+        private String mainTwolastName="";
 
 
         @SerializedName("shipperfirstName")
-        private String shipperfirstName;
+        private String shipperfirstName="";
 
         @SerializedName("shipperlastName")
-        private String shipperlastName;
+        private String shipperlastName="";
 
         @SerializedName("vendorfirstName")
-        private String vendorfirstName;
+        private String vendorfirstName="";
 
 
         @SerializedName("vendorlastName")
-        private String vendorlastName;
+        private String vendorlastName="";
 
 
         @SerializedName("consigneefirstName")
-        private String consigneefirstName;
+        private String consigneefirstName="";
 
         @SerializedName("consigneelastName")
-        private String consigneelastName;
+        private String consigneelastName="";
+
+        @SerializedName("customerfirstName")
+        private String customerfirstName="";
+
+        @SerializedName("customerlastName")
+        private String customerlastName="";
 
 
         @SerializedName("make")
-        private String make;
+        private String make="";
 
 
         @SerializedName("model")
-        private String model;
+        private String model="";
 
 
         @SerializedName("year")
-        private String year;
+        private String year="";
 
 
         @SerializedName("bodyStyle")
-        private String bodyStyle;
+        private String bodyStyle="";
 
 
         @SerializedName("engineType")
-        private String engineType;
+        private String engineType="";
 
 
 
         @SerializedName("engineLiters")
-        private String engineLiters;
+        private String engineLiters="";
 
 
         @SerializedName("assemlyCountry")
-        private String assemlyCountry;
+        private String assemlyCountry="";
 
 
         @SerializedName("color")
-        private String color;
+        private String color="";
 
         @SerializedName("seacost")
-        private String seacost;
+        private String seacost="";
 
 
 
         @SerializedName("landcost")
-        private String landcost;
+        private String landcost="";
 
 
         @SerializedName("state")
-        private String state;
+        private String state="";
 
 
         @SerializedName("releaseOption")
-        private String releaseOption;
+        private String releaseOption="";
 
         @SerializedName("releaseDate")
-        private String releaseDate;
+        private String releaseDate="";
 
 
         @SerializedName("uuid")
-        private String uuid;
+        private String uuid="";
 
 
 
         @SerializedName("description")
-        private String description;
+        private String description="";
 
 
 
         @SerializedName("containerLink")
-        private String containerLink;
+        private String containerLink="";
 
 
         @SerializedName("eta")
-        private String eta;
+        private String eta="";
 
 
 
         @SerializedName("etd")
-        private String etd;
+        private String etd="";
 
 
         public int getId() {
@@ -244,6 +263,22 @@ public class vehicalsDetails {
 
         public void setConsigneelastName(String consigneelastName) {
             this.consigneelastName = consigneelastName;
+        }
+
+        public String getCustomerfirstName() {
+            return customerfirstName;
+        }
+
+        public void setCustomerfirstName(String customerfirstName) {
+            this.customerfirstName = customerfirstName;
+        }
+
+        public String getCustomerlastName() {
+            return customerlastName;
+        }
+
+        public void setCustomerlastName(String customerlastName) {
+            this.customerlastName = customerlastName;
         }
 
         public String getMake() {

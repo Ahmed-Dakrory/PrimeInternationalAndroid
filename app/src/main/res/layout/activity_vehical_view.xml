@@ -6,14 +6,114 @@
     android:layout_height="match_parent"
     tools:context=".vehicalView">
 
-    <androidx.recyclerview.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:scrollbars="horizontal"
-        android:background="#fa323233"
-        android:id="@+id/recyclerView">
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:id="@+id/layoutImages"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true">
+            <androidx.recyclerview.widget.RecyclerView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:scrollbars="horizontal"
+                android:background="#fa323233"
+                android:id="@+id/recyclerViewForImages"
+                android:layout_alignParentTop="true">
 
-    </androidx.recyclerview.widget.RecyclerView>
+
+
+            </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:scrollbars="horizontal"
+                android:background="#fa323233"
+                android:id="@+id/recyclerViewForDocs"
+                android:visibility="gone">
+
+
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:id="@+id/buttonsLayout"
+            android:layout_marginTop="1dp"
+            android:layout_below="@id/layoutImages">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:fontFamily="casual"
+            android:textColor="#1766A3"
+            android:background="@drawable/button_select"
+            android:id="@+id/ImagesButton"
+            android:text="@string/Images"/>
+            <View
+                android:id="@+id/divider"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:foreground="#ACABAB"
+                android:layout_margin="1dp"
+                android:background="?android:attr/listDivider" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:fontFamily="casual"
+            android:textColor="#1766A3"
+            android:background="@drawable/button_select"
+            android:id="@+id/DocumentsButton"
+            android:text="@string/Docs"/>
+
+        </LinearLayout>
+
+        <com.alespero.expandablecardview.ExpandableCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonsLayout"
+            android:id="@+id/vechicalDataList"
+            app:title="@string/VehicalData"
+            app:icon="@drawable/ic_directions_car_black_24dp"
+            app:inner_view="@layout/car_data_layout"
+            app:expandOnClick="true"
+            app:animationDuration="300"
+            app:startExpanded="false">
+
+
+        </com.alespero.expandablecardview.ExpandableCardView>
+
+        <com.alespero.expandablecardview.ExpandableCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vechicalDataList"
+            app:title="@string/HolderData"
+            app:icon="@drawable/ic_person_black_24dp"
+            app:inner_view="@layout/persons_data_layout"
+            app:expandOnClick="true"
+            app:animationDuration="300"
+            app:startExpanded="false">
+
+
+        </com.alespero.expandablecardview.ExpandableCardView>
+    </RelativeLayout>
+</ScrollView>
+
 </LinearLayout>

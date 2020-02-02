@@ -1,5 +1,8 @@
 package dakrory.a7med.cargomarine.fragmentsMainApp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,12 +11,13 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import dakrory.a7med.cargomarine.CustomViews.MyImageAdapter;
+
 import dakrory.a7med.cargomarine.CustomViews.vehicalsAdapter;
-import dakrory.a7med.cargomarine.Models.vehicalsData;
+import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.R;
 import dakrory.a7med.cargomarine.helpers.Api;
-import dakrory.a7med.cargomarine.layoutManagers.ZoomCenterCardLayoutManager;
+import dakrory.a7med.cargomarine.helpers.Constants;
+import dakrory.a7med.cargomarine.vehicalView;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,14 +35,18 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +55,17 @@ import java.util.concurrent.TimeUnit;
 
 public class vehicals extends Fragment {
 
+    //qr code scanner object
+    private IntentIntegrator qrScan;
+
+
     RecyclerView recyclerView;
     vehicalsAdapter adapter;
     ProgressBar loaderRecy;
     ImageView emptyImage;
-    List<dakrory.a7med.cargomarine.Models.vehicalsData.vehicalItem> vehicalItems;
-    List<dakrory.a7med.cargomarine.Models.vehicalsData.vehicalItem> vehicalItemsFull;
+    FloatingActionButton addNewVehicalButton;
+    List<vehicalsDataAllList.vehicalItemOfAllList> vehicalItems;
+    List<vehicalsDataAllList.vehicalItemOfAllList> vehicalItemsFull;
     Api api ;
     LinearLayoutManager layoutManager;
     private int page=0;
@@ -65,6 +78,7 @@ public class vehicals extends Fragment {
     private int pastVisibleItems, visibleItemCount,totalItemCount,previous_total = 0;
     private int view_threshold = 10;
 
+    private int idOffUser = 48;
     public static vehicals newInstance() {
         vehicals v = new vehicals();
         return v;
@@ -85,18 +99,29 @@ public class vehicals extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // TODO: Use the ViewModel
         setHasOptionsMenu(true);
+//intializing scan object
+        qrScan = new IntentIntegrator(this.getActivity());
 
+
+        //All Cars List
         page = 0;
         //Variables for Pagination
         isLoading =true;
         pastVisibleItems = 0; visibleItemCount=0; totalItemCount=0; previous_total = 0;
         view_threshold = 10;
-        vehicalItems=new ArrayList<vehicalsData.vehicalItem>();
-        vehicalItemsFull=new ArrayList<vehicalsData.vehicalItem>();
+        vehicalItems=new ArrayList<vehicalsDataAllList.vehicalItemOfAllList>();
+        vehicalItemsFull=new ArrayList<vehicalsDataAllList.vehicalItemOfAllList>();
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerViewVehicals);
         loaderRecy=(ProgressBar)getActivity().findViewById(R.id.progBar);
         emptyImage=(ImageView)getActivity().findViewById(R.id.emptyImage);
         spinner= (Spinner) getActivity().findViewById(R.id.spinnerVehicalState);
+        addNewVehicalButton = (FloatingActionButton)getActivity().findViewById(R.id.addNewVehical);
+        addNewVehicalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewCar();
+            }
+        });
         ArrayAdapter<CharSequence> adapterSpiner = ArrayAdapter.createFromResource(getActivity(),
                R.array.states_vehicals, R.layout.simple_spinner_item);
         adapterSpiner.setDropDownViewResource(R.layout.dropstate);
@@ -189,23 +214,143 @@ public class vehicals extends Fragment {
 
     }
 
+    private void addNewCar() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Use Scan Or Enter Vin?").setPositiveButton("Scan", dialogClickListener)
+                .setNegativeButton("Type it", dialogClickListener).show();
+    }
+
+    private String getVinNumber(String contents) {
+
+
+        int[] values = { 1, 2, 3, 4, 5, 6, 7, 8, 0, 1,
+                2, 3, 4, 5, 0, 7, 0, 9, 2, 3,
+                4, 5, 6, 7, 8, 9 };
+        int[] weights = { 8, 7, 6, 5, 4, 3, 2, 10, 0, 9,
+                8, 7, 6, 5, 4, 3, 2 };
+
+        String s = contents;
+        s = s.replaceAll("-", "");
+        s = s.toUpperCase();
+        if (s.length() != 17){
+            StringBuilder sb = new StringBuilder(s);
+            sb.deleteCharAt(0);
+            s = sb.toString();
+        }
+
+        if (s.length() != 17){
+            return "";
+        }
+
+        int sum = 0;
+        for (int i = 0; i < 17; i++) {
+            char c = s.charAt(i);
+            int value;
+            int weight = weights[i];
+
+            // letter
+            if (c >= 'A' && c <= 'Z') {
+                value = values[c - 'A'];
+                if (value == 0)
+                    return "";
+            }
+
+            // number
+            else if (c >= '0' && c <= '9') value = c - '0';
+
+                // illegal character
+            else  return "";
+
+            sum = sum + weight * value;
+
+        }
+
+        // check digit
+        sum = sum % 11;
+        char check = s.charAt(8);
+        if (check != 'X' && (check < '0' || check > '9'))
+            throw new RuntimeException("Illegal check digit: " + check);
+        if      (sum == 10 && check == 'X')  return s;
+        else if (sum == check - '0')        return s;
+        else                                return s;
+
+    }
+
+
+
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    //Yes button clicked
+                    qrScan.initiateScan();
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    openEditVinDialog();
+                    break;
+            }
+        }
+    };
+
+    private void openEditVinDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("Vin");
+        alertDialog.setMessage("Enter Vin");
+
+
+        final EditText input = new EditText(this.getActivity());
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+        alertDialog.setIcon(R.drawable.ic_directions_car_black_24dp);
+
+        alertDialog.setPositiveButton("Done",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                       String vin = input.getText().toString();
+                        addNewCarWithVin(vin);
+                    }
+                });
+
+        alertDialog.setNegativeButton("Close",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+    }
+
+    private void addNewCarWithVin(String vin) {
+        Intent addNewCar=new Intent(getActivity(), vehicalView.class);
+        addNewCar.putExtra(Constants.SET_MODE_INTENT,Constants.MODE_ADD_NEW);
+        addNewCar.putExtra(Constants.Car_VIN_Add_New,vin);
+        startActivity(addNewCar);
+    }
+
     private void PerformPagination(int type) {
 
 
             //WareHouse
             loaderRecy.setVisibility(View.VISIBLE);
             //creating a call and calling the upload image method
-            Call<vehicalsData> call = api.getAllCarsForMainUser(48,page,N_item,type);
-            call.enqueue(new Callback<vehicalsData>() {
+            Call<vehicalsDataAllList> call = api.getAllCarsForMainUser(idOffUser,page,N_item,type);
+            call.enqueue(new Callback<vehicalsDataAllList>() {
                 @Override
-                public void onResponse(Call<vehicalsData> call, Response<vehicalsData> response) {
+                public void onResponse(Call<vehicalsDataAllList> call, Response<vehicalsDataAllList> response) {
 
-                    vehicalsData vehicalsData=response.body();
+                    vehicalsDataAllList vehicalsDataAllList =response.body();
 
-                    if(vehicalsData.getError().equalsIgnoreCase("false")){
+                    if(vehicalsDataAllList.getError().equalsIgnoreCase("false")){
 
-                        vehicalItems.addAll(vehicalsData.getData());
-                        vehicalItemsFull.addAll(vehicalsData.getData());
+                        vehicalItems.addAll(vehicalsDataAllList.getData());
+                        vehicalItemsFull.addAll(vehicalsDataAllList.getData());
                         if(vehicalItemsFull.size()>0){
                             recyclerView.setVisibility(View.VISIBLE);
                             emptyImage.setVisibility(View.GONE);
@@ -221,7 +366,7 @@ public class vehicals extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<vehicalsData> call, Throwable t) {
+                public void onFailure(Call<vehicalsDataAllList> call, Throwable t) {
                     isLoading=false;
                     loaderRecy.setVisibility(View.GONE);
                     if(vehicalItemsFull.size()==0) {
@@ -256,5 +401,29 @@ public class vehicals extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.v("AhmedDakrory","Done3");
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            //if qrcode has nothing in it
+            if (result.getContents() == null) {
+                Toast.makeText(getActivity(), "Result Not Found", Toast.LENGTH_LONG).show();
+            } else {
+                String vin = getVinNumber( result.getContents());
+               // Toast.makeText(getActivity(), vin, Toast.LENGTH_LONG).show();
+
+                Log.v("AhmedDakrory", vin); // Prints scan results
+                addNewCarWithVin(vin);
+
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+
+        }
     }
 }

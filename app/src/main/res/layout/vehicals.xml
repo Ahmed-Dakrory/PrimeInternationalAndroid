@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ffffrrmain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -37,7 +37,6 @@
        android:layout_height="match_parent"
        android:layout_margin="2dp"
        android:layout_below="@+id/spinnerVehicalStateLayout"
-       android:layout_above="@+id/progBar"
        android:id="@+id/recyclerViewVehicals"
        android:background="#eef1f5">
 
@@ -57,7 +56,20 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/progBar"
+        android:backgroundTint="#00FFFFFF"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:backgroundTint="#FFFFFF"
+        android:id="@+id/addNewVehical"
+        android:src="@drawable/ic_add_black_24dp"
+        android:layout_margin="30dp">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 </RelativeLayout>

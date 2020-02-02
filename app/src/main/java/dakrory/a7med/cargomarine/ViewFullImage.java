@@ -14,12 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import dakrory.a7med.cargomarine.CustomViews.MyImageData;
 import dakrory.a7med.cargomarine.helpers.Constants;
 
+import com.jsibbold.zoomage.ZoomageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
 public class ViewFullImage extends Activity {
-    private ImageView imageView;
+    private ZoomageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class ViewFullImage extends Activity {
         String imageUrl = intent.getStringExtra(Constants.ImageUrl_INTENT);
         int imageUrlType = intent.getIntExtra(Constants.ImageUrl_Type,0);
 
-        imageView = (ImageView) findViewById(R.id.imageViewFull);
+        imageView = (ZoomageView) findViewById(R.id.imageViewFull);
 
         if(imageUrlType== MyImageData.TYPE_FILE){
             File f = new File(imageUrl);

@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
-public class vehicalsData {
+public class vehicalsDataAllList {
     @SerializedName("error")
     private String error;
 
     @SerializedName("data")
-    private List<vehicalItem> data;
+    private List<vehicalItemOfAllList> data;
 
-    public class vehicalItem{
+    public class vehicalItemOfAllList{
 
 
         @SerializedName("id")
@@ -167,11 +167,11 @@ public class vehicalsData {
         this.error = error;
     }
 
-    public List<vehicalItem> getData() {
+    public List<vehicalItemOfAllList> getData() {
         return data;
     }
 
-    public void setData(List<vehicalItem> data) {
+    public void setData(List<vehicalItemOfAllList> data) {
         this.data = data;
     }
 }

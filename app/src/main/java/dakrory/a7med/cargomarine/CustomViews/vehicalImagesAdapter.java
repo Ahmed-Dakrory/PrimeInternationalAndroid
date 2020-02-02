@@ -3,6 +3,7 @@ package dakrory.a7med.cargomarine.CustomViews;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 import com.app.adprogressbarlib.AdCircleProgress;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -24,12 +24,12 @@ import dakrory.a7med.cargomarine.ViewFullImage;
 import dakrory.a7med.cargomarine.helpers.Constants;
 
 
-public class vehicalViewAdapter extends RecyclerView.Adapter<vehicalViewAdapter.ViewHolder> {
+public class vehicalImagesAdapter extends RecyclerView.Adapter<vehicalImagesAdapter.ViewHolder> {
     private List<vehicalsDetails.urlItem> listdata;
     private Activity activity;
     RecyclerView recyclerView;
 
-    public vehicalViewAdapter(RecyclerView recyclerView, List<vehicalsDetails.urlItem> listdata, Activity activity) {
+    public vehicalImagesAdapter(RecyclerView recyclerView, List<vehicalsDetails.urlItem> listdata, Activity activity) {
         this.listdata = listdata;
         this.activity = activity;
         this.recyclerView = recyclerView;
@@ -61,7 +61,8 @@ public class vehicalViewAdapter extends RecyclerView.Adapter<vehicalViewAdapter.
             @Override
             public void onClick(View view) {
                 Intent openFullView =new Intent(activity, ViewFullImage.class);
-                openFullView.putExtra(Constants.ImageUrl_Type,vehicalsDetails.TYPE_Server);
+                openFullView.putExtra(Constants.ImageUrl_Type,myImageData.getType());
+                openFullView.putExtra(Constants.SET_MODE_INTENT,Constants.MODE_VIEW);
                 openFullView.putExtra(Constants.ImageUrl_INTENT,Constants.ImageBaseUrl+myImageData.getUrl());
                 activity.startActivity(openFullView);
             }

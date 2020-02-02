@@ -42,4 +42,24 @@
     <string name="Communicate">Communicate</string>
     <string name="arrowImage">arrowImage</string>
     <string name="emptyImagePlaceHolder">emptyImagePlaceHolder</string>
+    <string name="Images">Images</string>
+    <string name="Docs">Documents</string>
+    <string name="VinText">Vin: </string>
+    <string name="ModelText">Model: </string>
+    <string name="MakeText">Make: </string>
+    <string name="YearText">Year: </string>
+    <string name="assemlyCountryText">Assemly Country: </string>
+    <string name="colorText">Color:</string>
+    <string name="engineLitersText">Engine Liters: </string>
+    <string name="bodyStyleText">Body Style</string>
+    <string name="engineTypeText">Engine Type:</string>
+    <string name="descriptionText">Description:</string>
+    <string name="VehicalData">Vehical Data</string>
+    <string name="HolderData">Holders Data</string>
+    <string name="MainUser">Main Username:</string>
+    <string name="MainUser2">Main Username 2:</string>
+    <string name="shipperName">Shipper Username:</string>
+    <string name="vendorText">Vendor Username:</string>
+    <string name="consigneeText">Consignee Username:</string>
+    <string name="customerText">Customer Username:</string>
 </resources>
