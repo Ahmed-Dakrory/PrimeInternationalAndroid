@@ -44,9 +44,9 @@
         android:id="@+id/mark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="end|bottom"
+        android:gravity="end|top"
         android:text="@string/rightDoulbe"
-        android:paddingBottom="30dp"
+        android:paddingTop="30dp"
         android:paddingRight="30dp"
         android:textSize="20sp"/>
 

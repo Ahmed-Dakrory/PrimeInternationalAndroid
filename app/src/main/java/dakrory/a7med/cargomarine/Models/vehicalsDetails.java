@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
+
 public class vehicalsDetails {
 
     public static int TYPE_FILE=0;
@@ -25,7 +27,13 @@ public class vehicalsDetails {
 
 
 
-    public class urlItem{
+    public static class urlItem{
+        public urlItem(String url, int type, CallBackViewChanger callBackViewChanger) {
+            this.url = url;
+            this.type = type;
+            this.callBackViewChanger = callBackViewChanger;
+        }
+
         @SerializedName("url")
         private String url;
 
@@ -33,6 +41,16 @@ public class vehicalsDetails {
         @SerializedName("type")
         private int type;
 
+
+        CallBackViewChanger callBackViewChanger;
+
+        public CallBackViewChanger getCallBackViewChanger() {
+            return callBackViewChanger;
+        }
+
+        public void setCallBackViewChanger(CallBackViewChanger callBackViewChanger) {
+            this.callBackViewChanger = callBackViewChanger;
+        }
 
         public int getType() {
             return type;
@@ -57,6 +75,31 @@ public class vehicalsDetails {
 
         @SerializedName("id")
         private int id;
+
+        @SerializedName("mainId")
+        private int mainId;
+
+
+        @SerializedName("mainTwoId")
+        private int mainTwoId;
+
+        @SerializedName("shipperId")
+        private int shipperId;
+
+        @SerializedName("vendorId")
+        private int vendorId;
+
+
+        @SerializedName("customerId")
+        private int customerId;
+
+
+        @SerializedName("consigneeId")
+        private int consigneeId;
+
+
+
+
 
 
         @SerializedName("userfirstName")
@@ -135,20 +178,20 @@ public class vehicalsDetails {
         private String color="";
 
         @SerializedName("seacost")
-        private String seacost="";
+        private float seacost;
 
 
 
         @SerializedName("landcost")
-        private String landcost="";
+        private float landcost;
 
 
         @SerializedName("state")
-        private String state="";
+        private int state;
 
 
         @SerializedName("releaseOption")
-        private String releaseOption="";
+        private int releaseOption;
 
         @SerializedName("releaseDate")
         private String releaseDate="";
@@ -345,35 +388,35 @@ public class vehicalsDetails {
             this.color = color;
         }
 
-        public String getSeacost() {
+        public float getSeacost() {
             return seacost;
         }
 
-        public void setSeacost(String seacost) {
+        public void setSeacost(float seacost) {
             this.seacost = seacost;
         }
 
-        public String getLandcost() {
+        public float getLandcost() {
             return landcost;
         }
 
-        public void setLandcost(String landcost) {
+        public void setLandcost(float landcost) {
             this.landcost = landcost;
         }
 
-        public String getState() {
+        public int getState() {
             return state;
         }
 
-        public void setState(String state) {
+        public void setState(int state) {
             this.state = state;
         }
 
-        public String getReleaseOption() {
+        public int getReleaseOption() {
             return releaseOption;
         }
 
-        public void setReleaseOption(String releaseOption) {
+        public void setReleaseOption(int releaseOption) {
             this.releaseOption = releaseOption;
         }
 
@@ -423,6 +466,54 @@ public class vehicalsDetails {
 
         public void setEtd(String etd) {
             this.etd = etd;
+        }
+
+        public int getMainId() {
+            return mainId;
+        }
+
+        public void setMainId(int mainId) {
+            this.mainId = mainId;
+        }
+
+        public int getMainTwoId() {
+            return mainTwoId;
+        }
+
+        public void setMainTwoId(int mainTwoId) {
+            this.mainTwoId = mainTwoId;
+        }
+
+        public int getShipperId() {
+            return shipperId;
+        }
+
+        public void setShipperId(int shipperId) {
+            this.shipperId = shipperId;
+        }
+
+        public int getVendorId() {
+            return vendorId;
+        }
+
+        public void setVendorId(int vendorId) {
+            this.vendorId = vendorId;
+        }
+
+        public int getCustomerId() {
+            return customerId;
+        }
+
+        public void setCustomerId(int customerId) {
+            this.customerId = customerId;
+        }
+
+        public int getConsigneeId() {
+            return consigneeId;
+        }
+
+        public void setConsigneeId(int consigneeId) {
+            this.consigneeId = consigneeId;
         }
     }
 

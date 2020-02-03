@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import dakrory.a7med.cargomarine.CustomViews.MyImageData;
+import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.helpers.Constants;
 
 import com.jsibbold.zoomage.ZoomageView;
@@ -35,7 +36,8 @@ public class ViewFullImage extends Activity {
 
         imageView = (ZoomageView) findViewById(R.id.imageViewFull);
 
-        if(imageUrlType== MyImageData.TYPE_FILE){
+        if(imageUrlType== vehicalsDetails.TYPE_FILE){
+            Log.v("AhmedDakrory","FileData: "+imageUrl);
             File f = new File(imageUrl);
             Picasso.get().load(f).into(imageView);
         }else{

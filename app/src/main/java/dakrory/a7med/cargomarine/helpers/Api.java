@@ -7,6 +7,7 @@ import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.Models.vinDetails;
 import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -28,7 +29,7 @@ public interface Api {
 
     @Multipart
     @POST("Api.php?apicall=upload")
-    Call<MyResponse> uploadImage(@Part MultipartBody.Part file, @Part("desc") String desc);
+    Call<MyResponse> uploadImage(@Part MultipartBody.Part file, @Part("carId") int carId, @Part("type") int type);
 
 
     @POST("Api.php?apicall=getallimages")
@@ -42,6 +43,9 @@ public interface Api {
     @FormUrlEncoded
     @POST("Api.php?apicall=getCarData")
     Call<vehicalsDetails> getAllDetailsForCar(@Field("id") int id);
+
+    @POST("Api.php?apicall=insertNewCar")
+    Call<vehicalsDetails> insertNewCar(@Body vehicalsDetails.carDetails carData);
 
     @GET("?format=json")
     Call<vinDetails> getCarDetailsfromVin();

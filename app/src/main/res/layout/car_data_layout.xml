@@ -17,7 +17,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/vinEdit">
 
@@ -25,7 +25,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -46,7 +46,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/modelEdit">
 
@@ -54,7 +54,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -75,7 +75,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/makeEdit">
 
@@ -83,7 +83,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -104,7 +104,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/yearEdit">
 
@@ -112,7 +112,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -134,7 +134,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/descriptionEdit">
 
@@ -142,7 +142,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -164,7 +164,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/assemlyCountryEdit">
 
@@ -172,7 +172,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -193,7 +193,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/colorEdit">
 
@@ -201,7 +201,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -222,7 +222,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/engineLitersEdit">
 
@@ -230,7 +230,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -251,6 +251,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textSize="@dimen/sizeSmall"
 
             android:layout_gravity="center"
             android:id="@+id/bodyStyleEdit">
@@ -259,7 +260,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -280,7 +281,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/engineTypeEdit">
 
@@ -288,7 +289,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"

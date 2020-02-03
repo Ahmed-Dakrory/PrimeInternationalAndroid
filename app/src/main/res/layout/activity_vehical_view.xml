@@ -18,32 +18,61 @@
             android:id="@+id/layoutImages"
             android:orientation="vertical"
             android:layout_alignParentTop="true">
-            <androidx.recyclerview.widget.RecyclerView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:scrollbars="horizontal"
-                android:background="#fa323233"
-                android:id="@+id/recyclerViewForImages"
-                android:layout_alignParentTop="true">
+                android:layout_height="match_parent"
+                android:id="@+id/layoutForImages">
+                <androidx.recyclerview.widget.RecyclerView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal"
+                    android:background="#fa323233"
+                    android:id="@+id/recyclerViewForImages">
 
 
 
-            </androidx.recyclerview.widget.RecyclerView>
-            <androidx.recyclerview.widget.RecyclerView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:scrollbars="horizontal"
-                android:background="#fa323233"
-                android:id="@+id/recyclerViewForDocs"
-                android:visibility="gone">
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:src="@drawable/ic_add_black_24dp"
+                    android:backgroundTint="#80FFFFFF"
+                    android:id="@+id/addImageFloating"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="20dp"/>
+            </RelativeLayout>
+           <RelativeLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:visibility="gone"
+               android:id="@+id/layoutForDocs">
+               <androidx.recyclerview.widget.RecyclerView
+                   xmlns:android="http://schemas.android.com/apk/res/android"
+                   xmlns:tools="http://schemas.android.com/tools"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:scrollbars="horizontal"
+                   android:background="#fa323233"
+                   android:id="@+id/recyclerViewForDocs">
 
 
 
-            </androidx.recyclerview.widget.RecyclerView>
+               </androidx.recyclerview.widget.RecyclerView>
+               <com.google.android.material.floatingactionbutton.FloatingActionButton
+                   android:layout_width="90dp"
+                   android:layout_height="90dp"
+                   android:src="@drawable/ic_add_black_24dp"
+                   android:backgroundTint="#80FFFFFF"
+                   android:id="@+id/addDocFloating"
+                   android:layout_alignParentBottom="true"
+                   android:layout_alignParentRight="true"
+                   android:layout_margin="20dp"/>
+           </RelativeLayout>
+
 
         </LinearLayout>
 

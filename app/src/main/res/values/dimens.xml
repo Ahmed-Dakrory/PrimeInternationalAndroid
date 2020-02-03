@@ -7,5 +7,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="dataH">50dp</dimen>
     <dimen name="marginTopTextEdit">5dp</dimen>
-    <dimen name="sizeBold">19dp</dimen>
+    <dimen name="sizeBold">13dp</dimen>
+    <dimen name="sizeSmall">11dp</dimen>
+    <dimen name="sepHight" >0.1dp</dimen>
 </resources>

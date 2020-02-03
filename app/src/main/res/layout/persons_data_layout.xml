@@ -17,7 +17,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/MainUserEdit">
 
@@ -25,7 +25,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -46,7 +46,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/MainUser2Edit">
 
@@ -54,7 +54,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -75,7 +75,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/shipperNameEdit">
 
@@ -83,7 +83,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -104,7 +104,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/vendorEdit">
 
@@ -112,7 +112,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -134,7 +134,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/consigneeEdit">
 
@@ -142,7 +142,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
@@ -164,7 +164,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/customerEdit">
 
@@ -172,7 +172,7 @@
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="@dimen/sepHight"
         android:foreground="#ACABAB"
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"

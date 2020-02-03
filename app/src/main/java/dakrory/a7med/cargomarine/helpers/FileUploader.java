@@ -37,9 +37,8 @@ public class FileUploader {
 
 
 
-    public void uploadFile(String fileName, String desc, final Activity activity, final FileUploaderCallback fileUploaderCallback) {
+    public void uploadFile(String fileName, int carId, final Activity activity, final FileUploaderCallback fileUploaderCallback,int type) {
 
-        Log.v("AhmedDakrory:","Start Upload");
         this.fileUploaderCallback=fileUploaderCallback;
         File file  = new File(fileName);
         //creating a file
@@ -66,7 +65,7 @@ public class FileUploader {
 
         Log.v("AhmedDakrory:","Start Upload3");
         //creating a call and calling the upload image method
-        Call<MyResponse> call = api.uploadImage(filePart, desc);
+        Call<MyResponse> call = api.uploadImage(filePart, carId,type);
 
         //finally performing the call
         call.enqueue(new Callback<MyResponse>() {
@@ -77,9 +76,12 @@ public class FileUploader {
             }
 
             @Override
-            public void onFailure(Call<MyResponse> call, Throwable t) {
+            public void onFailure(Call<MyResponse> responseCall, Throwable t) {
+
                 fileUploaderCallback.onError(t);
                 Log.v("AhmedDakrory:","Start Error");
+                Log.v("AhmedDakrory:",t.getMessage());
+                Log.v("AhmedDakrory:",t.toString());
                 Toast.makeText(activity.getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

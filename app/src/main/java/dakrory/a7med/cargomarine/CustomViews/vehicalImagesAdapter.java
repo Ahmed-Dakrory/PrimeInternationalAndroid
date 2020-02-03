@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.app.adprogressbarlib.AdCircleProgress;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -46,27 +47,51 @@ public class vehicalImagesAdapter extends RecyclerView.Adapter<vehicalImagesAdap
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final vehicalsDetails.urlItem myImageData = listdata.get(position);
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Picasso.get().load(Constants.ImageBaseUrl+listdata.get(position).getUrl()).placeholder(R.drawable.animation_loader).into(holder.imageView);
-                holder.loader.setVisibility(View.GONE);
-                holder.overlayView.setVisibility(View.GONE);
-                holder.markView.setTextColor(activity.getResources().getColor(R.color.colorGreenSign));
-            }
-        });
 
 
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent openFullView =new Intent(activity, ViewFullImage.class);
-                openFullView.putExtra(Constants.ImageUrl_Type,myImageData.getType());
-                openFullView.putExtra(Constants.SET_MODE_INTENT,Constants.MODE_VIEW);
-                openFullView.putExtra(Constants.ImageUrl_INTENT,Constants.ImageBaseUrl+myImageData.getUrl());
-                activity.startActivity(openFullView);
+        if(listdata.get(position).getType()==vehicalsDetails.TYPE_FILE) {
+            myImageData.getCallBackViewChanger().setViewToPercentage(holder.loader,holder.overlayView,holder.markView);
+
+            if (listdata.get(position).getUrl() != null) {
+                File f = new File(listdata.get(position).getUrl());
+                Picasso.get().load(f).into(holder.imageView);
+
+
             }
-        });
+
+            holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent openFullView =new Intent(activity, ViewFullImage.class);
+                    openFullView.putExtra(Constants.ImageUrl_Type,myImageData.getType());
+                    openFullView.putExtra(Constants.SET_MODE_INTENT,Constants.MODE_VIEW);
+                    openFullView.putExtra(Constants.ImageUrl_INTENT,myImageData.getUrl());
+                    activity.startActivity(openFullView);
+                }
+            });
+
+        }else {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Picasso.get().load(Constants.ImageBaseUrl + listdata.get(position).getUrl()).placeholder(R.drawable.animation_loader).into(holder.imageView);
+                    holder.loader.setVisibility(View.GONE);
+                    holder.overlayView.setVisibility(View.GONE);
+                    holder.markView.setTextColor(activity.getResources().getColor(R.color.colorGreenSign));
+                }
+            });
+            holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent openFullView =new Intent(activity, ViewFullImage.class);
+                    openFullView.putExtra(Constants.ImageUrl_Type,myImageData.getType());
+                    openFullView.putExtra(Constants.SET_MODE_INTENT,Constants.MODE_VIEW);
+                    openFullView.putExtra(Constants.ImageUrl_INTENT,Constants.ImageBaseUrl+myImageData.getUrl());
+                    activity.startActivity(openFullView);
+                }
+            });
+        }
+
     }
 
 
