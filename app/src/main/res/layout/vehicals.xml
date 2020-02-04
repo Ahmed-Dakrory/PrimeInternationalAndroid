@@ -13,10 +13,11 @@
             <Spinner
                 android:id="@+id/spinnerVehicalState"
                 android:layout_width="match_parent"
-                android:background="#f9f9f9"
+                android:background="#E4E1E1"
                 android:dropDownVerticalOffset="11dp"
                 android:overlapAnchor="false"
                 android:layout_height="50dp"
+                android:layout_margin="9dp"
                 android:entries="@array/states_vehicals"
                 android:dropDownWidth="match_parent"
                 android:spinnerMode="dropdown" />

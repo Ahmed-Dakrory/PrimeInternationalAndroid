@@ -25,12 +25,15 @@ import dakrory.a7med.cargomarine.fragmentsMainApp.vehicals;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainApp extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Fragment vehicalsFragment;
     Fragment userDetailsFragment;
+
+    TextView userNameTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,12 +42,14 @@ public class MainApp extends AppCompatActivity
         vehicalsFragment =vehicals.newInstance();
         userDetailsFragment=UserDetails.newInstance();
 
+
         if (savedInstanceState == null) {
             setFragmentNow(vehicalsFragment);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -55,6 +60,15 @@ public class MainApp extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        initializeUserNameData(navigationView);
+    }
+
+    private void initializeUserNameData(NavigationView navigationView) {
+        View headerView = navigationView.getHeaderView(0);
+        userNameTextView = (TextView)headerView.findViewById(R.id.userNameData);
+        userNameTextView.setText("Ahmed DAkrory");
     }
 
     public void setFragmentNow(Fragment fragmentNow){
@@ -104,21 +118,10 @@ public class MainApp extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.Freightlist) {
             // Handle the camera action
 
             setFragmentNow(vehicalsFragment);
-        } else if (id == R.id.nav_gallery) {
-
-            setFragmentNow(userDetailsFragment);
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

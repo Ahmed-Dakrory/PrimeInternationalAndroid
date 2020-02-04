@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 <com.jsibbold.zoomage.ZoomageView
+    android:background="#292626"
     android:contentDescription="@string/fullImageView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

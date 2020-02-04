@@ -20,7 +20,7 @@
     <string name="title_activity_main_app">Cargo Marine</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_title">Username</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_search">Search</string>
@@ -39,7 +39,7 @@
     <string name="carImage">carImage</string>
     <string name="imageForreleaseState">imageForreleaseState</string>
     <string name="Icon">Icon</string>
-    <string name="Communicate">Communicate</string>
+    <string name="Communicate">Access</string>
     <string name="arrowImage">arrowImage</string>
     <string name="emptyImagePlaceHolder">emptyImagePlaceHolder</string>
     <string name="Images">Images</string>
@@ -62,4 +62,10 @@
     <string name="vendorText">Vendor Username:</string>
     <string name="consigneeText">Consignee Username:</string>
     <string name="customerText">Customer Username:</string>
+    <string name="ProblemErrorOnServerAddNewCar">Problem on Add New Car To Server</string>
+    <string name="ProblemOnHandleData">Problem to handle data!!!</string>
+    <string name="ShipmentStates">Shipment State</string>
+    <string name="release">Release</string>
+    <string name="FreightVehicals">Freight Vehicals</string>
+    <string name="LogOut">sign out</string>
 </resources>

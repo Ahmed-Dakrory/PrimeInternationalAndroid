@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".vehicalView">
-
-<ScrollView
+<androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -133,6 +133,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/vechicalDataList"
+            android:id="@+id/vehicalHolderData"
             app:title="@string/HolderData"
             app:icon="@drawable/ic_person_black_24dp"
             app:inner_view="@layout/persons_data_layout"
@@ -142,7 +143,43 @@
 
 
         </com.alespero.expandablecardview.ExpandableCardView>
-    </RelativeLayout>
-</ScrollView>
 
-</LinearLayout>
+        <com.alespero.expandablecardview.ExpandableCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/vehicalHolderData"
+            app:title="@string/ShipmentStates"
+            app:icon="@drawable/ic_assignment_turned_in_black_24dp"
+            app:inner_view="@layout/shipment_state"
+            app:expandOnClick="true"
+            app:animationDuration="300"
+            app:startExpanded="false">
+
+
+        </com.alespero.expandablecardview.ExpandableCardView>
+
+    </RelativeLayout>
+</androidx.core.widget.NestedScrollView>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#A3FFFFFF"
+    android:id="@+id/loaderPanel">
+    <ProgressBar
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>
+<com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:layout_width="155dp"
+    android:layout_height="155dp"
+    android:src="@drawable/ic_check_black_24dp"
+    android:backgroundTint="#CBE9E7E7"
+    android:id="@+id/saveAllNewResults"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_margin="20dp">
+
+</com.google.android.material.floatingactionbutton.FloatingActionButton>
+</RelativeLayout>

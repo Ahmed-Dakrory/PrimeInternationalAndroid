@@ -1,13 +1,22 @@
 package dakrory.a7med.cargomarine;
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +24,7 @@ import com.app.adprogressbarlib.AdCircleProgress;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +35,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
@@ -50,7 +64,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class vehicalView extends AppCompatActivity implements View.OnClickListener {
+public class vehicalView extends Activity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
 
     RecyclerView recyclerViewImages;
@@ -61,6 +75,8 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
 
     FloatingActionButton addImageFloatingButton;
     FloatingActionButton addDocFloatingButton;
+
+    FloatingActionButton saveAllNewResultsFloatingActionButton;
 
     vehicalImagesAdapter adapterForImages;
     vehicalImagesAdapter adapterForDocs;
@@ -89,6 +105,15 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
     EditText consigneeUserName;
 
 
+    LinearLayout layoutRelease;
+    ImageButton setReleaseDateButton;
+    TextView ReleaseDateTextView;
+
+    CheckBox releaseStateCheckBox;
+    Spinner releaseTypeSpinner;
+    Spinner stateTypeSpinner;
+
+
     int idOfCar=-1;
     int Mode;
     private boolean AllowedToModify = false;
@@ -99,7 +124,7 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
     String vinNew;
 
     Retrofit retrofit = null;
-
+    RelativeLayout loaderPanel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,10 +147,15 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
 
         addImageFloatingButton.setOnClickListener(this);
         addDocFloatingButton.setOnClickListener(this);
+        saveAllNewResultsFloatingActionButton.setOnClickListener(this);
+
 
         imagesButton.setOnClickListener(this);
         DocsButton.setOnClickListener(this);
 
+        setReleaseDateButton.setOnClickListener(this);
+
+        setReleaseDateButton.setOnClickListener(this);
         Intent lastIntentGet=getIntent();
         Mode = lastIntentGet.getIntExtra(Constants.SET_MODE_INTENT,-1);
 
@@ -146,6 +176,64 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
             setViewsToNotEdit();
         }
 
+
+
+        releaseTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               setReleaseType(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        stateTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setStateOfCar(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        releaseStateCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                carData.getData().setReleaseOption(isChecked?1:0);
+                setTextData(carData.getData());
+                //addNewCarToServer();
+            }
+        });
+
+
+
+    }
+
+    private void setStateOfCar(int position) {
+        carData.getData().setState(position);
+       // addNewCarToServer();
+    }
+
+    private void setReleaseType(int position) {
+        if(position == 0){
+            carData.getData().setStateOut(-1);
+        }else if(position == 1){
+            carData.getData().setStateOut(1);
+
+        }else if(position == 2){
+            carData.getData().setStateOut(2);
+
+        }else if(position == 3){
+            carData.getData().setStateOut(3);
+
+        }
+        Log.v("AhmedDakrory",idOfCar+ "position: "+position+", setStateOut: "+carData.getData().getStateOut());
     }
 
     private void handleVinAndSetViewAfterRequestFromOutSide(final String vinNew) {
@@ -183,12 +271,14 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onFailure(Call<vinDetails> call, Throwable t) {
 
+                loaderPanel.setVisibility(View.GONE);
+                Toast.makeText(vehicalView.this,getString(R.string.ProblemErrorOnServerAddNewCar),Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void addNewCarToServer() {
-
+        loaderPanel.setVisibility(View.VISIBLE);
 
         //creating retrofit object
         Retrofit retrofit = new Retrofit.Builder()
@@ -208,11 +298,16 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
                carData.setData(vDetails.getData());
                carData.getImages().addAll(vDetails.getImages());
                carData.getDocs().addAll(vDetails.getDocs());
-               Log.v("AhmedDakrory33",String.valueOf(vDetails.getData().getUuid()+", "+vDetails.getData().getId()));
+               idOfCar = carData.getData().getId();
+                setTextData(carData.getData());
+                loaderPanel.setVisibility(View.GONE);
+               Log.v("AhmedDakrory33",String.valueOf(vDetails.getData().getUuid()+", "+vDetails.getData().getId()+", "+vDetails.getData().getStateOut()));
             }
 
             @Override
             public void onFailure(Call<vehicalsDetails> call, Throwable t) {
+                Toast.makeText(vehicalView.this,getString(R.string.ProblemErrorOnServerAddNewCar),Toast.LENGTH_LONG).show();
+                loaderPanel.setVisibility(View.GONE);
                 Log.v("AhmedDakrory",t.toString());
             }
         });
@@ -242,7 +337,7 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
     }
 
     private void defineViewsAndIntegrate() {
-
+        loaderPanel = (RelativeLayout)findViewById(R.id.loaderPanel);
         recyclerViewImages = (RecyclerView) findViewById(R.id.recyclerViewForImages);
         recyclerViewDocs = (RecyclerView) findViewById(R.id.recyclerViewForDocs);
 
@@ -253,6 +348,8 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
 
         addImageFloatingButton=(FloatingActionButton)findViewById(R.id.addImageFloating);
         addDocFloatingButton=(FloatingActionButton)findViewById(R.id.addDocFloating);
+        saveAllNewResultsFloatingActionButton=(FloatingActionButton)findViewById(R.id.saveAllNewResults);
+
 
         imagesButton = (Button) findViewById(R.id.ImagesButton);
         DocsButton = (Button) findViewById(R.id.DocumentsButton);
@@ -279,6 +376,17 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
         vendorUserName= (EditText)findViewById(R.id.vendorEdit);
         customerUserName= (EditText)findViewById(R.id.customerEdit);
         consigneeUserName= (EditText)findViewById(R.id.consigneeEdit);
+
+
+        //Shipment state
+        releaseStateCheckBox = (CheckBox)findViewById(R.id.releaseOption);
+        releaseTypeSpinner = (Spinner)findViewById(R.id.spinnerReleaseState);
+        stateTypeSpinner = (Spinner)findViewById(R.id.spinnerstates);
+
+        ReleaseDateTextView = (TextView)findViewById(R.id.releaseDateTextView);
+        setReleaseDateButton=(ImageButton)findViewById(R.id.setReleaseDate);
+        layoutRelease = (LinearLayout)findViewById(R.id.layoutRelease);
+
 
         Log.v("AhmedDakrory","Size of Images"+carData.getImages().size());
         adapterForImages = new vehicalImagesAdapter(recyclerViewImages,carData.getImages(),vehicalView.this);
@@ -334,12 +442,15 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
                     adapterForDocs.notifyDataSetChanged();
 
                     setTextData(carData.getData());
+                    loaderPanel.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Call<vehicalsDetails> call, Throwable t) {
 
+                loaderPanel.setVisibility(View.GONE);
+                Toast.makeText(vehicalView.this,getString(R.string.ProblemOnHandleData),Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -364,6 +475,63 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
         setTextUsernameToField(customerUserName,data.getCustomerfirstName(),data.getCustomerlastName());
         setTextUsernameToField(consigneeUserName,data.getConsigneefirstName(),data.getConsigneelastName());
 
+
+        setCheckedRelease(data.getReleaseOption()==1?true:false);
+
+
+        stateSpinnerSetState(data.getState());
+        releaseSpinnerSetType(data.getStateOut());
+
+        setDateRelease(data.getReleaseDate());
+
+
+
+    }
+
+    private void setDateRelease(String releaseDate) {
+
+            if(releaseDate != null) {
+                if (!releaseDate.equalsIgnoreCase("")) {
+                    //Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(releaseDate);
+
+                    ReleaseDateTextView.setText(releaseDate);
+                }
+            }
+
+    }
+
+    private void setCheckedRelease(boolean b) {
+        releaseStateCheckBox.setChecked(b);
+        if(b) {
+            releaseTypeSpinner.setVisibility(View.VISIBLE);
+            layoutRelease.setVisibility(View.VISIBLE);
+        }else{
+
+            releaseTypeSpinner.setVisibility(View.GONE);
+            layoutRelease.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    private void stateSpinnerSetState(int state) {
+
+            stateTypeSpinner.setSelection(state);
+
+    }
+
+    private void releaseSpinnerSetType(int state) {
+        if(state == -1){
+            releaseTypeSpinner.setSelection(0);
+        }else if(state == 1){
+            releaseTypeSpinner.setSelection(1);
+
+        }else if(state == 2){
+            releaseTypeSpinner.setSelection(2);
+
+        }else if(state == 3){
+            releaseTypeSpinner.setSelection(3);
+
+        }
     }
 
     public void setTextUsernameToField(EditText field,String firstName,String lastName){
@@ -393,8 +561,24 @@ public class vehicalView extends AppCompatActivity implements View.OnClickListen
             Log.v("AhmedDakrory","ButtonDoc");
             captureImage(Constants.TypeDocForServer);
 
+        }else if(v.getId()==R.id.saveAllNewResults){
+            addNewCarToServer();
+        }else if(v.getId()==R.id.setReleaseDate){
+            selectDateToRelease();
         }
     }
+
+    private void selectDateToRelease() {
+        Calendar now = Calendar.getInstance();
+        com.wdullaer.materialdatetimepicker.date.DatePickerDialog dpd = DatePickerDialog.newInstance(
+                vehicalView.this,
+                now.get(Calendar.YEAR), // Initial year selection
+                now.get(Calendar.MONTH), // Initial month selection
+                now.get(Calendar.DAY_OF_MONTH) // Inital day selection
+        );
+        dpd.show(getFragmentManager(), "Release Date");
+    }
+
 
     private void captureImage(int typeForImageOrDoc) {
 
@@ -550,5 +734,20 @@ if(carData.getData().getId()!=0) {
 
 
         return retrofit;
+    }
+
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar cal=Calendar.getInstance();
+        cal.set(Calendar.YEAR,year);
+        cal.set(Calendar.MONTH,monthOfYear);
+        cal.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+
+        Date date = cal.getTime();
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+        carData.getData().setReleaseDate(format1.format(date));
+        setTextData(carData.getData());
     }
 }

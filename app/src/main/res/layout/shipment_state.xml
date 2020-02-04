@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dataH"
+        android:orientation="horizontal">
+
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:entries="@array/states_vehicalsExact"
+            android:id="@+id/spinnerstates"
+            android:spinnerMode="dialog"
+            android:textSize="@dimen/sizeBold"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+        </Spinner>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sepHight"
+        android:foreground="#ACABAB"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="3dp"
+        android:background="?android:attr/listDivider" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dataH"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/marginTopTextEdit"
+            android:layout_gravity="center"
+            android:id="@+id/releaseOption"
+            android:textSize="@dimen/sizeBold"
+            android:text="@string/release">
+
+
+        </CheckBox>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:entries="@array/releaseType"
+            android:id="@+id/spinnerReleaseState"
+            android:spinnerMode="dialog"
+            android:textSize="@dimen/sizeBold"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="15dp"
+            android:visibility="gone">
+
+        </Spinner>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sepHight"
+        android:foreground="#ACABAB"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="3dp"
+        android:background="?android:attr/listDivider" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/layoutRelease">
+<ImageButton
+    android:layout_width="57dp"
+    android:layout_height="57dp"
+    android:src="@drawable/ic_access_time_black_24dp"
+    android:layout_margin="3dp"
+    android:id="@+id/setReleaseDate"></ImageButton>
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    android:layout_marginRight="3dp"
+    android:textSize="19dp"
+    android:layout_gravity="center"
+    android:gravity="center|left"
+    android:id="@+id/releaseDateTextView"></TextView>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sepHight"
+        android:foreground="#ACABAB"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="3dp"
+        android:background="?android:attr/listDivider" />
+
+
+</LinearLayout>

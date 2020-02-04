@@ -7,4 +7,24 @@
         <item>Fright In Transit</item>
         <item>Sent For Payment</item>
     </string-array>
+
+    <string-array name="states_vehicalsExact">
+        <item>Warehouse (Title uploaded, VIR uploaded, Load Request NO) </item>
+        <item>Warehouse ( VIR and Title uploaded, Load Request YES)</item>
+        <item>Warehouse (Title uploaded, VIR uploaded, Priority OK TO LOAD/ LOAD ASAP, Job Order Form assigned to freight)</item>
+        <item>Warehouse (No documents uploaded (Vehicle Inspection Report, Title or both))</item>
+        <item>Dry Cargo (Load Request NO)</item>
+        <item>Dry Cargo (Load Request YES)</item>
+        <item>Fright In Transit ( ETA present)</item>
+        <item>Fright In Transit  (No ETA)</item>
+        <item>Sent For Payment</item>
+    </string-array>
+
+    <string-array name="releaseType">
+        <item>Not Released</item>
+        <item>RELEASE TO CUSTOMER</item>
+        <item>RELEASE RORO</item>
+        <item>RELEASE Container</item>
+    </string-array>
+
 </resources>

@@ -193,6 +193,10 @@ public class vehicalsDetails {
         @SerializedName("releaseOption")
         private int releaseOption;
 
+
+        @SerializedName("stateOut")
+        private int stateOut;
+
         @SerializedName("releaseDate")
         private String releaseDate="";
 
@@ -418,6 +422,14 @@ public class vehicalsDetails {
 
         public void setReleaseOption(int releaseOption) {
             this.releaseOption = releaseOption;
+        }
+
+        public int getStateOut() {
+            return stateOut;
+        }
+
+        public void setStateOut(int stateOut) {
+            this.stateOut = stateOut;
         }
 
         public String getReleaseDate() {

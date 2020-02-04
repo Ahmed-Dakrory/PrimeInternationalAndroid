@@ -25,12 +25,12 @@ public class vehicalsDataAllList {
         @SerializedName("state")
         private int state;
 
-        @SerializedName("firstName")
-        private String firstName;
+        @SerializedName("shipper_firstName")
+        private String shipper_firstName;
 
 
-        @SerializedName("lastName")
-        private String lastName;
+        @SerializedName("shipper_lastName")
+        private String shipper_lastName;
 
 
         @SerializedName("shipperId")
@@ -78,20 +78,20 @@ public class vehicalsDataAllList {
             this.lastUpdateCar = lastUpdateCar;
         }
 
-        public String getFirstName() {
-            return firstName;
+        public String getShipper_firstName() {
+            return shipper_firstName;
         }
 
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
+        public void setShipper_firstName(String shipper_firstName) {
+            this.shipper_firstName = shipper_firstName;
         }
 
-        public String getLastName() {
-            return lastName;
+        public String getShipper_lastName() {
+            return shipper_lastName;
         }
 
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
+        public void setShipper_lastName(String shipper_lastName) {
+            this.shipper_lastName = shipper_lastName;
         }
 
         public int getShipperId() {

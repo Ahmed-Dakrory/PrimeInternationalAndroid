@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/D:/New%20folder/android-studio-ide-191.5529924-windows/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_add_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/D:/New%20folder/android-studio-ide-191.5529924-windows/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_search_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,8 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="fbffff" />
-                            <entry key="outputName" value="ic_add_black_24dp" />
+                            <entry key="color" value="f8f6f6" />
+                            <entry key="outputName" value="ic_search_white_24dp" />
                             <entry key="sourceFile" value="C:\Users\Ahmed.Dakrory" />
                           </map>
                         </option>

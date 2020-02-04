@@ -5,33 +5,18 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/Tools" />
+            android:id="@+id/Freightlist"
+            android:icon="@drawable/ic_directions_car_black_24dp"
+            android:title="@string/FreightVehicals" />
+
     </group>
 
     <item android:title="@string/Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/Send" />
+                android:id="@+id/logOut"
+                android:icon="@drawable/ic_call_missed_outgoing_black_24dp"
+                android:title="@string/LogOut" />
         </menu>
     </item>
 

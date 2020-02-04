@@ -19,6 +19,7 @@
 
     <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
         <item name="android:paddingLeft">15dp</item>
+        <item name="android:textColor">#161515</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:popupBackground">@android:drawable/ic_media_rew</item>
     </style>
@@ -26,6 +27,8 @@
     <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:paddingLeft">15dp</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:background">#C9C9C9</item>
+        <item name="android:textColor">#161515</item>
         <item name="android:popupBackground">@android:drawable/ic_media_rew</item>
     </style>
 

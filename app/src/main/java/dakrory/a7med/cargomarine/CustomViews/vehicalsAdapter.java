@@ -57,8 +57,8 @@ public class vehicalsAdapter extends RecyclerView.Adapter<vehicalsAdapter.ViewHo
         holder.makeModel.setText(String.valueOf(vItem.getMake() + " " + vItem.getModel() + " " + vItem.getYear()));
 
         holder.lastUpdate.setText("Last update: " + String.valueOf(vItem.getLastUpdateCar().toString()));
-        holder.shipperName.setText("Shipper: " + String.valueOf(vItem.getFirstName() + " " + vItem.getLastName()));
-        if (vItem.getReleaseOption() == 1) {
+        holder.shipperName.setText("Shipper: " + String.valueOf(vItem.getShipper_firstName() + " " + vItem.getShipper_lastName()));
+        if (vItem.getReleaseOption() == 0) {
             Picasso.get().load(R.mipmap.no).into(holder.stateImage);
         } else {
             Picasso.get().load(R.mipmap.ok).into(holder.stateImage);
@@ -93,28 +93,36 @@ public class vehicalsAdapter extends RecyclerView.Adapter<vehicalsAdapter.ViewHo
                 filterData.addAll(vehicalsDataFull);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
+
                 for (vehicalItemOfAllList item : vehicalsDataFull) {
-                    if (item.getLastName().toLowerCase().trim().contains(filterPattern)
-                            || item.getFirstName().toLowerCase().trim().contains(filterPattern)
+
+                    if (item.getShipper_lastName().toLowerCase().trim().contains(filterPattern)
+                            || item.getShipper_firstName().toLowerCase().trim().contains(filterPattern)
                             || item.getYear().toLowerCase().trim().contains(filterPattern)
                             || item.getModel().toLowerCase().trim().contains(filterPattern)
                             || item.getMake().toLowerCase().trim().contains(filterPattern)
                             || item.getUuid().toLowerCase().trim().contains(filterPattern)) {
+
                         filterData.add(item);
                     }
                 }
             }
             FilterResults filterResults = new FilterResults();
             filterResults.values = filterData;
+            Log.v("AhmedDakrory","Data: "+((ArrayList) filterResults.values).size());
             return filterResults;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            vehicalsData.clear();
-            vehicalsData.addAll((List)results.values);
-            Log.v("AhmedDakrory3","Size: "+vehicalsData.size());
-            Log.v("AhmedDakrory3","SizeFull: "+vehicalsDataFull.size());
+
+            if(results.values!=null){
+                vehicalsData.clear();
+                vehicalsData.addAll((List)results.values);
+                //Log.v("AhmedDakrory3","Size: "+vehicalsData.size());
+                //Log.v("AhmedDakrory3","SizeFull: "+vehicalsDataFull.size());
+            }
+
             notifyDataSetChanged();
         }
     };
