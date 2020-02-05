@@ -2,6 +2,7 @@ package dakrory.a7med.cargomarine.helpers;
 
 import com.google.gson.JsonObject;
 
+import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.Models.vinDetails;
@@ -39,6 +40,35 @@ public interface Api {
     @FormUrlEncoded
     @POST("Api.php?apicall=getAllCarsForMainAccount")
     Call<vehicalsDataAllList> getAllCarsForMainUser(@Field("mainId") int mainId, @Field("page") int page, @Field("N_items") int N_items, @Field("type") int type);
+
+
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getAllCarsForMainTwoAccount")
+    Call<vehicalsDataAllList> getAllCarsForMainTwoAccount(@Field("mainTwoId") int mainId, @Field("page") int page, @Field("N_items") int N_items, @Field("type") int type);
+
+
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getAllCarsForShipperAccount")
+    Call<vehicalsDataAllList> getAllCarsForShipperAccount(@Field("shipperId") int mainId, @Field("page") int page, @Field("N_items") int N_items, @Field("type") int type);
+
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getAllCarsForVendorAccount")
+    Call<vehicalsDataAllList> getAllCarsForVendorAccount(@Field("vendorId") int mainId, @Field("page") int page, @Field("N_items") int N_items, @Field("type") int type);
+
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getAllCarsForCustomerAccount")
+    Call<vehicalsDataAllList> getAllCarsForCustomerAccount(@Field("customerId") int mainId, @Field("page") int page, @Field("N_items") int N_items, @Field("type") int type);
+
+
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getAllCarsForConsigneeAccount")
+    Call<vehicalsDataAllList> getAllCarsForConsigneeAccount(@Field("consigneeId") int mainId, @Field("page") int page, @Field("N_items") int N_items, @Field("type") int type);
+
+
+
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getUserWithNameAndPassword")
+    Call<userData> getUserWithNameAndPassword(@Field("userName") String userName, @Field("password") String password);
 
     @FormUrlEncoded
     @POST("Api.php?apicall=getCarData")

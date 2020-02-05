@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import dakrory.a7med.cargomarine.CustomViews.vehicalsAdapter;
+import dakrory.a7med.cargomarine.LoginActivity;
+import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.R;
 import dakrory.a7med.cargomarine.helpers.Api;
@@ -77,8 +79,8 @@ public class vehicals extends Fragment {
     private boolean isLoading =true;
     private int pastVisibleItems, visibleItemCount,totalItemCount,previous_total = 0;
     private int view_threshold = 10;
-
-    private int idOffUser = 48;
+    private boolean allowEdit = false;
+    private userData userDataOfThisAccount = LoginActivity.thisAccountCredData;
     public static vehicals newInstance() {
         vehicals v = new vehicals();
         return v;
@@ -99,6 +101,12 @@ public class vehicals extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // TODO: Use the ViewModel
         setHasOptionsMenu(true);
+
+        if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN||userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN2){
+            allowEdit = true;
+        }else{
+            allowEdit = false;
+        }
 //intializing scan object
         qrScan = new IntentIntegrator(this.getActivity());
 
@@ -116,6 +124,14 @@ public class vehicals extends Fragment {
         emptyImage=(ImageView)getActivity().findViewById(R.id.emptyImage);
         spinner= (Spinner) getActivity().findViewById(R.id.spinnerVehicalState);
         addNewVehicalButton = (FloatingActionButton)getActivity().findViewById(R.id.addNewVehical);
+
+        if(allowEdit){
+            addNewVehicalButton.show();
+        }else{
+            addNewVehicalButton.hide();
+        }
+
+
         addNewVehicalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -331,7 +347,7 @@ public class vehicals extends Fragment {
         Intent addNewCar=new Intent(getActivity(), vehicalView.class);
         addNewCar.putExtra(Constants.SET_MODE_INTENT,Constants.MODE_ADD_NEW);
         addNewCar.putExtra(Constants.Car_VIN_Add_New,vin);
-        startActivity(addNewCar);
+        startActivityForResult(addNewCar,Constants.ADD_NEW_VEHICAL_REQ_CODE);
     }
 
     private void PerformPagination(int type) {
@@ -339,8 +355,27 @@ public class vehicals extends Fragment {
 
             //WareHouse
             loaderRecy.setVisibility(View.VISIBLE);
-            //creating a call and calling the upload image method
-            Call<vehicalsDataAllList> call = api.getAllCarsForMainUser(idOffUser,page,N_item,type);
+        Call<vehicalsDataAllList> call = null;
+            if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN) {
+                 call = api.getAllCarsForMainUser(userDataOfThisAccount.getUserDetails().getMainUserId(), page, N_item, type);
+
+            }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN2) {
+                call = api.getAllCarsForMainTwoAccount(userDataOfThisAccount.getUserDetails().getMainTwoId(), page, N_item, type);
+
+            }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_SHIPPER) {
+                 call = api.getAllCarsForShipperAccount(userDataOfThisAccount.getUserDetails().getShipperId(), page, N_item, type);
+
+            }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_VENDOR) {
+              call = api.getAllCarsForVendorAccount(userDataOfThisAccount.getUserDetails().getVendorId(), page, N_item, type);
+
+            }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_CUSTOMER) {
+               call = api.getAllCarsForCustomerAccount(userDataOfThisAccount.getUserDetails().getCustomerId(), page, N_item, type);
+
+            }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_CONGSIGNEE) {
+                 call = api.getAllCarsForConsigneeAccount(userDataOfThisAccount.getUserDetails().getConsigneeId(), page, N_item, type);
+
+            }
+
             call.enqueue(new Callback<vehicalsDataAllList>() {
                 @Override
                 public void onResponse(Call<vehicalsDataAllList> call, Response<vehicalsDataAllList> response) {
@@ -423,7 +458,21 @@ public class vehicals extends Fragment {
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+           if(requestCode == Constants.ADD_NEW_VEHICAL_REQ_CODE) {
+               page = 0;
+               //Variables for Pagination
+               isLoading = true;
+               pastVisibleItems = 0;
+               visibleItemCount = 0;
+               totalItemCount = 0;
+               previous_total = 0;
+               view_threshold = 10;
+               vehicalItems.clear();
+               vehicalItemsFull.clear();
 
-        }
+               PerformPagination(stateSelected);
+
+           }
+           }
     }
 }

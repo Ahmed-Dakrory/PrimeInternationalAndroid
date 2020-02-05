@@ -5,25 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,22 +18,25 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
-import dakrory.a7med.cargomarine.Models.Base64;
-import dakrory.a7med.cargomarine.Models.Hex;
-
-import static android.Manifest.permission.READ_CONTACTS;
+import dakrory.a7med.cargomarine.Models.encryption.Base64;
+import dakrory.a7med.cargomarine.Models.encryption.Hex;
+import dakrory.a7med.cargomarine.Models.encryption.encrypt;
+import dakrory.a7med.cargomarine.Models.userData;
+import dakrory.a7med.cargomarine.Models.vehicalsDetails;
+import dakrory.a7med.cargomarine.helpers.Api;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A login screen that offers login via userName/password.
@@ -70,7 +59,8 @@ public class LoginActivity extends Activity  {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private String algorithm = "MD5";
+
+    public static userData thisAccountCredData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +122,7 @@ public class LoginActivity extends Activity  {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password) ) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -141,10 +131,6 @@ public class LoginActivity extends Activity  {
         // Check for a valid userName address.
         if (TextUtils.isEmpty(userName)) {
             mUserNameView.setError(getString(R.string.error_field_required));
-            focusView = mUserNameView;
-            cancel = true;
-        } else if (!isUserNameValid(userName)) {
-            mUserNameView.setError(getString(R.string.error_invalid_userName));
             focusView = mUserNameView;
             cancel = true;
         }
@@ -162,15 +148,7 @@ public class LoginActivity extends Activity  {
         }
     }
 
-    private boolean isUserNameValid(String userName) {
-        //TODO: Replace this with your own logic
-        return userName.contains("@");
-    }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -228,84 +206,41 @@ public class LoginActivity extends Activity  {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-          String hash  = encodePassword("123","ahmedsonic1993@gmail.com");
-            Log.v("AhmedDakrory","Hash: "+hash);
-            // TODO: register the new account here.
-            return true;
-        }
 
+          String hash  = new encrypt().encodePassword(mPassword,mUserName);
+            //String hash=mPassword;
+            //creating retrofit object
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Api.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-        public String encodePassword(String rawPass, Object salt) {
-            String saltedPass = mergePasswordAndSalt(rawPass, salt, false);
+            //creating our api
+            Api api = retrofit.create(Api.class);
 
-            MessageDigest messageDigest = getMessageDigest();
-
-            byte[] digest;
+            //creating a call and calling the upload image method
+            Call<userData> call = api.getUserWithNameAndPassword(mUserName,hash);
 
             try {
-                digest = messageDigest.digest(saltedPass.getBytes("UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalStateException("UTF-8 not supported!");
-            }
+                thisAccountCredData= call.execute().body();
 
-            // "stretch" the encoded value if configured to do so
-            for (int i = 1; i < iterations; i++) {
-                digest = messageDigest.digest(digest);
-            }
-
-            if (getEncodeHashAsBase64()) {
-                return new String(Base64.encode(digest));
-            } else {
-                return new String(Hex.encode(digest));
-            }
-        }
-
-        //~ Instance fields ================================================================================================
-
-        private boolean encodeHashAsBase64 = false;
-
-        private int iterations = 1;
-        //~ Methods ========================================================================================================
-
-        public boolean getEncodeHashAsBase64() {
-            return encodeHashAsBase64;
-        }
-
-        /**
-         * The encoded password is normally returned as Hex (32 char) version of the hash bytes. Setting this
-         * property to true will cause the encoded pass to be returned as Base64 text, which will consume 24 characters.
-         *
-         * @param encodeHashAsBase64 set to true for Base64 output
-         */
-        public void setEncodeHashAsBase64(boolean encodeHashAsBase64) {
-            this.encodeHashAsBase64 = encodeHashAsBase64;
-        }
-        protected final MessageDigest getMessageDigest() throws IllegalArgumentException {
-            try {
-                return MessageDigest.getInstance(algorithm);
-            } catch (NoSuchAlgorithmException e) {
-                throw new IllegalArgumentException("No such algorithm [" + algorithm + "]");
-            }
-        }
+                if (thisAccountCredData.getUserDetails().getId() != 0){
 
 
-        protected String mergePasswordAndSalt(String password, Object salt, boolean strict) {
-            if (password == null) {
-                password = "";
-            }
-
-            if (strict && (salt != null)) {
-                if ((salt.toString().lastIndexOf("{") != -1) || (salt.toString().lastIndexOf("}") != -1)) {
-                    throw new IllegalArgumentException("Cannot use { or } in salt.toString()");
+                    return true;
+                }else{
+                    return false;
                 }
-            }
 
-            if ((salt == null) || "".equals(salt)) {
-                return password;
-            } else {
-                return password + "{" + salt.toString() + "}";
+
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+                return false;
             }
         }
+
+
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
@@ -316,6 +251,9 @@ public class LoginActivity extends Activity  {
                 startActivity(openMainProg);
                 finish();
             } else {
+                mUserNameView.setError(getString(R.string.error_invalid_userName));
+                mUserNameView.requestFocus();
+
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }

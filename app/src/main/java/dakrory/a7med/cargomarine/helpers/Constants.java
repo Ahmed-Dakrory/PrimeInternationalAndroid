@@ -7,6 +7,7 @@ public class Constants {
     public static final int MODE_VIEW = 1;
     public static final String SET_MODE_INTENT = "SET_MODE_INTENT" ;
     public static final String URL_TO_GET_VIN_DATA ="https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/";
+    public static final int ADD_NEW_VEHICAL_REQ_CODE = 55;
     public static String ImageUrl_INTENT="ImageUrl_INTENT";
     public static String ImageUrl_Type="ImageType_INTENT";
     public static String ImageBaseUrl="http://cargomarin.com/images?file=";

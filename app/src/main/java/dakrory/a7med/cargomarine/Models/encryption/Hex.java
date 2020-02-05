@@ -1,4 +1,4 @@
-package dakrory.a7med.cargomarine.Models;
+package dakrory.a7med.cargomarine.Models.encryption;
 
 /**
  * Hex data encoder. Converts byte arrays (such as those obtained from message digests)

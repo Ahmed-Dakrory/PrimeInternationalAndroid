@@ -45,6 +45,7 @@ import java.util.List;
 import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
 import dakrory.a7med.cargomarine.CustomViews.MyImageData;
 import dakrory.a7med.cargomarine.CustomViews.vehicalImagesAdapter;
+import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails.carDetails;
 import dakrory.a7med.cargomarine.Models.vinDetails;
@@ -125,6 +126,9 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
     Retrofit retrofit = null;
     RelativeLayout loaderPanel;
+    userData thisAccountUserData = LoginActivity.thisAccountCredData;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,8 +176,19 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             getAllDataToAdapter();
         }
 
+
+        setPersonDataAccess();
+
+        if(thisAccountUserData.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN || thisAccountUserData.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN2){
+            AllowedToModify = true;
+        }else{
+            AllowedToModify = false;
+        }
+
+
         if(!AllowedToModify){
-            setViewsToNotEdit();
+            setALLEditableFieldsAccess();
+
         }
 
 
@@ -257,8 +272,13 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                     dataOfCar.setEngineType(car.Results.get(0).EngineConfiguration+"- "+car.Results.get(0).EngineCylinders+" Cylinders");
 
 
-
-                    dataOfCar.setMainId(48);
+                    if(thisAccountUserData.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN){
+                        dataOfCar.setMainId(thisAccountUserData.getUserDetails().getMainUserId());
+                    }else if(thisAccountUserData.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN2){
+                        dataOfCar.setMainId(thisAccountUserData.getUserDetails().getMainUserId());
+                        dataOfCar.setMainTwoId(thisAccountUserData.getUserDetails().getMainTwoId());
+                        Log.v("AhmedDakrory","Done ya : "+dataOfCar.getMainTwoId());
+                    }
 
                     carData.setData(dataOfCar);
                     setTextData(carData.getData());
@@ -278,6 +298,20 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     }
 
     private void addNewCarToServer() {
+
+        Log.v("AhmedDakrory","Done ya : "+carData.getData().getMainTwoId());
+        carData.getData().setUuid(vinEdit.getText().toString());
+        carData.getData().setModel(ModelEdit.getText().toString());
+        carData.getData().setMake(MakeEdit.getText().toString());
+        carData.getData().setYear(YearEdit.getText().toString());
+        carData.getData().setDescription(descriptionEdit.getText().toString());
+        carData.getData().setAssemlyCountry(assemlyCountryEdit.getText().toString());
+        carData.getData().setColor(colorEdit.getText().toString());
+        carData.getData().setEngineLiters(engineLitersEdit.getText().toString());
+        carData.getData().setBodyStyle(bodyStyleEdit.getText().toString());
+        carData.getData().setEngineType(engineTypeEdit.getText().toString());
+
+
         loaderPanel.setVisibility(View.VISIBLE);
 
         //creating retrofit object
@@ -295,13 +329,17 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             @Override
             public void onResponse(Call<vehicalsDetails> call, Response<vehicalsDetails> response) {
                vehicalsDetails vDetails = response.body();
+
                carData.setData(vDetails.getData());
                carData.getImages().addAll(vDetails.getImages());
                carData.getDocs().addAll(vDetails.getDocs());
+
                idOfCar = carData.getData().getId();
                 setTextData(carData.getData());
                 loaderPanel.setVisibility(View.GONE);
                Log.v("AhmedDakrory33",String.valueOf(vDetails.getData().getUuid()+", "+vDetails.getData().getId()+", "+vDetails.getData().getStateOut()));
+               adapterForImages.notifyDataSetChanged();
+               adapterForDocs.notifyDataSetChanged();
             }
 
             @Override
@@ -313,7 +351,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         });
     }
 
-    private void setViewsToNotEdit() {
+    private void setALLEditableFieldsAccess() {
         vinEdit.setKeyListener(null);
         ModelEdit.setKeyListener(null);
         MakeEdit.setKeyListener(null);
@@ -326,7 +364,17 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         engineTypeEdit.setKeyListener(null);
 
 
+        saveAllNewResultsFloatingActionButton.hide();
+        addImageFloatingButton.hide();
+        addDocFloatingButton.hide();
 
+        releaseStateCheckBox.setEnabled(false);
+        releaseTypeSpinner.setEnabled(false);
+        setReleaseDateButton.setEnabled(false);
+        stateTypeSpinner.setEnabled(false);
+    }
+
+        private void setPersonDataAccess() {
         //Persons
         mainUserName.setKeyListener(null);
         main2UserName.setKeyListener(null);

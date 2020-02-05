@@ -122,6 +122,11 @@ public class MainApp extends AppCompatActivity
             // Handle the camera action
 
             setFragmentNow(vehicalsFragment);
+        }else if(id == R.id.logOut){
+            Intent goToLogIn = new Intent(MainApp.this,LoginActivity.class);
+            LoginActivity.thisAccountCredData= null;
+            startActivity(goToLogIn);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
