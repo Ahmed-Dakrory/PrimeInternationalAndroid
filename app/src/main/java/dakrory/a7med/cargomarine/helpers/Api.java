@@ -3,6 +3,7 @@ package dakrory.a7med.cargomarine.helpers;
 import com.google.gson.JsonObject;
 
 import dakrory.a7med.cargomarine.Models.userData;
+import dakrory.a7med.cargomarine.Models.userImage;
 import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.Models.vinDetails;
@@ -33,8 +34,11 @@ public interface Api {
     Call<MyResponse> uploadImage(@Part MultipartBody.Part file, @Part("carId") int carId, @Part("type") int type);
 
 
-    @POST("Api.php?apicall=getallimages")
-    Call<JsonObject> getAllImages();
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getImageFromUserId")
+    Call<userImage> getImageFromUserId(@Field("userId") int userId);
+
+
 
 
     @FormUrlEncoded

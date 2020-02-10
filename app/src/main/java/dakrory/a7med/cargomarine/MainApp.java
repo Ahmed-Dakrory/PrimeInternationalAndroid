@@ -1,15 +1,21 @@
 package dakrory.a7med.cargomarine;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -20,12 +26,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import dakrory.a7med.cargomarine.Models.userData;
+import dakrory.a7med.cargomarine.Models.userImage;
+import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.fragmentsMainApp.UserDetails;
 import dakrory.a7med.cargomarine.fragmentsMainApp.vehicals;
+import dakrory.a7med.cargomarine.helpers.Api;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainApp extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -34,6 +55,13 @@ public class MainApp extends AppCompatActivity
     Fragment userDetailsFragment;
 
     TextView userNameTextView;
+    ImageView userDataImage;
+    ProgressBar userDataImageLoader;
+
+
+    userData thisAccountUserData = LoginActivity.thisAccountCredData;
+    private Api api;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +95,51 @@ public class MainApp extends AppCompatActivity
 
     private void initializeUserNameData(NavigationView navigationView) {
         View headerView = navigationView.getHeaderView(0);
+        userDataImageLoader = (ProgressBar) headerView.findViewById(R.id.userDataImageLoader);
+        userDataImage = (ImageView) headerView.findViewById(R.id.userDataImage);
         userNameTextView = (TextView)headerView.findViewById(R.id.userNameData);
-        userNameTextView.setText("Ahmed DAkrory");
+        userNameTextView.setText(thisAccountUserData.getUserDetails().getFirstName()+" "+thisAccountUserData.getUserDetails().getLastName());
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .build();
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .create();
+        //creating retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(Api.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        //creating our api
+        api = retrofit.create(Api.class);
+        Call<userImage> call  = api.getImageFromUserId(thisAccountUserData.getUserDetails().getId());
+        call.enqueue(new Callback<userImage>() {
+            @Override
+            public void onResponse(Call<userImage> data, Response<userImage> response) {
+                userImage userImage = (dakrory.a7med.cargomarine.Models.userImage) response.body();
+                if(!userImage.getData().getImage().equalsIgnoreCase("")) {
+                    byte[] decodedString = Base64.decode(userImage.getData().getImage(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    userDataImage.setImageBitmap(decodedByte);
+                    userDataImageLoader.setVisibility(View.GONE);
+                    userDataImage.setVisibility(View.VISIBLE);
+                }else{
+                    Picasso.get().load(R.mipmap.logo).into(userDataImage);
+                    userDataImageLoader.setVisibility(View.GONE);
+                    userDataImage.setVisibility(View.VISIBLE);
+                }
+                Log.v("AhmedDakrory","Data: "+String.valueOf(userImage.getData().getImage()));
+            }
+
+            @Override
+            public void onFailure(Call<userImage> call, Throwable t) {
+
+            }
+        });
     }
 
     public void setFragmentNow(Fragment fragmentNow){
