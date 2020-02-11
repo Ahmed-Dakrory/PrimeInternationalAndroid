@@ -33,6 +33,7 @@ import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.fragmentsMainApp.UserDetails;
 import dakrory.a7med.cargomarine.fragmentsMainApp.vehicals;
 import dakrory.a7med.cargomarine.helpers.Api;
+import dakrory.a7med.cargomarine.helpers.modelsFunctions;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +46,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
@@ -117,30 +119,39 @@ public class MainApp extends AppCompatActivity
         //creating our api
         api = retrofit.create(Api.class);
         Call<userImage> call  = api.getImageFromUserId(thisAccountUserData.getUserDetails().getId());
-        call.enqueue(new Callback<userImage>() {
-            @Override
-            public void onResponse(Call<userImage> data, Response<userImage> response) {
-                userImage userImage = (dakrory.a7med.cargomarine.Models.userImage) response.body();
-                if(!userImage.getData().getImage().equalsIgnoreCase("")) {
-                    byte[] decodedString = Base64.decode(userImage.getData().getImage(), Base64.DEFAULT);
-                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                    userDataImage.setImageBitmap(decodedByte);
-                    userDataImageLoader.setVisibility(View.GONE);
-                    userDataImage.setVisibility(View.VISIBLE);
-                }else{
-                    Picasso.get().load(R.mipmap.logo).into(userDataImage);
-                    userDataImageLoader.setVisibility(View.GONE);
-                    userDataImage.setVisibility(View.VISIBLE);
-                }
-                Log.v("AhmedDakrory","Data: "+String.valueOf(userImage.getData().getImage()));
-            }
+       if(modelsFunctions.checkNetworkStatus(this)) {
+           call.enqueue(new Callback<userImage>() {
+               @Override
+               public void onResponse(Call<userImage> data, Response<userImage> response) {
+                   userImage userImage = (dakrory.a7med.cargomarine.Models.userImage) response.body();
+                   if (!userImage.getData().getImage().equalsIgnoreCase("")) {
+                       byte[] decodedString = Base64.decode(userImage.getData().getImage(), Base64.DEFAULT);
+                       Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                       userDataImage.setImageBitmap(decodedByte);
+                       userDataImageLoader.setVisibility(View.GONE);
+                       userDataImage.setVisibility(View.VISIBLE);
+                   } else {
+                       Picasso.get().load(R.mipmap.logo).into(userDataImage);
+                       userDataImageLoader.setVisibility(View.GONE);
+                       userDataImage.setVisibility(View.VISIBLE);
+                   }
+                   Log.v("AhmedDakrory", "Data: " + String.valueOf(userImage.getData().getImage()));
+               }
 
-            @Override
-            public void onFailure(Call<userImage> call, Throwable t) {
+               @Override
+               public void onFailure(Call<userImage> call, Throwable t) {
 
-            }
-        });
-    }
+               }
+           });
+       }else{
+           runOnUiThread(new Runnable() {
+               @Override
+               public void run() {
+                   Toast.makeText(MainApp.this,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+               }
+           });
+       }
+       }
 
     public void setFragmentNow(Fragment fragmentNow){
 

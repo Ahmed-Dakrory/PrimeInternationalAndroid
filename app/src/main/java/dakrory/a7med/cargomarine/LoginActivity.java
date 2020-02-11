@@ -22,6 +22,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -34,6 +35,7 @@ import dakrory.a7med.cargomarine.Models.encryption.encrypt;
 import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.helpers.Api;
+import dakrory.a7med.cargomarine.helpers.modelsFunctions;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -222,16 +224,26 @@ public class LoginActivity extends Activity  {
             Call<userData> call = api.getUserWithNameAndPassword(mUserName,hash);
 
             try {
-                thisAccountCredData= call.execute().body();
+                if(modelsFunctions.checkNetworkStatus(LoginActivity.this)) {
+                    thisAccountCredData = call.execute().body();
 
-                if (thisAccountCredData.getUserDetails().getId() != 0){
+                    if (thisAccountCredData.getUserDetails().getId() != 0) {
 
 
-                    return true;
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }else{
+runOnUiThread(new Runnable() {
+    @Override
+    public void run() {
+        Toast.makeText(LoginActivity.this,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+    }
+});
+
                     return false;
                 }
-
 
             } catch (IOException e1) {
                 // TODO Auto-generated catch block

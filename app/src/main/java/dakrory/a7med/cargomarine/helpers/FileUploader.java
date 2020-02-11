@@ -19,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import androidx.loader.content.CursorLoader;
+
+import dakrory.a7med.cargomarine.R;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -66,25 +68,34 @@ public class FileUploader {
         Log.v("AhmedDakrory:","Start Upload3");
         //creating a call and calling the upload image method
         Call<MyResponse> call = api.uploadImage(filePart, carId,type);
+        if(modelsFunctions.checkNetworkStatus(activity)) {
+            //finally performing the call
+            call.enqueue(new Callback<MyResponse>() {
+                @Override
+                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                    fileUploaderCallback.onFinish(response);
+                    Log.v("AhmedDakrory:", "Start Response");
+                }
 
-        //finally performing the call
-        call.enqueue(new Callback<MyResponse>() {
-            @Override
-            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                fileUploaderCallback.onFinish(response);
-                Log.v("AhmedDakrory:","Start Response");
-            }
+                @Override
+                public void onFailure(Call<MyResponse> responseCall, Throwable t) {
 
-            @Override
-            public void onFailure(Call<MyResponse> responseCall, Throwable t) {
+                    fileUploaderCallback.onError(t);
+                    Log.v("AhmedDakrory:", "Start Error");
+                    Log.v("AhmedDakrory:", t.getMessage());
+                    Log.v("AhmedDakrory:", t.toString());
+                    Toast.makeText(activity.getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }else{
 
-                fileUploaderCallback.onError(t);
-                Log.v("AhmedDakrory:","Start Error");
-                Log.v("AhmedDakrory:",t.getMessage());
-                Log.v("AhmedDakrory:",t.toString());
-                Toast.makeText(activity.getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     public interface FileUploaderCallback{

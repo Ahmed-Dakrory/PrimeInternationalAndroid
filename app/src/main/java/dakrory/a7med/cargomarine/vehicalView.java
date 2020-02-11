@@ -53,6 +53,7 @@ import dakrory.a7med.cargomarine.helpers.Api;
 import dakrory.a7med.cargomarine.helpers.Constants;
 import dakrory.a7med.cargomarine.helpers.FileUploader;
 import dakrory.a7med.cargomarine.helpers.MyResponse;
+import dakrory.a7med.cargomarine.helpers.modelsFunctions;
 import dakrory.a7med.cargomarine.layoutManagers.ZoomCenterCardLayoutManager;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -255,46 +256,52 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         Api apiInterface = getClient(vinNew+"/").create(Api.class);
         //creating a call and calling the upload image method
         Call<vinDetails> call = apiInterface.getCarDetailsfromVin();
-        call.enqueue(new Callback<vinDetails>() {
-            @Override
-            public void onResponse(Call<vinDetails> call, Response<vinDetails> response) {
-                vinDetails car = response.body();
-                if(car !=null){
-                    vehicalsDetails.carDetails dataOfCar = new carDetails();
-                    dataOfCar.setState(0);
-                    dataOfCar.setUuid(vinNew);
-                    dataOfCar.setMake(car.Results.get(0).Make);
-                    dataOfCar.setModel(car.Results.get(0).Model);
-                    dataOfCar.setYear(car.Results.get(0).ModelYear);
-                    dataOfCar.setAssemlyCountry(car.Results.get(0).PlantCountry);
-                    dataOfCar.setBodyStyle(car.Results.get(0).DriveType);
-                    dataOfCar.setEngineLiters(car.Results.get(0).DisplacementL);
-                    dataOfCar.setEngineType(car.Results.get(0).EngineConfiguration+"- "+car.Results.get(0).EngineCylinders+" Cylinders");
+
+        if(modelsFunctions.checkNetworkStatus(this)) {
+            call.enqueue(new Callback<vinDetails>() {
+                @Override
+                public void onResponse(Call<vinDetails> call, Response<vinDetails> response) {
+                    vinDetails car = response.body();
+                    if (car != null) {
+                        vehicalsDetails.carDetails dataOfCar = new carDetails();
+                        dataOfCar.setState(0);
+                        dataOfCar.setUuid(vinNew);
+                        dataOfCar.setMake(car.Results.get(0).Make);
+                        dataOfCar.setModel(car.Results.get(0).Model);
+                        dataOfCar.setYear(car.Results.get(0).ModelYear);
+                        dataOfCar.setAssemlyCountry(car.Results.get(0).PlantCountry);
+                        dataOfCar.setBodyStyle(car.Results.get(0).DriveType);
+                        dataOfCar.setEngineLiters(car.Results.get(0).DisplacementL);
+                        dataOfCar.setEngineType(car.Results.get(0).EngineConfiguration + "- " + car.Results.get(0).EngineCylinders + " Cylinders");
 
 
-                    if(thisAccountUserData.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN){
-                        dataOfCar.setMainId(thisAccountUserData.getUserDetails().getMainUserId());
-                    }else if(thisAccountUserData.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN2){
-                        dataOfCar.setMainId(thisAccountUserData.getUserDetails().getMainUserId());
-                        dataOfCar.setMainTwoId(thisAccountUserData.getUserDetails().getMainTwoId());
-                        Log.v("AhmedDakrory","Done ya : "+dataOfCar.getMainTwoId());
+                        if (thisAccountUserData.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN) {
+                            dataOfCar.setMainId(thisAccountUserData.getUserDetails().getMainUserId());
+                        } else if (thisAccountUserData.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN2) {
+                            dataOfCar.setMainId(thisAccountUserData.getUserDetails().getMainUserId());
+                            dataOfCar.setMainTwoId(thisAccountUserData.getUserDetails().getMainTwoId());
+                            Log.v("AhmedDakrory", "Done ya : " + dataOfCar.getMainTwoId());
+                        }
+
+                        carData.setData(dataOfCar);
+                        setTextData(carData.getData());
+
+                        addNewCarToServer();
+
                     }
-
-                    carData.setData(dataOfCar);
-                    setTextData(carData.getData());
-
-                    addNewCarToServer();
-
                 }
-            }
 
-            @Override
-            public void onFailure(Call<vinDetails> call, Throwable t) {
+                @Override
+                public void onFailure(Call<vinDetails> call, Throwable t) {
 
-                loaderPanel.setVisibility(View.GONE);
-                Toast.makeText(vehicalView.this,getString(R.string.ProblemErrorOnServerAddNewCar),Toast.LENGTH_LONG).show();
-            }
-        });
+                    loaderPanel.setVisibility(View.GONE);
+                    Toast.makeText(vehicalView.this, getString(R.string.ProblemErrorOnServerAddNewCar), Toast.LENGTH_LONG).show();
+                }
+            });
+        }else {
+
+            Toast.makeText(this,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+        }
     }
 
     private void addNewCarToServer() {
@@ -325,30 +332,42 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
         //creating a call and calling the upload image method
         Call<vehicalsDetails> call = api.insertNewCar(carData.getData());
-        call.enqueue(new Callback<vehicalsDetails>() {
-            @Override
-            public void onResponse(Call<vehicalsDetails> call, Response<vehicalsDetails> response) {
-               vehicalsDetails vDetails = response.body();
 
-               carData.setData(vDetails.getData());
-               carData.getImages().addAll(vDetails.getImages());
-               carData.getDocs().addAll(vDetails.getDocs());
+        if(modelsFunctions.checkNetworkStatus(this)) {
+            call.enqueue(new Callback<vehicalsDetails>() {
+                @Override
+                public void onResponse(Call<vehicalsDetails> call, Response<vehicalsDetails> response) {
+                    vehicalsDetails vDetails = response.body();
 
-               idOfCar = carData.getData().getId();
-                setTextData(carData.getData());
-                loaderPanel.setVisibility(View.GONE);
-               Log.v("AhmedDakrory33",String.valueOf(vDetails.getData().getUuid()+", "+vDetails.getData().getId()+", "+vDetails.getData().getStateOut()));
-               adapterForImages.notifyDataSetChanged();
-               adapterForDocs.notifyDataSetChanged();
+                    carData.setData(vDetails.getData());
+                    carData.getImages().addAll(vDetails.getImages());
+                    carData.getDocs().addAll(vDetails.getDocs());
+
+                    idOfCar = carData.getData().getId();
+                    setTextData(carData.getData());
+                    loaderPanel.setVisibility(View.GONE);
+                    Log.v("AhmedDakrory33", String.valueOf(vDetails.getData().getUuid() + ", " + vDetails.getData().getId() + ", " + vDetails.getData().getStateOut()));
+                    adapterForImages.notifyDataSetChanged();
+                    adapterForDocs.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onFailure(Call<vehicalsDetails> call, Throwable t) {
+                    Toast.makeText(vehicalView.this, getString(R.string.ProblemErrorOnServerAddNewCar), Toast.LENGTH_LONG).show();
+                    loaderPanel.setVisibility(View.GONE);
+                    Log.v("AhmedDakrory", t.toString());
+                }
+            });
+        }else{
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(vehicalView.this,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+                    loaderPanel.setVisibility(View.GONE);
+                }
+            });
             }
-
-            @Override
-            public void onFailure(Call<vehicalsDetails> call, Throwable t) {
-                Toast.makeText(vehicalView.this,getString(R.string.ProblemErrorOnServerAddNewCar),Toast.LENGTH_LONG).show();
-                loaderPanel.setVisibility(View.GONE);
-                Log.v("AhmedDakrory",t.toString());
-            }
-        });
     }
 
     private void setALLEditableFieldsAccess() {
@@ -470,37 +489,48 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
         //creating a call and calling the upload image method
         Call<vehicalsDetails> call = api.getAllDetailsForCar(idOfCar);
-        call.enqueue(new Callback<vehicalsDetails>() {
-            @Override
-            public void onResponse(Call<vehicalsDetails> call, Response<vehicalsDetails> response) {
+        if(modelsFunctions.checkNetworkStatus(this)) {
 
-                 vehicalsDetails car_data =  response.body();
-                if(car_data!=null){
+            call.enqueue(new Callback<vehicalsDetails>() {
+                @Override
+                public void onResponse(Call<vehicalsDetails> call, Response<vehicalsDetails> response) {
 
-                    carData.setData(car_data.getData());
+                    vehicalsDetails car_data = response.body();
+                    if (car_data != null) {
 
-                    carData.getImages().addAll(car_data.getImages());
-                    Log.v("AhmedDakrory","Size of Images"+carData.getImages().size());
+                        carData.setData(car_data.getData());
 
-                    adapterForImages.notifyDataSetChanged();
+                        carData.getImages().addAll(car_data.getImages());
+                        Log.v("AhmedDakrory", "Size of Images" + carData.getImages().size());
+
+                        adapterForImages.notifyDataSetChanged();
 
 
-                    carData.getDocs().addAll(car_data.getDocs());
-                    Log.v("AhmedDakrory","Size of Images"+carData.getDocs().size());
-                    adapterForDocs.notifyDataSetChanged();
+                        carData.getDocs().addAll(car_data.getDocs());
+                        Log.v("AhmedDakrory", "Size of Images" + carData.getDocs().size());
+                        adapterForDocs.notifyDataSetChanged();
 
-                    setTextData(carData.getData());
-                    loaderPanel.setVisibility(View.GONE);
+                        setTextData(carData.getData());
+                        loaderPanel.setVisibility(View.GONE);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<vehicalsDetails> call, Throwable t) {
+                @Override
+                public void onFailure(Call<vehicalsDetails> call, Throwable t) {
 
-                loaderPanel.setVisibility(View.GONE);
-                Toast.makeText(vehicalView.this,getString(R.string.ProblemOnHandleData),Toast.LENGTH_LONG).show();
-            }
-        });
+                    loaderPanel.setVisibility(View.GONE);
+                    Toast.makeText(vehicalView.this, getString(R.string.ProblemOnHandleData), Toast.LENGTH_LONG).show();
+                }
+            });
+        }else{
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(vehicalView.this,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     private void setTextData(vehicalsDetails.carDetails data) {

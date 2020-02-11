@@ -68,4 +68,5 @@
     <string name="release">Release</string>
     <string name="FreightVehicals">Freight Vehicals</string>
     <string name="LogOut">sign out</string>
+    <string name="PleaseCheckNetworkConnection">Please Check the Internet Connection</string>
 </resources>

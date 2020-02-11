@@ -19,6 +19,7 @@ import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.R;
 import dakrory.a7med.cargomarine.helpers.Api;
 import dakrory.a7med.cargomarine.helpers.Constants;
+import dakrory.a7med.cargomarine.helpers.modelsFunctions;
 import dakrory.a7med.cargomarine.vehicalView;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -375,25 +376,25 @@ public class vehicals extends Fragment {
                  call = api.getAllCarsForConsigneeAccount(userDataOfThisAccount.getUserDetails().getConsigneeId(), page, N_item, type);
 
             }
-
+        if(modelsFunctions.checkNetworkStatus(getActivity())) {
             call.enqueue(new Callback<vehicalsDataAllList>() {
                 @Override
                 public void onResponse(Call<vehicalsDataAllList> call, Response<vehicalsDataAllList> response) {
 
-                    vehicalsDataAllList vehicalsDataAllList =response.body();
+                    vehicalsDataAllList vehicalsDataAllList = response.body();
 
-                    if(vehicalsDataAllList.getError().equalsIgnoreCase("false")){
+                    if (vehicalsDataAllList.getError().equalsIgnoreCase("false")) {
 
                         vehicalItems.addAll(vehicalsDataAllList.getData());
                         vehicalItemsFull.addAll(vehicalsDataAllList.getData());
-                        if(vehicalItemsFull.size()>0){
+                        if (vehicalItemsFull.size() > 0) {
                             recyclerView.setVisibility(View.VISIBLE);
                             emptyImage.setVisibility(View.GONE);
                         }
                         adapter.notifyDataSetChanged();
                         loaderRecy.setVisibility(View.GONE);
 
-                        Log.v("AhmedDakrory","page: "+page+"SizeOfList: "+stateSelected+" is "+vehicalItemsFull.size());
+                        Log.v("AhmedDakrory", "page: " + page + "SizeOfList: " + stateSelected + " is " + vehicalItemsFull.size());
 
                     }
 
@@ -402,17 +403,25 @@ public class vehicals extends Fragment {
 
                 @Override
                 public void onFailure(Call<vehicalsDataAllList> call, Throwable t) {
-                    isLoading=false;
+                    isLoading = false;
                     loaderRecy.setVisibility(View.GONE);
-                    if(vehicalItemsFull.size()==0) {
+                    if (vehicalItemsFull.size() == 0) {
                         recyclerView.setVisibility(View.GONE);
                         emptyImage.setVisibility(View.VISIBLE);
                     }
-                    Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.Error_In_Loading),Toast.LENGTH_LONG).show();
-                    Log.v("AhmedDakrory","Error: "+t.toString());
+                    Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.Error_In_Loading), Toast.LENGTH_LONG).show();
+                    Log.v("AhmedDakrory", "Error: " + t.toString());
+                }
+            });
+        }else{
+           getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(),R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
                 }
             });
 
+        }
       }
 
     @Override
