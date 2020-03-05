@@ -45,7 +45,7 @@ public class FileUploader {
         File file  = new File(fileName);
         //creating a file
         totalFileLength = totalFileLength + file.length();
-        PRRequestBody fileBody = new PRRequestBody(file);
+        PRRequestBody fileBody = new PRRequestBody(file,type);
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), fileBody);
 
 
@@ -106,18 +106,23 @@ public class FileUploader {
 
     public class PRRequestBody extends RequestBody {
         private File mFile;
-
+        private int type = 0;
         private static final int DEFAULT_BUFFER_SIZE = 50000;
 
-        public PRRequestBody(final File file) {
+        public PRRequestBody(final File file,int type) {
             mFile = file;
+            this.type = type;
 
         }
 
         @Override
         public MediaType contentType() {
             // i want to upload only images
-            return MediaType.parse("image/*");
+            if(type ==Constants.TypePdfForServer){
+                return MediaType.parse("application/pdf");
+            }else {
+                return MediaType.parse("image/*");
+            }
         }
 
         @Override

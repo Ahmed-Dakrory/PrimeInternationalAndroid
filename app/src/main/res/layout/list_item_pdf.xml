@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout"
+    android:layout_width="70dp"
+    android:layout_height="100dp"
+    android:layout_gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:src="@mipmap/pdf"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:contentDescription="@string/Icon" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
+        android:text="ahmed"
+        android:gravity="center"
+        android:textSize="8dp"
+        android:textColor="@color/cardview_light_background"
+        android:id="@+id/nameFile"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#A1FFFFFF"
+        android:id="@+id/backgroundWhite"
+        />
+
+    <com.app.adprogressbarlib.AdCircleProgress
+        android:id="@+id/donut_progress"
+
+        android:indeterminate="true"
+        android:layout_centerInParent="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:adpgb_background_color="#2AFFFFFF"
+        android:backgroundTintMode="add"
+        app:adpgb_finished_color="@android:color/white"
+        app:adpgb_unfinished_color="#9BB333"
+        custom:adpgb_finished_stroke_width="7dp"
+        app:adpgb_text_size="15dp"
+        custom:adpgb_show_text="true"
+        app:adpgb_text_color="@android:color/white"
+        custom:adpgb_unfinished_stroke_width="5dp" />
+
+    <TextView
+        android:id="@+id/mark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|top"
+        android:text="@string/rightDoulbe"
+        android:paddingTop="1dp"
+        android:paddingRight="1dp"
+        android:textSize="20sp"/>
+
+</RelativeLayout>

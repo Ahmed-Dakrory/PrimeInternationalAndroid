@@ -1,9 +1,19 @@
 package dakrory.a7med.cargomarine;
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,10 +41,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,12 +58,14 @@ import java.util.List;
 import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
 import dakrory.a7med.cargomarine.CustomViews.MyImageData;
 import dakrory.a7med.cargomarine.CustomViews.vehicalImagesAdapter;
+import dakrory.a7med.cargomarine.CustomViews.vehicalPdfsAdapter;
 import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails.carDetails;
 import dakrory.a7med.cargomarine.Models.vinDetails;
 import dakrory.a7med.cargomarine.helpers.Api;
 import dakrory.a7med.cargomarine.helpers.Constants;
+import dakrory.a7med.cargomarine.helpers.FilePath;
 import dakrory.a7med.cargomarine.helpers.FileUploader;
 import dakrory.a7med.cargomarine.helpers.MyResponse;
 import dakrory.a7med.cargomarine.helpers.modelsFunctions;
@@ -71,20 +86,25 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
     RecyclerView recyclerViewImages;
     RecyclerView recyclerViewDocs;
+    RecyclerView recyclerViewPdfs;
 
     RelativeLayout layoutForImages;
     RelativeLayout layoutForDocs;
+    RelativeLayout layoutForPdfs;
 
     FloatingActionButton addImageFloatingButton;
     FloatingActionButton addDocFloatingButton;
+    FloatingActionButton addPdfFloatingButton;
 
     FloatingActionButton saveAllNewResultsFloatingActionButton;
 
     vehicalImagesAdapter adapterForImages;
     vehicalImagesAdapter adapterForDocs;
+    vehicalPdfsAdapter adapterForPdfs;
 
     Button imagesButton;
     Button DocsButton;
+    Button PdfsButton;
 
 
     EditText vinEdit;
@@ -138,6 +158,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         carData.setData(new carDetails());
         carData.setImages(new ArrayList<vehicalsDetails.urlItem>());
         carData.setDocs(new ArrayList<vehicalsDetails.urlItem>());
+        carData.setPdfs(new ArrayList<vehicalsDetails.urlItem>());
 
 
         defineViewsAndIntegrate();
@@ -152,11 +173,13 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
         addImageFloatingButton.setOnClickListener(this);
         addDocFloatingButton.setOnClickListener(this);
+        addPdfFloatingButton.setOnClickListener(this);
         saveAllNewResultsFloatingActionButton.setOnClickListener(this);
 
 
         imagesButton.setOnClickListener(this);
         DocsButton.setOnClickListener(this);
+        PdfsButton.setOnClickListener(this);
 
         setReleaseDateButton.setOnClickListener(this);
 
@@ -342,6 +365,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                     carData.setData(vDetails.getData());
                     carData.getImages().addAll(vDetails.getImages());
                     carData.getDocs().addAll(vDetails.getDocs());
+                    carData.getPdfs().addAll(vDetails.getPdfs());
 
                     idOfCar = carData.getData().getId();
                     setTextData(carData.getData());
@@ -386,6 +410,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         saveAllNewResultsFloatingActionButton.hide();
         addImageFloatingButton.hide();
         addDocFloatingButton.hide();
+        addPdfFloatingButton.hide();
 
         releaseStateCheckBox.setEnabled(false);
         releaseTypeSpinner.setEnabled(false);
@@ -407,19 +432,23 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         loaderPanel = (RelativeLayout)findViewById(R.id.loaderPanel);
         recyclerViewImages = (RecyclerView) findViewById(R.id.recyclerViewForImages);
         recyclerViewDocs = (RecyclerView) findViewById(R.id.recyclerViewForDocs);
+        recyclerViewPdfs = (RecyclerView) findViewById(R.id.recyclerViewForPdfs);
 
 
         layoutForDocs = (RelativeLayout) findViewById(R.id.layoutForDocs);
         layoutForImages = (RelativeLayout) findViewById(R.id.layoutForImages);
+        layoutForPdfs = (RelativeLayout) findViewById(R.id.layoutForPdfs);
 
 
         addImageFloatingButton=(FloatingActionButton)findViewById(R.id.addImageFloating);
         addDocFloatingButton=(FloatingActionButton)findViewById(R.id.addDocFloating);
+        addPdfFloatingButton=(FloatingActionButton)findViewById(R.id.addPdfFloating);
         saveAllNewResultsFloatingActionButton=(FloatingActionButton)findViewById(R.id.saveAllNewResults);
 
 
         imagesButton = (Button) findViewById(R.id.ImagesButton);
         DocsButton = (Button) findViewById(R.id.DocumentsButton);
+        PdfsButton = (Button) findViewById(R.id.PdfsButton);
 
 
         vinEdit= (EditText)findViewById(R.id.vinEdit);
@@ -469,6 +498,14 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         recyclerViewDocs.setHasFixedSize(true);
         recyclerViewDocs.setLayoutManager(layoutManager2);
         recyclerViewDocs.setAdapter(adapterForDocs);
+
+
+        Log.v("AhmedDakrory","Size of Pdfs"+carData.getPdfs().size());
+        adapterForPdfs = new vehicalPdfsAdapter(recyclerViewPdfs,carData.getPdfs(),vehicalView.this);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(vehicalView.this,4);
+        recyclerViewPdfs.setHasFixedSize(true);
+        recyclerViewPdfs.setLayoutManager(gridLayoutManager);
+        recyclerViewPdfs.setAdapter(adapterForPdfs);
     }
 
     private void getAllDataToAdapter() {
@@ -509,6 +546,10 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                         carData.getDocs().addAll(car_data.getDocs());
                         Log.v("AhmedDakrory", "Size of Images" + carData.getDocs().size());
                         adapterForDocs.notifyDataSetChanged();
+
+                        carData.getPdfs().addAll(car_data.getPdfs());
+                        Log.v("AhmedDakrory", "Size of Pdfs" + carData.getPdfs().size());
+                        adapterForPdfs.notifyDataSetChanged();
 
                         setTextData(carData.getData());
                         loaderPanel.setVisibility(View.GONE);
@@ -623,22 +664,69 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
         }
 
+    DialogInterface.OnClickListener dialogImageClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    //Yes button clicked
+                    captureImage(Constants.TypeImageForServer);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    storageImage(Constants.TypeImageForServer);
+                    break;
+            }
+        }
+    };
+
+    DialogInterface.OnClickListener dialogDocClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    //Yes button clicked
+                    captureImage(Constants.TypeDocForServer);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    storageImage(Constants.TypeDocForServer);
+                    break;
+            }
+        }
+    };
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.ImagesButton){
             //ShowImages
             layoutForImages.setVisibility(View.VISIBLE);
             layoutForDocs.setVisibility(View.GONE);
+            layoutForPdfs.setVisibility(View.GONE);
         }else if(v.getId()==R.id.DocumentsButton){
             layoutForImages.setVisibility(View.GONE);
             layoutForDocs.setVisibility(View.VISIBLE);
+            layoutForPdfs.setVisibility(View.GONE);
+        }else if(v.getId()==R.id.PdfsButton){
+            layoutForImages.setVisibility(View.GONE);
+            layoutForDocs.setVisibility(View.GONE);
+            layoutForPdfs.setVisibility(View.VISIBLE);
         }else if(v.getId()==R.id.addImageFloating){
             Log.v("AhmedDakrory","ButtonImage");
-            captureImage(Constants.TypeImageForServer);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("From Camera or Storage?").setPositiveButton("Camera", dialogImageClickListener)
+                    .setNegativeButton("Storage", dialogImageClickListener).show();
         }else if(v.getId()==R.id.addDocFloating){
             Log.v("AhmedDakrory","ButtonDoc");
-            captureImage(Constants.TypeDocForServer);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("From Camera or Storage?").setPositiveButton("Camera", dialogDocClickListener)
+                    .setNegativeButton("Storage", dialogDocClickListener).show();
 
+        }else if(v.getId()==R.id.addPdfFloating){
+            Log.v("AhmedDakrory","ButtonDoc");
+           // captureImage(Constants.TypePdfForServer);
+            storagePdf(Constants.TypePdfForServer);
         }else if(v.getId()==R.id.saveAllNewResults){
             addNewCarToServer();
         }else if(v.getId()==R.id.setReleaseDate){
@@ -657,6 +745,56 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         dpd.show(getFragmentManager(), "Release Date");
     }
 
+    private void storagePdf(int typeForPdf) {
+
+        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+
+
+            ActivityCompat.requestPermissions(vehicalView.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    3);
+        }else {
+            String[] mimeTypes =
+                    { "application/pdf"};
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                intent.setType(mimeTypes.length == 1 ? mimeTypes[0] : "*/*");
+                if (mimeTypes.length > 0) {
+                    intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+                }
+            } else {
+                String mimeTypesStr = "";
+                for (String mimeType : mimeTypes) {
+                    mimeTypesStr += mimeType + "|";
+                }
+                intent.setType(mimeTypesStr.substring(0,mimeTypesStr.length() - 1));
+            }
+            startActivityForResult(Intent.createChooser(intent,"ChooseFile"), typeForPdf);
+            Log.v("AhmedDakrory","Type1: "+typeForPdf);
+
+        }
+    }
+
+    private void storageImage(int typeForImageOrDoc) {
+
+        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+
+
+            ActivityCompat.requestPermissions(vehicalView.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    3);
+        }else {
+            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+            photoPickerIntent.setType("image/*");
+            Log.v("AhmedDakrory","Type1: "+typeForImageOrDoc);
+            startActivityForResult(photoPickerIntent, typeForImageOrDoc);
+        }
+    }
 
     private void captureImage(int typeForImageOrDoc) {
 
@@ -750,6 +888,43 @@ if(carData.getData().getId()!=0) {
         recyclerViewDocs.scrollToPosition(adapterForDocs.getItemCount() - 1);
     }
 
+
+    else if (typeForImageOrDoc == Constants.TypePdfForServer) {
+        carData.getPdfs().add(new vehicalsDetails.urlItem(file.getPath(), vehicalsDetails.TYPE_FILE, new CallBackViewChanger() {
+            @Override
+            public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
+                new FileUploader().uploadFile(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
+                    @Override
+                    public void onError(Throwable t) {
+                        Toast.makeText(vehicalView.this, "Some error occurred...", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFinish(Response<MyResponse> response) {
+                        Log.v("AhmedDakrory:", "Finish");
+                        MyResponse response1 = response.body();
+                        loader.setVisibility(View.GONE);
+                        overlayView.setVisibility(View.GONE);
+                        markView.setTextColor(vehicalView.this.getResources().getColor(R.color.colorGreenSign));
+
+                        Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onProgressUpdate(int currentpercent, int totalpercent) {
+
+                        loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
+                        //Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
+                    }
+                }, typeForImageOrDoc);
+            }
+        }));
+
+
+        adapterForPdfs.notifyItemInserted(adapterForPdfs.getItemCount() - 1);
+        recyclerViewPdfs.scrollToPosition(adapterForPdfs.getItemCount() - 1);
+    }
+
 }else{
     Toast.makeText(this,"Problem For Car",Toast.LENGTH_LONG).show();
 }
@@ -758,8 +933,37 @@ if(carData.getData().getId()!=0) {
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == Constants.TypeDocForServer){
+            if(resultCode == RESULT_OK) {
+                final Uri imageUri = data.getData();
+                String selectedFilePath = FilePath.getPath(this, imageUri);
+                final File file = new File(selectedFilePath);
 
-        if(requestCode!=100) {
+                Log.v("AhmedDakrory", "Type: "+Constants.TypeDocForServer);
+                uploadFileAndAddToAdapter(file,Constants.TypeDocForServer);
+                Log.v("AhmedDakrory", imageUri.getPath());
+            }
+        }else if(requestCode == Constants.TypeImageForServer){
+            if(resultCode == RESULT_OK) {
+                final Uri imageUri = data.getData();
+                String selectedFilePath = FilePath.getPath(this, imageUri);
+                final File file = new File(selectedFilePath);
+                Log.v("AhmedDakrory", "Type: "+Constants.TypeImageForServer);
+                uploadFileAndAddToAdapter(file,Constants.TypeImageForServer);
+                Log.v("AhmedDakrory", imageUri.getPath());
+            }
+        }else if(requestCode == Constants.TypePdfForServer){
+            Log.v("AhmedDakrory", "Type: "+Constants.TypePdfForServer);
+            if(resultCode == RESULT_OK) {
+                final Uri imageUri = data.getData();
+                String selectedFilePath = FilePath.getPath(this, imageUri);
+                final File file = new File(selectedFilePath);
+                Log.v("AhmedDakrory", "Type: "+Constants.TypePdfForServer);
+                uploadFileAndAddToAdapter(file,Constants.TypePdfForServer);
+                Log.v("AhmedDakrory", imageUri.getPath());
+            }
+        }else if(requestCode!=100) {
+            Log.v("AhmedDakrory", "Ok");
 
             EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
 

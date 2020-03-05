@@ -21,6 +21,9 @@ public class vehicalsDetails {
     @SerializedName("docs")
     private List<urlItem> docs;
 
+    @SerializedName("pdfs")
+    private List<urlItem> pdfs;
+
     @SerializedName("data")
     private carDetails data;
 
@@ -560,5 +563,13 @@ public class vehicalsDetails {
 
     public void setData(carDetails data) {
         this.data = data;
+    }
+
+    public List<urlItem> getPdfs() {
+        return pdfs;
+    }
+
+    public void setPdfs(List<urlItem> pdfs) {
+        this.pdfs = pdfs;
     }
 }
