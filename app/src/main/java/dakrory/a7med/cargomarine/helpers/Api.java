@@ -26,7 +26,7 @@ import retrofit2.http.Part;
 
 public interface Api {
 
-    String BASE_URL = "http://cargomarin.com:8083";
+    String BASE_URL = "http://143.244.151.25:8083";
 
 
     @Multipart
