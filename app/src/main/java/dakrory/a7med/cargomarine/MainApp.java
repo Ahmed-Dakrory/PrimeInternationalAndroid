@@ -5,9 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +15,6 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -29,7 +25,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.userImage;
-import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.fragmentsMainApp.UserDetails;
 import dakrory.a7med.cargomarine.fragmentsMainApp.vehicals;
 import dakrory.a7med.cargomarine.helpers.Api;
@@ -69,8 +64,8 @@ public class MainApp extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_app);
 
-        vehicalsFragment =vehicals.newInstance();
-        userDetailsFragment=UserDetails.newInstance();
+        vehicalsFragment = vehicals.newInstance();
+        userDetailsFragment= UserDetails.newInstance();
 
 
         if (savedInstanceState == null) {

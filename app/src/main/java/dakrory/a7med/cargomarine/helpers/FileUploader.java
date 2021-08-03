@@ -2,23 +2,17 @@ package dakrory.a7med.cargomarine.helpers;
 
 
 import android.app.Activity;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import androidx.loader.content.CursorLoader;
 
 import dakrory.a7med.cargomarine.R;
 import okhttp3.MediaType;

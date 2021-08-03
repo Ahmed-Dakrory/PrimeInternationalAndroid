@@ -1,8 +1,6 @@
 package dakrory.a7med.cargomarine.CustomViews;
 
 
-import java.io.File;
-
 public class MyImageData {
     private String description;
     private String imgUrl;

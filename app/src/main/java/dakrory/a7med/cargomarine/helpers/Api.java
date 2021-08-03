@@ -1,7 +1,5 @@
 package dakrory.a7med.cargomarine.helpers;
 
-import com.google.gson.JsonObject;
-
 import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.userImage;
 import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;

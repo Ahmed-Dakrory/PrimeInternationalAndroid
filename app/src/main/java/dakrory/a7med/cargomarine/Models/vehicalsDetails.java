@@ -2,7 +2,6 @@ package dakrory.a7med.cargomarine.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
 import java.util.List;
 
 import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;

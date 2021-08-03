@@ -1,26 +1,14 @@
 package dakrory.a7med.cargomarine;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.jsibbold.zoomage.ZoomageView;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
 
 import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.helpers.Constants;

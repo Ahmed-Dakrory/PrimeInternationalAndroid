@@ -11,17 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.adprogressbarlib.AdCircleProgress;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
@@ -29,10 +26,8 @@ import java.util.List;
 import dakrory.a7med.cargomarine.BuildConfig;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.R;
-import dakrory.a7med.cargomarine.ViewFullImage;
 import dakrory.a7med.cargomarine.ViewFullPdf;
 import dakrory.a7med.cargomarine.helpers.Constants;
-import dakrory.a7med.cargomarine.helpers.FilePath;
 
 
 public class vehicalPdfsAdapter extends RecyclerView.Adapter<vehicalPdfsAdapter.ViewHolder> {

@@ -12,8 +12,8 @@ public class Constants {
     public static final int RESULT_LOAD_IMG = 33;
     public static String ImageUrl_INTENT="ImageUrl_INTENT";
     public static String ImageUrl_Type="ImageType_INTENT";
-    public static String ImageBaseUrl="http://143.244.151.25/images?file=";
-    public static String PdfBaseUrl="http://143.244.151.25/images/?file=";
+    public static String ImageBaseUrl="https://primeshippingllc.com/images?file=";
+    public static String PdfBaseUrl="https://primeshippingllc.com/images/?file=";
     public static final int TypeImageForServer = 0;
     public static final int TypeDocForServer = 1;
     public static final int TypePdfForServer = 2;

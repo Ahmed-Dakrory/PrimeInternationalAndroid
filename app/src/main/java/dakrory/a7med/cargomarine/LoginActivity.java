@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,15 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
-import dakrory.a7med.cargomarine.Models.encryption.Base64;
-import dakrory.a7med.cargomarine.Models.encryption.Hex;
 import dakrory.a7med.cargomarine.Models.encryption.encrypt;
 import dakrory.a7med.cargomarine.Models.userData;
-import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.helpers.Api;
 import dakrory.a7med.cargomarine.helpers.modelsFunctions;
 import retrofit2.Call;

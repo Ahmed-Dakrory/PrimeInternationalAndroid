@@ -2,26 +2,18 @@ package dakrory.a7med.cargomarine;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -38,7 +30,6 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -46,9 +37,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,12 +44,10 @@ import java.util.Date;
 import java.util.List;
 
 import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
-import dakrory.a7med.cargomarine.CustomViews.MyImageData;
 import dakrory.a7med.cargomarine.CustomViews.vehicalImagesAdapter;
 import dakrory.a7med.cargomarine.CustomViews.vehicalPdfsAdapter;
 import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails;
-import dakrory.a7med.cargomarine.Models.vehicalsDetails.carDetails;
 import dakrory.a7med.cargomarine.Models.vinDetails;
 import dakrory.a7med.cargomarine.helpers.Api;
 import dakrory.a7med.cargomarine.helpers.Constants;
@@ -155,7 +141,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehical_view);
         carData=new vehicalsDetails();
-        carData.setData(new carDetails());
+        carData.setData(new vehicalsDetails.carDetails());
         carData.setImages(new ArrayList<vehicalsDetails.urlItem>());
         carData.setDocs(new ArrayList<vehicalsDetails.urlItem>());
         carData.setPdfs(new ArrayList<vehicalsDetails.urlItem>());
@@ -286,7 +272,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                 public void onResponse(Call<vinDetails> call, Response<vinDetails> response) {
                     vinDetails car = response.body();
                     if (car != null) {
-                        vehicalsDetails.carDetails dataOfCar = new carDetails();
+                        vehicalsDetails.carDetails dataOfCar = new vehicalsDetails.carDetails();
                         dataOfCar.setState(0);
                         dataOfCar.setUuid(vinNew);
                         dataOfCar.setMake(car.Results.get(0).Make);

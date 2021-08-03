@@ -20,7 +20,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.Models.vehicalsDataAllList.vehicalItemOfAllList;
 import dakrory.a7med.cargomarine.R;
 import dakrory.a7med.cargomarine.helpers.Constants;
