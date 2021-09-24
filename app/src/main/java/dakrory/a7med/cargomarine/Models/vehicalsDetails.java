@@ -226,6 +226,31 @@ public class vehicalsDetails {
         private String etd="";
 
 
+
+        @SerializedName("dateOfDriverSignture")
+        private String dateOfDriverSignture="";
+
+
+        @SerializedName("urlOfDriverSignture")
+        private String urlOfDriverSignture="";
+
+
+        public String getDateOfDriverSignture() {
+            return dateOfDriverSignture;
+        }
+
+        public void setDateOfDriverSignture(String dateOfDriverSignture) {
+            this.dateOfDriverSignture = dateOfDriverSignture;
+        }
+
+        public String getUrlOfDriverSignture() {
+            return urlOfDriverSignture;
+        }
+
+        public void setUrlOfDriverSignture(String urlOfDriverSignture) {
+            this.urlOfDriverSignture = urlOfDriverSignture;
+        }
+
         public int getId() {
             return id;
         }

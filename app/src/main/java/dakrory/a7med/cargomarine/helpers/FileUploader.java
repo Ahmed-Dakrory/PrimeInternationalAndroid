@@ -32,7 +32,7 @@ public class FileUploader {
     private long totalFileUploaded = 0;
 
 
-
+    //Responsible for upload Images and Doc
     public void uploadFile(String fileName, int carId, final Activity activity, final FileUploaderCallback fileUploaderCallback,int type) {
 
         this.fileUploaderCallback=fileUploaderCallback;
@@ -92,6 +92,69 @@ public class FileUploader {
         }
     }
 
+
+
+    //Responsible for upload Signiture Image
+    public void uploadSignitureOfDriver(String fileName, int carId, final Activity activity, final FileUploaderCallback fileUploaderCallback) {
+
+        this.fileUploaderCallback=fileUploaderCallback;
+        File file  = new File(fileName);
+        //creating a file
+        totalFileLength = totalFileLength + file.length();
+        PRRequestBodyForDriverSigniture fileBody = new PRRequestBodyForDriverSigniture(file);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), fileBody);
+
+
+        Log.v("AhmedDakrory:","Start Upload2 LEngth: "+String.valueOf(totalFileLength));
+        //The gson builder
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+
+        //creating retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Api.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        //creating our api
+        Api api = retrofit.create(Api.class);
+
+        Log.v("AhmedDakrory:","Start Upload3");
+        //creating a call and calling the upload image method
+        Call<MyResponse> call = api.uploadSignitureOfDriver(filePart, carId);
+        if(modelsFunctions.checkNetworkStatus(activity)) {
+            //finally performing the call
+            call.enqueue(new Callback<MyResponse>() {
+                @Override
+                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                    fileUploaderCallback.onFinish(response);
+                    Log.v("AhmedDakrory:", "Start Response");
+                }
+
+                @Override
+                public void onFailure(Call<MyResponse> responseCall, Throwable t) {
+
+                    fileUploaderCallback.onError(t);
+                    Log.v("AhmedDakrory:", "Start Error");
+                    Log.v("AhmedDakrory:", t.getMessage());
+                    Log.v("AhmedDakrory:", t.toString());
+                    Toast.makeText(activity.getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }else{
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+
     public interface FileUploaderCallback{
         void onError(Throwable t);
         void onFinish(Response<MyResponse> response);
@@ -146,6 +209,55 @@ public class FileUploader {
             }
         }
     }
+
+
+
+
+    public class PRRequestBodyForDriverSigniture extends RequestBody {
+        private File mFile;
+        private static final int DEFAULT_BUFFER_SIZE = 50000;
+
+        public PRRequestBodyForDriverSigniture(final File file) {
+            mFile = file;
+
+        }
+
+        @Override
+        public MediaType contentType() {
+            // i want to upload only images
+
+                return MediaType.parse("image/*");
+
+        }
+
+        @Override
+        public long contentLength() throws IOException {
+            return mFile.length();
+        }
+
+        @Override
+        public void writeTo(BufferedSink sink) throws IOException {
+            long fileLength = mFile.length();
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            FileInputStream in = new FileInputStream(mFile);
+            long uploaded = 0;
+
+            try {
+                int read;
+                Handler handler = new Handler(Looper.getMainLooper());
+                while ((read = in.read(buffer)) != -1) {
+
+                    // update progress on UI thread
+                    handler.post(new ProgressUpdater(uploaded, fileLength));
+                    uploaded += read;
+                    sink.write(buffer, 0, read);
+                }
+            } finally {
+                in.close();
+            }
+        }
+    }
+
 
 
     private class ProgressUpdater implements Runnable {

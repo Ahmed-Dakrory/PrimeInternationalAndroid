@@ -2,12 +2,16 @@ package dakrory.a7med.cargomarine;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -23,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.adprogressbarlib.AdCircleProgress;
+import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,7 +42,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -136,9 +146,24 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     userData thisAccountUserData = LoginActivity.thisAccountCredData;
 
 
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private SignaturePad mSignaturePadForDriver;
+    private Button mClearButtonForDriver;
+    private Button mSaveButtonForDriver;
+
+
+    public TextView TimeStampForSigniture;
+    public TextView overlayViewDriverSign;
+    public AdCircleProgress loaderDriverSign;
+    public ImageView imageDriverSignView;
+    public TextView markDriverSignView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        verifyStoragePermissions(this);
         setContentView(R.layout.activity_vehical_view);
         carData=new vehicalsDetails();
         carData.setData(new vehicalsDetails.carDetails());
@@ -236,6 +261,30 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             }
         });
 
+
+
+        mSignaturePadForDriver.setOnSignedListener(new SignaturePad.OnSignedListener() {
+            @Override
+            public void onStartSigning() {
+            //    Toast.makeText(vehicalView.this, "You are Signing Now", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSigned() {
+                mSaveButtonForDriver.setEnabled(true);
+                mClearButtonForDriver.setEnabled(true);
+            }
+
+            @Override
+            public void onClear() {
+                mSaveButtonForDriver.setEnabled(false);
+                mClearButtonForDriver.setEnabled(false);
+            }
+        });
+
+
+        mClearButtonForDriver.setOnClickListener(this);
+        mSaveButtonForDriver.setOnClickListener(this);
 
 
     }
@@ -492,6 +541,22 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         recyclerViewPdfs.setHasFixedSize(true);
         recyclerViewPdfs.setLayoutManager(gridLayoutManager);
         recyclerViewPdfs.setAdapter(adapterForPdfs);
+
+
+
+
+
+
+        //Define Driver Signiture
+        mSignaturePadForDriver = (SignaturePad) findViewById(R.id.signature_padForDriverSign);
+        mClearButtonForDriver = (Button) findViewById(R.id.clear_buttonForDriverSign);
+        mSaveButtonForDriver = (Button) findViewById(R.id.save_buttonForDriverSign);
+
+
+        overlayViewDriverSign = (TextView)findViewById(R.id.backgroundWhiteDriverSign);
+        markDriverSignView = (TextView)findViewById(R.id.markDriverSign);
+        loaderDriverSign = (AdCircleProgress) findViewById(R.id.donut_progressDriverSign);
+        TimeStampForSigniture = (TextView) findViewById(R.id.TimeStampForSigniture);
     }
 
     private void getAllDataToAdapter() {
@@ -573,6 +638,32 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         engineTypeEdit.setText(String.valueOf(data.getEngineType()));
 
 
+        try{
+            Log.v("AhmedDakrory","Image Loading");
+            String imageDriverSign = Constants.ImageBaseUrl +data.getUrlOfDriverSignture();
+            final URL url = new URL(imageDriverSign);
+            TimeStampForSigniture.setText(data.getDateOfDriverSignture());
+            Thread thread = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try  {
+                        //Your code goes here
+
+                        Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        mSignaturePadForDriver.setSignatureBitmap(image);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
+
+        }catch (Exception ex){
+
+            Log.v("AhmedDakrory","Error Image Loading"+ex.toString());
+        }
         setTextUsernameToField(mainUserName,data.getUserfirstName(),data.getUserlastName());
         setTextUsernameToField(main2UserName,data.getMainTwofirstName(),data.getMainTwolastName());
         setTextUsernameToField(shipperUserName,data.getShipperfirstName(),data.getShipperlastName());
@@ -717,6 +808,43 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             addNewCarToServer();
         }else if(v.getId()==R.id.setReleaseDate){
             selectDateToRelease();
+        }else if(v.getId()==R.id.save_buttonForDriverSign){
+            Bitmap signatureBitmap = mSignaturePadForDriver.getSignatureBitmap();
+
+            final File file = bitmapToFile(vehicalView.this,signatureBitmap,"tempSigniture");
+
+            uploadFileAndAddToAdapter(file,Constants.TypeSignitureForDriverForServer);
+
+            Toast.makeText(vehicalView.this, "Signature saved", Toast.LENGTH_SHORT).show();
+        }else if(v.getId()==R.id.clear_buttonForDriverSign){
+            mSignaturePadForDriver.clear();
+        }
+    }
+
+
+    public static File bitmapToFile(Context context, Bitmap bitmap, String fileNameToSave) { // File name like "image.png"
+        File f3=new File("/sdcard/Download/"+fileNameToSave+"/");
+        if(!f3.exists())
+            f3.mkdirs();
+        OutputStream outStream = null;
+        Log.v("AhmedDakrory",f3.getPath());
+        File file = new File("/sdcard/Download/"+fileNameToSave+"/seconds"+".jpeg");
+        try {
+            outStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outStream);
+            outStream.close();
+
+            Log.v("AhmedDakrory","File maked2");
+            return file;
+//            Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Log.v("AhmedDakrory","Error File maked");
+            Log.v("AhmedDakrory",e.getMessage());
+
+            Log.v("AhmedDakrory",e.toString());
+            return file;
         }
     }
 
@@ -782,6 +910,13 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         }
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Clear the Activity's bundle of the subsidiary fragments' bundles.
+        outState.clear();
+    }
     private void captureImage(int typeForImageOrDoc) {
 
         if(ContextCompat.checkSelfPermission(vehicalView.this, Manifest.permission.CAMERA)
@@ -838,7 +973,54 @@ if(carData.getData().getId()!=0) {
 
         adapterForImages.notifyItemInserted(adapterForImages.getItemCount() - 1);
         recyclerViewImages.scrollToPosition(adapterForImages.getItemCount() - 1);
-    } else if (typeForImageOrDoc == Constants.TypeDocForServer) {
+    }
+
+    else if (typeForImageOrDoc == Constants.TypeSignitureForDriverForServer) {
+
+        Log.v("AhmedDakrory", typeForImageOrDoc + " :Ok");
+     CallBackViewChanger viewChanger1 =   new CallBackViewChanger() {
+            @Override
+            public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
+
+
+
+
+                new FileUploader().uploadSignitureOfDriver(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
+                    @Override
+                    public void onError(Throwable t) {
+
+                        Toast.makeText(vehicalView.this, "Some error occurred...", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFinish(Response<MyResponse> response) {
+                        Log.v("AhmedDakrory:", "Finish");
+                        MyResponse response1 = response.body();
+                        loader.setVisibility(View.GONE);
+                        overlayView.setVisibility(View.GONE);
+                        markView.setTextColor(vehicalView.this.getResources().getColor(R.color.colorGreenSign));
+                        file.delete();
+                        Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onProgressUpdate(int currentpercent, int totalpercent) {
+                        loader.setVisibility(View.VISIBLE);
+                        overlayView.setVisibility(View.VISIBLE);
+                        loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
+                         Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
+                    }
+                });
+            }
+        };
+
+        viewChanger1.setViewToPercentage(loaderDriverSign,overlayViewDriverSign,markDriverSignView);
+
+       //Update Map
+    }
+
+
+    else if (typeForImageOrDoc == Constants.TypeDocForServer) {
         carData.getDocs().add(new vehicalsDetails.urlItem(file.getPath(), vehicalsDetails.TYPE_FILE, new CallBackViewChanger() {
             @Override
             public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
@@ -911,14 +1093,15 @@ if(carData.getData().getId()!=0) {
         recyclerViewPdfs.scrollToPosition(adapterForPdfs.getItemCount() - 1);
     }
 
-}else{
-    Toast.makeText(this,"Problem For Car",Toast.LENGTH_LONG).show();
-}
+    }else{
+        Toast.makeText(this,"Problem For Car",Toast.LENGTH_LONG).show();
+    }
     }
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.v("AhmedDakrory","Returned");
         if(requestCode == Constants.TypeDocForServer){
             if(resultCode == RESULT_OK) {
                 final Uri imageUri = data.getData();
@@ -929,7 +1112,8 @@ if(carData.getData().getId()!=0) {
                 uploadFileAndAddToAdapter(file,Constants.TypeDocForServer);
                 Log.v("AhmedDakrory", imageUri.getPath());
             }
-        }else if(requestCode == Constants.TypeImageForServer){
+        }
+        else if(requestCode == Constants.TypeImageForServer){
             if(resultCode == RESULT_OK) {
                 final Uri imageUri = data.getData();
                 String selectedFilePath = FilePath.getPath(this, imageUri);
@@ -938,7 +1122,8 @@ if(carData.getData().getId()!=0) {
                 uploadFileAndAddToAdapter(file,Constants.TypeImageForServer);
                 Log.v("AhmedDakrory", imageUri.getPath());
             }
-        }else if(requestCode == Constants.TypePdfForServer){
+        }
+        else if(requestCode == Constants.TypePdfForServer){
             Log.v("AhmedDakrory", "Type: "+Constants.TypePdfForServer);
             if(resultCode == RESULT_OK) {
                 final Uri imageUri = data.getData();
@@ -948,7 +1133,8 @@ if(carData.getData().getId()!=0) {
                 uploadFileAndAddToAdapter(file,Constants.TypePdfForServer);
                 Log.v("AhmedDakrory", imageUri.getPath());
             }
-        }else if(requestCode!=100) {
+        }
+        else if(requestCode!=100) {
             Log.v("AhmedDakrory", "Ok");
 
             EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
@@ -1017,5 +1203,27 @@ if(carData.getData().getId()!=0) {
 
         carData.getData().setReleaseDate(format1.format(date));
         setTextData(carData.getData());
+    }
+
+
+    /**
+     * Checks if the app has permission to write to device storage
+     * <p/>
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity the activity from which permissions are checked
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 }

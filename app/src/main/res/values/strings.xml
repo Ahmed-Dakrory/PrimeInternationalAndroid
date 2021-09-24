@@ -72,4 +72,10 @@
     <string name="Pdfs">Pdfs</string>
     <string name="remote_pdf_url">Remote PDF URL</string>
     <string name="download">Tap to start download</string>
+    <string name="DriverSigniture">Driver Signiture</string>
+
+
+    <string name="agreementForDriverDeliver">I have deliver the vehicle.</string>
+    <string name="clear_pad">Clear Pad</string>
+    <string name="save_signature">Save Signature</string>
 </resources>

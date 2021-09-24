@@ -32,6 +32,11 @@ public interface Api {
     Call<MyResponse> uploadImage(@Part MultipartBody.Part file, @Part("carId") int carId, @Part("type") int type);
 
 
+    @Multipart
+    @POST("Api.php?apicall=uploadSignitureOfDriver")
+    Call<MyResponse> uploadSignitureOfDriver(@Part MultipartBody.Part file, @Part("carId") int carId);
+
+
     @FormUrlEncoded
     @POST("Api.php?apicall=getImageFromUserId")
     Call<userImage> getImageFromUserId(@Field("userId") int userId);
