@@ -27,4 +27,18 @@
         <item>RELEASE Container</item>
     </string-array>
 
+
+    <string-array name="VehicleTypes">
+        <item>Coupe</item>
+        <item>Motor Cycle</item>
+        <item>Pickup 2 Doors</item>
+        <item>Pickup 4 Doors</item>
+        <item>Sedan</item>
+        <item>SUV</item>
+        <item>Truck (day cab)</item>
+        <item>Truck (With Sleeper)</item>
+        <item>Van</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>

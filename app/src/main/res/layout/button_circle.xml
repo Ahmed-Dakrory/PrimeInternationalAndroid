@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/designbutton"
+        android:layout_margin="5dp"
+        android:textColor="@color/whitesmall"
+        android:textSize="@dimen/fontCircule"
+        android:text="MS"
+        android:id="@+id/buttonOfDamage"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/textViewOfDamage"
+        android:textColor="@color/whitesmall"
+        android:textSize="@dimen/smallnote"
+        android:text="Multiple Scratches"
+        />
+
+
+</LinearLayout>

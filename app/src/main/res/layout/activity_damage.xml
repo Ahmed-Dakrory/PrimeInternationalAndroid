@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="dakrory.a7med.cargomarine.damageActivity">
+
+
+    <LinearLayout
+        android:layout_width="65dp"
+        android:layout_height="match_parent"
+        android:background="#5F5F5F"
+        android:id="@+id/layoutOfButtons"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/allCirculesNotes">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_marginLeft="65dp"
+        android:layout_marginRight="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageContainer">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="30dp"
+            android:background="#F8F8F8"
+            android:src="@mipmap/sedan"
+            android:scaleType="fitXY"
+            android:id="@+id/imageOfMainVehicle">
+
+        </ImageView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_alignParentEnd="true"
+        android:layout_width="100dp"
+        android:padding="15dp"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:text="Remove All"
+            android:textColor="#fff"
+            android:id="@+id/removeAllButtonCircles"
+            android:background="@drawable/design_cancel_button"/>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="50dp"
+            android:text="Save"
+            android:textColor="#fff"
+            android:id="@+id/saveallTags"
+            android:background="@drawable/design_save_button"/>
+
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:text="Back"
+            android:textColor="#fff"
+            android:id="@+id/returnback"
+            android:background="@drawable/design_save_button"/>
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

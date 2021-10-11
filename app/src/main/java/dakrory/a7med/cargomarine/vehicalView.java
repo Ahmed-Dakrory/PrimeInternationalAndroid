@@ -88,6 +88,12 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     RelativeLayout layoutForDocs;
     RelativeLayout layoutForPdfs;
 
+
+
+
+    FloatingActionButton addDamageFloatingButton;
+
+
     FloatingActionButton addImageFloatingButton;
     FloatingActionButton addDocFloatingButton;
     FloatingActionButton addPdfFloatingButton;
@@ -107,6 +113,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     EditText ModelEdit;
     EditText MakeEdit;
     EditText YearEdit;
+    Spinner typeSelect;
     EditText descriptionEdit;
     EditText assemlyCountryEdit;
     EditText colorEdit;
@@ -135,7 +142,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     int idOfCar=-1;
     int Mode;
     private boolean AllowedToModify = false;
-    vehicalsDetails carData;
+    static vehicalsDetails carData;
 
 
     //Add New Variables
@@ -182,6 +189,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
 
 
+        addDamageFloatingButton.setOnClickListener(this);
         addImageFloatingButton.setOnClickListener(this);
         addDocFloatingButton.setOnClickListener(this);
         addPdfFloatingButton.setOnClickListener(this);
@@ -369,6 +377,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         carData.getData().setModel(ModelEdit.getText().toString());
         carData.getData().setMake(MakeEdit.getText().toString());
         carData.getData().setYear(YearEdit.getText().toString());
+        carData.getData().setType(typeSelect.getSelectedItem().toString());
         carData.getData().setDescription(descriptionEdit.getText().toString());
         carData.getData().setAssemlyCountry(assemlyCountryEdit.getText().toString());
         carData.getData().setColor(colorEdit.getText().toString());
@@ -434,6 +443,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         ModelEdit.setKeyListener(null);
         MakeEdit.setKeyListener(null);
         YearEdit.setKeyListener(null);
+        typeSelect.setSelection(0);
         descriptionEdit.setKeyListener(null);
         assemlyCountryEdit.setKeyListener(null);
         colorEdit.setKeyListener(null);
@@ -474,7 +484,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         layoutForImages = (RelativeLayout) findViewById(R.id.layoutForImages);
         layoutForPdfs = (RelativeLayout) findViewById(R.id.layoutForPdfs);
 
-
+        addDamageFloatingButton=(FloatingActionButton)findViewById(R.id.setAllDamages);
         addImageFloatingButton=(FloatingActionButton)findViewById(R.id.addImageFloating);
         addDocFloatingButton=(FloatingActionButton)findViewById(R.id.addDocFloating);
         addPdfFloatingButton=(FloatingActionButton)findViewById(R.id.addPdfFloating);
@@ -490,6 +500,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         ModelEdit= (EditText)findViewById(R.id.modelEdit);
         MakeEdit= (EditText)findViewById(R.id.makeEdit);
         YearEdit= (EditText)findViewById(R.id.yearEdit);
+        typeSelect = (Spinner) findViewById(R.id.typeSelect);
         descriptionEdit= (EditText)findViewById(R.id.descriptionEdit);
         assemlyCountryEdit= (EditText)findViewById(R.id.assemlyCountryEdit);
         colorEdit= (EditText)findViewById(R.id.colorEdit);
@@ -625,11 +636,23 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         }
     }
 
+    //private method of your class
+    private int getIndex(Spinner spinner, String myString){
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
     private void setTextData(vehicalsDetails.carDetails data) {
          vinEdit.setText(String.valueOf(data.getUuid()));
          ModelEdit.setText(String.valueOf(data.getModel()));
          MakeEdit.setText(String.valueOf(data.getMake()));
          YearEdit.setText(String.valueOf(data.getYear()));
+         typeSelect.setSelection(getIndex(typeSelect,String.valueOf(data.getType())));
          descriptionEdit.setText(String.valueOf(data.getDescription()));
          assemlyCountryEdit.setText(String.valueOf(data.getAssemlyCountry()));
          colorEdit.setText(String.valueOf(data.getColor()));
@@ -794,6 +817,11 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("From Camera or Storage?").setPositiveButton("Camera", dialogImageClickListener)
                     .setNegativeButton("Storage", dialogImageClickListener).show();
+        }else if(v.getId()==R.id.setAllDamages){
+            Log.v("AhmedDakrory","ButtonImage");
+            Intent openDamage = new Intent(vehicalView.this,damageActivity.class);
+            openDamage.putExtra("TYPE",typeSelect.getSelectedItem().toString());
+            startActivity(openDamage);
         }else if(v.getId()==R.id.addDocFloating){
             Log.v("AhmedDakrory","ButtonDoc");
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

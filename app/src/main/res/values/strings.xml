@@ -78,4 +78,5 @@
     <string name="agreementForDriverDeliver">I have deliver the vehicle.</string>
     <string name="clear_pad">Clear Pad</string>
     <string name="save_signature">Save Signature</string>
+    <string name="TYPE">Type</string>
 </resources>

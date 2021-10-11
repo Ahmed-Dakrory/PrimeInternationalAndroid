@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#557F94</color>
     <color name="colorAccent">#557F94</color>
     <color name="colorGreenSign">#C4FF00</color>
+    <color name="gray">#C4C1C1</color>
+    <color name="whitesmall">#F1F1F1</color>
+    <color name="orangeButton">#F1C424</color>
 </resources>

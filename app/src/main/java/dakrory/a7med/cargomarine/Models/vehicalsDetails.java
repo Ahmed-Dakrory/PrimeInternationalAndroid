@@ -159,6 +159,11 @@ public class vehicalsDetails {
         private String year="";
 
 
+
+        @SerializedName("type")
+        private String type="";
+
+
         @SerializedName("bodyStyle")
         private String bodyStyle="";
 
@@ -190,6 +195,12 @@ public class vehicalsDetails {
 
         @SerializedName("state")
         private int state;
+
+
+
+        @SerializedName("carAllTagsOfCrash")
+        private String carAllTagsOfCrash;
+
 
 
         @SerializedName("releaseOption")
@@ -234,6 +245,22 @@ public class vehicalsDetails {
         @SerializedName("urlOfDriverSignture")
         private String urlOfDriverSignture="";
 
+
+        public String getCarAllTagsOfCrash() {
+            return carAllTagsOfCrash;
+        }
+
+        public void setCarAllTagsOfCrash(String carAllTagsOfCrash) {
+            this.carAllTagsOfCrash = carAllTagsOfCrash;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
 
         public String getDateOfDriverSignture() {
             return dateOfDriverSignture;

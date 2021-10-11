@@ -11,4 +11,6 @@
     <dimen name="sizeSmall">11dp</dimen>
     <dimen name="sepHight" >0.1dp</dimen>
     <dimen name="signitureBitmap">350dp</dimen>
+    <dimen name="fontCircule">25dp</dimen>
+    <dimen name="smallnote">15dp</dimen>
 </resources>

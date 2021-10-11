@@ -294,7 +294,7 @@ public final class Base64 {
     }
 
 
-    /* ********  E N C O D I N G   M E T H O D S  ******** */
+    /* ********  E N C O D I N g   M E T H O D S  ******** */
 
     /**
      * <p>Encodes up to three bytes of the array <var>source</var>
@@ -439,7 +439,7 @@ public final class Base64 {
     }
 
 
-    /* ********  D E C O D I N G   M E T H O D S  ******** */
+    /* ********  D E C O D I N g   M E T H O D S  ******** */
 
 
     /**
