@@ -25,22 +25,31 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.app.adprogressbarlib.AdCircleProgress;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
 import dakrory.a7med.cargomarine.CustomViews.buttonCirculeAdapter;
 import dakrory.a7med.cargomarine.CustomViews.vehicalsAdapter;
 import dakrory.a7med.cargomarine.Models.ObjectOFImageTag;
+import dakrory.a7med.cargomarine.helpers.Constants;
+import dakrory.a7med.cargomarine.helpers.FileUploader;
+import dakrory.a7med.cargomarine.helpers.MyResponse;
 import me.piruin.quickaction.ActionItem;
 import me.piruin.quickaction.QuickAction;
 import dakrory.a7med.cargomarine.CustomViews.buttonCirculeAdapter;
 import dakrory.a7med.cargomarine.Models.buttonDataCircle;
+import retrofit2.Response;
 
 public class damageActivity extends Activity implements View.OnClickListener {
 
@@ -95,14 +104,70 @@ public class damageActivity extends Activity implements View.OnClickListener {
         allTags =new ArrayList<ObjectOFImageTag>();
         removeAllButtonCircles = (Button) findViewById(R.id.removeAllButtonCircles);
 
+        returnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         saveAllTags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                vehicalView.carData.getData().setCarAllTagsOfCrash(allTagsJsonArray.toString());
+                vehicalView.carData.getData().setCrashPointsJson(allTagsJsonArray.toString());
+                Log.v("AhmedNewSave",allTagsJsonArray.toString());
                 rr.setDrawingCacheEnabled(true);
                 Bitmap bitmap = Bitmap.createBitmap(rr.getDrawingCache());
                 rr.setDrawingCacheEnabled(false);
                 vehicalView.bitmapToFile(damageActivity.this,bitmap,"car");
+
+                final File file = vehicalView.bitmapToFile(damageActivity.this,bitmap,"tempCrash");
+
+
+                int typeForImageOrDoc = Constants.TypeSignitureForDriverForServer;
+
+
+
+                Log.v("AhmedDakrory", typeForImageOrDoc + " :Ok");
+                CallBackViewChanger viewChanger1 =   new CallBackViewChanger() {
+                    @Override
+                    public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
+
+
+
+
+                        new FileUploader().uploadCrashImage(vehicalView.carData.getData().getCrashPointsJson(),file.getPath(), vehicalView.carData.getData().getId(), damageActivity.this, new FileUploader.FileUploaderCallback() {
+                            @Override
+                            public void onError(Throwable t) {
+
+                                Toast.makeText(damageActivity.this, "Some error occurred...", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onFinish(Response<MyResponse> response) {
+                                Log.v("AhmedDakrory:", "Finish");
+                                MyResponse response1 = response.body();
+                                loader.setVisibility(View.GONE);
+                                overlayView.setVisibility(View.GONE);
+                                markView.setTextColor(damageActivity.this.getResources().getColor(R.color.colorGreenSign));
+                                file.delete();
+                                Toast.makeText(damageActivity.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onProgressUpdate(int currentpercent, int totalpercent) {
+                                loader.setVisibility(View.VISIBLE);
+                                overlayView.setVisibility(View.VISIBLE);
+                                loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
+                                Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
+                            }
+                        });
+                    }
+                };
+
+                viewChanger1.setViewToPercentage(vehicalView.loaderDriverSign,vehicalView.overlayViewDriverSign,vehicalView.markDriverSignView);
+
+                //Update Map
+
             }
         });
         removeAllButtonCircles.setOnClickListener(new View.OnClickListener() {
@@ -186,8 +251,15 @@ public class damageActivity extends Activity implements View.OnClickListener {
         rr = (RelativeLayout) findViewById(R.id.imageContainer);
 
         try {
-            Log.v("AhmedNew",String.valueOf(vehicalView.carData.getData().getCarAllTagsOfCrash()));
-            JSONObject allPoints =new JSONObject(vehicalView.carData.getData().getCarAllTagsOfCrash());
+            vehicalView.carData.getData().setCrashPointsJson(vehicalView.carData.getData().getCrashPointsJson().replace("\"[","[").replace("]\"", "]").replace("\\\"", "\""));
+
+            if(vehicalView.carData.getData().getCrashPointsJson().startsWith("\""))
+            {
+                vehicalView.carData.getData().setCrashPointsJson( vehicalView.carData.getData().getCrashPointsJson().substring(1, vehicalView.carData.getData().getCrashPointsJson().length() - 1));
+            }
+
+            Log.v("AhmedNew",String.valueOf(vehicalView.carData.getData().getCrashPointsJson()));
+            JSONObject allPoints =new JSONObject(vehicalView.carData.getData().getCrashPointsJson());
 
 
             for(int i=0;i<allPoints.getInt("length");i++){
@@ -276,12 +348,14 @@ public class damageActivity extends Activity implements View.OnClickListener {
 
                 ((ViewGroup) rr).addView(imageTag.getImage());
             }catch (Exception e){
-
+                Log.v("AhmedNewError:",String.valueOf(e));
             }
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }catch (Exception ec){
+            Log.v("AhmedNewError2:",String.valueOf(e));
+        }catch (Exception ec2){
+            Log.v("AhmedNewErrorEc:",String.valueOf(ec2));
 
         }
 

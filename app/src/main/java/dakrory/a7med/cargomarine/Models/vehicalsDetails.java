@@ -198,9 +198,6 @@ public class vehicalsDetails {
 
 
 
-        @SerializedName("carAllTagsOfCrash")
-        private String carAllTagsOfCrash;
-
 
 
         @SerializedName("releaseOption")
@@ -246,12 +243,80 @@ public class vehicalsDetails {
         private String urlOfDriverSignture="";
 
 
-        public String getCarAllTagsOfCrash() {
-            return carAllTagsOfCrash;
+
+
+        @SerializedName("dateOfDriverSigntureDestination")
+        private String dateOfDriverSigntureDestination="";
+
+
+        @SerializedName("urlOfDriverSigntureDestination")
+        private String urlOfDriverSigntureDestination="";
+
+
+
+
+        @SerializedName("dateOfCrashImage")
+        private String dateOfCrashImage="";
+
+
+        @SerializedName("urlOfCrashImage")
+        private String urlOfCrashImage="";
+
+
+        @SerializedName("crashPointsJson")
+        private String crashPointsJson="";
+
+
+        @SerializedName("CarType")
+        private String CarType="";
+
+
+        public String getCarType() {
+            return CarType;
         }
 
-        public void setCarAllTagsOfCrash(String carAllTagsOfCrash) {
-            this.carAllTagsOfCrash = carAllTagsOfCrash;
+        public void setCarType(String carType) {
+            CarType = carType;
+        }
+
+        public String getDateOfCrashImage() {
+            return dateOfCrashImage;
+        }
+
+        public void setDateOfCrashImage(String dateOfCrashImage) {
+            this.dateOfCrashImage = dateOfCrashImage;
+        }
+
+        public String getUrlOfCrashImage() {
+            return urlOfCrashImage;
+        }
+
+        public void setUrlOfCrashImage(String urlOfCrashImage) {
+            this.urlOfCrashImage = urlOfCrashImage;
+        }
+
+        public String getCrashPointsJson() {
+            return crashPointsJson;
+        }
+
+        public void setCrashPointsJson(String crashPointsJson) {
+            this.crashPointsJson = crashPointsJson;
+        }
+
+        public String getDateOfDriverSigntureDestination() {
+            return dateOfDriverSigntureDestination;
+        }
+
+        public void setDateOfDriverSigntureDestination(String dateOfDriverSigntureDestination) {
+            this.dateOfDriverSigntureDestination = dateOfDriverSigntureDestination;
+        }
+
+        public String getUrlOfDriverSigntureDestination() {
+            return urlOfDriverSigntureDestination;
+        }
+
+        public void setUrlOfDriverSigntureDestination(String urlOfDriverSigntureDestination) {
+            this.urlOfDriverSigntureDestination = urlOfDriverSigntureDestination;
         }
 
         public String getType() {

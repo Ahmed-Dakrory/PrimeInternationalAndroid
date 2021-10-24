@@ -160,12 +160,26 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     private Button mClearButtonForDriver;
     private Button mSaveButtonForDriver;
 
+    private SignaturePad mSignaturePadForDriver_destination;
+    private Button mClearButtonForDriver_destination;
+    private Button mSaveButtonForDriver_destination;
+
+
+
 
     public TextView TimeStampForSigniture;
-    public TextView overlayViewDriverSign;
-    public AdCircleProgress loaderDriverSign;
+    public static TextView overlayViewDriverSign;
+    public static AdCircleProgress loaderDriverSign;
     public ImageView imageDriverSignView;
-    public TextView markDriverSignView;
+    public static TextView markDriverSignView;
+
+
+
+    public TextView TimeStampForSigniture_destination;
+    public static TextView overlayViewDriverSign_destination;
+    public static AdCircleProgress loaderDriverSign_destination;
+    public ImageView imageDriverSignView_destination;
+    public static TextView markDriverSignView_destination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,6 +284,30 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         });
 
 
+
+
+        mSignaturePadForDriver_destination.setOnSignedListener(new SignaturePad.OnSignedListener() {
+            @Override
+            public void onStartSigning() {
+                //    Toast.makeText(vehicalView.this, "You are Signing Now", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSigned() {
+                mSaveButtonForDriver_destination.setEnabled(true);
+                mClearButtonForDriver_destination.setEnabled(true);
+            }
+
+            @Override
+            public void onClear() {
+                mSaveButtonForDriver_destination.setEnabled(false);
+                mClearButtonForDriver_destination.setEnabled(false);
+            }
+        });
+
+
+        mClearButtonForDriver_destination.setOnClickListener(this);
+        mSaveButtonForDriver_destination.setOnClickListener(this);
 
         mSignaturePadForDriver.setOnSignedListener(new SignaturePad.OnSignedListener() {
             @Override
@@ -377,7 +415,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         carData.getData().setModel(ModelEdit.getText().toString());
         carData.getData().setMake(MakeEdit.getText().toString());
         carData.getData().setYear(YearEdit.getText().toString());
-        carData.getData().setType(typeSelect.getSelectedItem().toString());
+        carData.getData().setCarType(typeSelect.getSelectedItem().toString());
         carData.getData().setDescription(descriptionEdit.getText().toString());
         carData.getData().setAssemlyCountry(assemlyCountryEdit.getText().toString());
         carData.getData().setColor(colorEdit.getText().toString());
@@ -562,12 +600,24 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         mSignaturePadForDriver = (SignaturePad) findViewById(R.id.signature_padForDriverSign);
         mClearButtonForDriver = (Button) findViewById(R.id.clear_buttonForDriverSign);
         mSaveButtonForDriver = (Button) findViewById(R.id.save_buttonForDriverSign);
+        mSignaturePadForDriver_destination = (SignaturePad) findViewById(R.id.signature_padForDriverSign_destination);
+        mClearButtonForDriver_destination = (Button) findViewById(R.id.clear_buttonForDriverSign_destination);
+        mSaveButtonForDriver_destination = (Button) findViewById(R.id.save_buttonForDriverSign_destination);
+
+
 
 
         overlayViewDriverSign = (TextView)findViewById(R.id.backgroundWhiteDriverSign);
         markDriverSignView = (TextView)findViewById(R.id.markDriverSign);
         loaderDriverSign = (AdCircleProgress) findViewById(R.id.donut_progressDriverSign);
         TimeStampForSigniture = (TextView) findViewById(R.id.TimeStampForSigniture);
+
+
+        overlayViewDriverSign_destination = (TextView)findViewById(R.id.backgroundWhiteDriverSign_destination);
+        markDriverSignView_destination = (TextView)findViewById(R.id.markDriverSign_destination);
+        loaderDriverSign_destination = (AdCircleProgress) findViewById(R.id.donut_progressDriverSign_destination);
+        TimeStampForSigniture_destination = (TextView) findViewById(R.id.TimeStampForSigniture_destination);
+
     }
 
     private void getAllDataToAdapter() {
@@ -652,7 +702,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
          ModelEdit.setText(String.valueOf(data.getModel()));
          MakeEdit.setText(String.valueOf(data.getMake()));
          YearEdit.setText(String.valueOf(data.getYear()));
-         typeSelect.setSelection(getIndex(typeSelect,String.valueOf(data.getType())));
+         typeSelect.setSelection(getIndex(typeSelect,String.valueOf(data.getCarType())));
          descriptionEdit.setText(String.valueOf(data.getDescription()));
          assemlyCountryEdit.setText(String.valueOf(data.getAssemlyCountry()));
          colorEdit.setText(String.valueOf(data.getColor()));
@@ -661,6 +711,33 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         engineTypeEdit.setText(String.valueOf(data.getEngineType()));
 
 
+
+        try{
+            Log.v("AhmedDakrory","Image Loading");
+            String imageDriverSign_destination = Constants.ImageBaseUrl +data.getUrlOfDriverSigntureDestination();
+            final URL url_destination = new URL(imageDriverSign_destination);
+            TimeStampForSigniture_destination.setText(data.getDateOfDriverSigntureDestination());
+            Thread thread_destination = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try  {
+                        //Your code goes here
+
+                        Bitmap image_destination = BitmapFactory.decodeStream(url_destination.openConnection().getInputStream());
+                        mSignaturePadForDriver_destination.setSignatureBitmap(image_destination);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread_destination.start();
+
+        }catch (Exception ex){
+
+            Log.v("AhmedDakrory","Error Image Loading"+ex.toString());
+        }
         try{
             Log.v("AhmedDakrory","Image Loading");
             String imageDriverSign = Constants.ImageBaseUrl +data.getUrlOfDriverSignture();
@@ -846,6 +923,16 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             Toast.makeText(vehicalView.this, "Signature saved", Toast.LENGTH_SHORT).show();
         }else if(v.getId()==R.id.clear_buttonForDriverSign){
             mSignaturePadForDriver.clear();
+        }else if(v.getId()==R.id.save_buttonForDriverSign_destination){
+            Bitmap signatureBitmap_destination = mSignaturePadForDriver_destination.getSignatureBitmap();
+
+            final File file = bitmapToFile(vehicalView.this,signatureBitmap_destination,"tempSigniture");
+
+            uploadFileAndAddToAdapter(file,Constants.TypeSignitureForDriverDestinationForServer);
+
+            Toast.makeText(vehicalView.this, "Signature saved", Toast.LENGTH_SHORT).show();
+        }else if(v.getId()==R.id.clear_buttonForDriverSign_destination){
+            mSignaturePadForDriver_destination.clear();
         }
     }
 
@@ -961,7 +1048,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             EasyImage.openCameraForImage(this,typeForImageOrDoc);
         }
     }
-    private void uploadFileAndAddToAdapter(final File file, final int typeForImageOrDoc) {
+    public  void uploadFileAndAddToAdapter(final File file, final int typeForImageOrDoc) {
 if(carData.getData().getId()!=0) {
     Log.v("AhmedDakrory", typeForImageOrDoc + " :Ok");
     if (typeForImageOrDoc == Constants.TypeImageForServer) {
@@ -1003,10 +1090,55 @@ if(carData.getData().getId()!=0) {
         recyclerViewImages.scrollToPosition(adapterForImages.getItemCount() - 1);
     }
 
+    else if (typeForImageOrDoc == Constants.TypeCrashPointsForServer) {
+
+        Log.v("AhmedDakrory", typeForImageOrDoc + " :Ok");
+        CallBackViewChanger viewChanger1 =   new CallBackViewChanger() {
+            @Override
+            public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
+
+
+
+
+                new FileUploader().uploadCrashImage(carData.getData().getCrashPointsJson(),file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
+                    @Override
+                    public void onError(Throwable t) {
+
+                        Toast.makeText(vehicalView.this, "Some error occurred...", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFinish(Response<MyResponse> response) {
+                        Log.v("AhmedDakrory:", "Finish");
+                        MyResponse response1 = response.body();
+                        loader.setVisibility(View.GONE);
+                        overlayView.setVisibility(View.GONE);
+                        markView.setTextColor(vehicalView.this.getResources().getColor(R.color.colorGreenSign));
+                        file.delete();
+                        Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onProgressUpdate(int currentpercent, int totalpercent) {
+                        loader.setVisibility(View.VISIBLE);
+                        overlayView.setVisibility(View.VISIBLE);
+                        loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
+                        Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
+                    }
+                });
+            }
+        };
+
+        viewChanger1.setViewToPercentage(loaderDriverSign,overlayViewDriverSign,markDriverSignView);
+
+        //Update Map
+    }
+
+
     else if (typeForImageOrDoc == Constants.TypeSignitureForDriverForServer) {
 
         Log.v("AhmedDakrory", typeForImageOrDoc + " :Ok");
-     CallBackViewChanger viewChanger1 =   new CallBackViewChanger() {
+        CallBackViewChanger viewChanger1 =   new CallBackViewChanger() {
             @Override
             public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
 
@@ -1036,7 +1168,7 @@ if(carData.getData().getId()!=0) {
                         loader.setVisibility(View.VISIBLE);
                         overlayView.setVisibility(View.VISIBLE);
                         loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
-                         Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
+                        Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
                     }
                 });
             }
@@ -1044,8 +1176,55 @@ if(carData.getData().getId()!=0) {
 
         viewChanger1.setViewToPercentage(loaderDriverSign,overlayViewDriverSign,markDriverSignView);
 
-       //Update Map
+        //Update Map
     }
+
+
+
+    else if (typeForImageOrDoc == Constants.TypeSignitureForDriverDestinationForServer) {
+
+        Log.v("AhmedDakrory", typeForImageOrDoc + " :Ok");
+        CallBackViewChanger viewChanger1 =   new CallBackViewChanger() {
+            @Override
+            public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
+
+
+
+
+                new FileUploader().uploadSignitureOfDriverDestination(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
+                    @Override
+                    public void onError(Throwable t) {
+
+                        Toast.makeText(vehicalView.this, "Some error occurred...", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFinish(Response<MyResponse> response) {
+                        Log.v("AhmedDakrory:", "Finish");
+                        MyResponse response1 = response.body();
+                        loader.setVisibility(View.GONE);
+                        overlayView.setVisibility(View.GONE);
+                        markView.setTextColor(vehicalView.this.getResources().getColor(R.color.colorGreenSign));
+                        file.delete();
+                        Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onProgressUpdate(int currentpercent, int totalpercent) {
+                        loader.setVisibility(View.VISIBLE);
+                        overlayView.setVisibility(View.VISIBLE);
+                        loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
+                        Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
+                    }
+                });
+            }
+        };
+
+        viewChanger1.setViewToPercentage(loaderDriverSign_destination,overlayViewDriverSign_destination,markDriverSignView_destination);
+
+        //Update Map
+    }
+
 
 
     else if (typeForImageOrDoc == Constants.TypeDocForServer) {

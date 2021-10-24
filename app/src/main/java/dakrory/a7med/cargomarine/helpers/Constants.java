@@ -18,5 +18,9 @@ public class Constants {
     public static final int TypeDocForServer = 1;
     public static final int TypePdfForServer = 2;
     public static final int TypeSignitureForDriverForServer = 5;
+    public static final int TypeCrashPointsForServer = 6;
+    public static final int TypeSignitureForDriverDestinationForServer = 7;
+
+
 
 }

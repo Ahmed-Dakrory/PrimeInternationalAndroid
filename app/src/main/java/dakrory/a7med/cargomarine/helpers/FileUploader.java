@@ -95,6 +95,71 @@ public class FileUploader {
 
 
     //Responsible for upload Signiture Image
+    public void uploadSignitureOfDriverDestination(String fileName, int carId, final Activity activity, final FileUploaderCallback fileUploaderCallback) {
+
+        this.fileUploaderCallback=fileUploaderCallback;
+        File file  = new File(fileName);
+        //creating a file
+        totalFileLength = totalFileLength + file.length();
+        PRRequestBodyForDriverSigniture fileBody = new PRRequestBodyForDriverSigniture(file);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), fileBody);
+
+
+        Log.v("AhmedDakrory:","Start Upload2 LEngth: "+String.valueOf(totalFileLength));
+        //The gson builder
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+
+        //creating retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Api.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        //creating our api
+        Api api = retrofit.create(Api.class);
+
+        Log.v("AhmedDakrory:","Start Upload3");
+        //creating a call and calling the upload image method
+        Call<MyResponse> call = api.uploadSignitureOfDriverDestination(filePart, carId);
+        if(modelsFunctions.checkNetworkStatus(activity)) {
+            //finally performing the call
+            call.enqueue(new Callback<MyResponse>() {
+                @Override
+                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                    fileUploaderCallback.onFinish(response);
+                    Log.v("AhmedDakrory:", "Start Response");
+                }
+
+                @Override
+                public void onFailure(Call<MyResponse> responseCall, Throwable t) {
+
+                    fileUploaderCallback.onError(t);
+                    Log.v("AhmedDakrory:", "Start Error");
+                    Log.v("AhmedDakrory:", t.getMessage());
+                    Log.v("AhmedDakrory:", t.toString());
+                    Toast.makeText(activity.getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }else{
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+
+
+
+
+
+    //Responsible for upload Signiture Image
     public void uploadSignitureOfDriver(String fileName, int carId, final Activity activity, final FileUploaderCallback fileUploaderCallback) {
 
         this.fileUploaderCallback=fileUploaderCallback;
@@ -153,6 +218,72 @@ public class FileUploader {
             });
         }
     }
+
+
+
+
+
+    //Responsible for upload Signiture Image
+    public void uploadCrashImage(String JsonCrashOfCar,String fileName, int carId, final Activity activity, final FileUploaderCallback fileUploaderCallback) {
+
+        this.fileUploaderCallback=fileUploaderCallback;
+        File file  = new File(fileName);
+        //creating a file
+        totalFileLength = totalFileLength + file.length();
+        PRRequestBodyForDriverSigniture fileBody = new PRRequestBodyForDriverSigniture(file);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), fileBody);
+
+
+        Log.v("AhmedDakrory:","Start Upload2 LEngth: "+String.valueOf(totalFileLength));
+        //The gson builder
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+
+        //creating retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Api.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        //creating our api
+        Api api = retrofit.create(Api.class);
+
+        Log.v("AhmedDakrory:","Start Upload3");
+        //creating a call and calling the upload image method
+        Call<MyResponse> call = api.uploadCrashImage(JsonCrashOfCar,filePart, carId);
+        if(modelsFunctions.checkNetworkStatus(activity)) {
+            //finally performing the call
+            call.enqueue(new Callback<MyResponse>() {
+                @Override
+                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                    fileUploaderCallback.onFinish(response);
+                    Log.v("AhmedDakrory:", "Start Response");
+                }
+
+                @Override
+                public void onFailure(Call<MyResponse> responseCall, Throwable t) {
+
+                    fileUploaderCallback.onError(t);
+                    Log.v("AhmedDakrory:", "Start Error");
+                    Log.v("AhmedDakrory:", t.getMessage());
+                    Log.v("AhmedDakrory:", t.toString());
+                    Toast.makeText(activity.getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }else{
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+
 
 
     public interface FileUploaderCallback{

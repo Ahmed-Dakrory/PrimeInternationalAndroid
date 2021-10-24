@@ -37,6 +37,16 @@ public interface Api {
     Call<MyResponse> uploadSignitureOfDriver(@Part MultipartBody.Part file, @Part("carId") int carId);
 
 
+    @Multipart
+    @POST("Api.php?apicall=uploadSignitureOfDriverDestination")
+    Call<MyResponse> uploadSignitureOfDriverDestination(@Part MultipartBody.Part file, @Part("carId") int carId);
+
+
+    @Multipart
+    @POST("Api.php?apicall=uploadCrashImage")
+    Call<MyResponse> uploadCrashImage(@Part("crashPointsJson") String crashPointsJson,@Part MultipartBody.Part file, @Part("carId") int carId);
+
+
     @FormUrlEncoded
     @POST("Api.php?apicall=getImageFromUserId")
     Call<userImage> getImageFromUserId(@Field("userId") int userId);

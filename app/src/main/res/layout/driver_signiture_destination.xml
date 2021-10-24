@@ -16,7 +16,7 @@
         android:layout_width="fill_parent"
         android:layout_height="110dp"
 
-        android:id="@+id/signature_pad_container">
+        android:id="@+id/signature_pad_container_destination">
 
 
 
@@ -27,25 +27,25 @@
             <com.github.gcacace.signaturepad.views.SignaturePad
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:id="@+id/signature_padForDriverSign" />
+                android:id="@+id/signature_padForDriverSign_destination" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:textSize="15dp"
                 android:text=""
-                android:id="@+id/TimeStampForSigniture"></TextView>
+                android:id="@+id/TimeStampForSigniture_destination"></TextView>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#A1FFFFFF"
-                android:id="@+id/backgroundWhiteDriverSign"
+                android:id="@+id/backgroundWhiteDriverSign_destination"
                 android:visibility="gone"
                 />
 
             <com.app.adprogressbarlib.AdCircleProgress
-                android:id="@+id/donut_progressDriverSign"
+                android:id="@+id/donut_progressDriverSign_destination"
 
                 android:indeterminate="true"
                 android:layout_centerInParent="true"
@@ -63,7 +63,7 @@
                 custom:adpgb_unfinished_stroke_width="5dp" />
 
             <TextView
-                android:id="@+id/markDriverSign"
+                android:id="@+id/markDriverSign_destination"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="end|top"
@@ -86,10 +86,10 @@
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
             android:layout_marginBottom="8dp"
-            android:layout_above="@+id/signature_pad_descriptionForDriverSign" />
+            android:layout_above="@+id/signature_pad_descriptionForDriverSign_destination" />
 
         <TextView
-            android:id="@+id/signature_pad_descriptionForDriverSign"
+            android:id="@+id/signature_pad_descriptionForDriverSign_destination"
             android:layout_width="match_parent"
             android:textAlignment="center"
             android:layout_centerHorizontal="true"
@@ -101,13 +101,13 @@
 
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/buttons_container"
+        android:id="@+id/buttons_container_destination"
         android:layout_width="fill_parent"
         android:layout_height="70dp"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/clear_buttonForDriverSign"
+            android:id="@+id/clear_buttonForDriverSign_destination"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
             android:enabled="false" />
 
         <Button
-            android:id="@+id/save_buttonForDriverSign"
+            android:id="@+id/save_buttonForDriverSign_destination"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
