@@ -239,18 +239,25 @@ public class vehicalsDetails {
         private String dateOfDriverSignture="";
 
 
+
+
+
         @SerializedName("urlOfDriverSignture")
         private String urlOfDriverSignture="";
 
 
 
+        @SerializedName("driverName")
+        private String driverName="";
 
-        @SerializedName("dateOfDriverSigntureDestination")
-        private String dateOfDriverSigntureDestination="";
+
+        @SerializedName("driverPhone")
+        private String driverPhone="";
+
+        @SerializedName("companyTransName")
+        private String companyTransName="";
 
 
-        @SerializedName("urlOfDriverSigntureDestination")
-        private String urlOfDriverSigntureDestination="";
 
 
 
@@ -303,21 +310,7 @@ public class vehicalsDetails {
             this.crashPointsJson = crashPointsJson;
         }
 
-        public String getDateOfDriverSigntureDestination() {
-            return dateOfDriverSigntureDestination;
-        }
 
-        public void setDateOfDriverSigntureDestination(String dateOfDriverSigntureDestination) {
-            this.dateOfDriverSigntureDestination = dateOfDriverSigntureDestination;
-        }
-
-        public String getUrlOfDriverSigntureDestination() {
-            return urlOfDriverSigntureDestination;
-        }
-
-        public void setUrlOfDriverSigntureDestination(String urlOfDriverSigntureDestination) {
-            this.urlOfDriverSigntureDestination = urlOfDriverSigntureDestination;
-        }
 
         public String getType() {
             return type;
@@ -445,6 +438,30 @@ public class vehicalsDetails {
 
         public void setCustomerlastName(String customerlastName) {
             this.customerlastName = customerlastName;
+        }
+
+        public String getDriverName() {
+            return driverName;
+        }
+
+        public void setDriverName(String driverName) {
+            this.driverName = driverName;
+        }
+
+        public String getDriverPhone() {
+            return driverPhone;
+        }
+
+        public void setDriverPhone(String driverPhone) {
+            this.driverPhone = driverPhone;
+        }
+
+        public String getCompanyTransName() {
+            return companyTransName;
+        }
+
+        public void setCompanyTransName(String companyTransName) {
+            this.companyTransName = companyTransName;
         }
 
         public String getMake() {

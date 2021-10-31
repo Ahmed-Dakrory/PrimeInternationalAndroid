@@ -242,21 +242,7 @@
 
 
 
-        <com.alespero.expandablecardview.ExpandableCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/signationORigin"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="0dp"
-            app:animationDuration="300"
-            app:expandOnClick="true"
-            app:icon="@drawable/ic_check_black_24dp"
-            app:inner_view="@layout/driver_signiture_destination"
-            app:startExpanded="false"
-            app:title="@string/DriverSignitureDestination">
 
-
-        </com.alespero.expandablecardview.ExpandableCardView>
 
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>

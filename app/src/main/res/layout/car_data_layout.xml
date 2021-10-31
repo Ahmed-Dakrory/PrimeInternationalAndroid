@@ -320,6 +320,76 @@
 
         </EditText>
     </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dataH"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/marginTopTextEdit"
+            android:layout_height="match_parent"
+            android:text="@string/DriverName"
+            android:textSize="@dimen/sizeBold"
+            android:gravity="center"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/sizeSmall"
+            android:layout_gravity="center"
+            android:id="@+id/driverNameEdit">
+
+        </EditText>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dataH"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/marginTopTextEdit"
+            android:layout_height="match_parent"
+            android:text="@string/driverPhoneText"
+            android:textSize="@dimen/sizeBold"
+            android:gravity="center"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/sizeSmall"
+            android:layout_gravity="center"
+            android:id="@+id/driverPhoneEdit">
+
+        </EditText>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dataH"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/marginTopTextEdit"
+            android:layout_height="match_parent"
+            android:text="@string/CompanytransportationNameText"
+            android:textSize="@dimen/sizeBold"
+            android:gravity="center"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/sizeSmall"
+            android:layout_gravity="center"
+            android:id="@+id/companyTransNameEdit">
+
+        </EditText>
+    </LinearLayout>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/sepHight"
