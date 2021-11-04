@@ -72,14 +72,14 @@
             android:text="@string/shipperName"
             android:textSize="@dimen/sizeBold"
             android:gravity="center"/>
-        <EditText
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="@dimen/sizeSmall"
             android:layout_gravity="center"
             android:id="@+id/shipperNameEdit">
 
-        </EditText>
+        </Spinner>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

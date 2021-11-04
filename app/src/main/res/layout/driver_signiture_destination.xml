@@ -9,12 +9,13 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:layout_height="500dp"
     android:orientation="vertical"
+    android:background="#F5F5F5"
     android:paddingTop="@dimen/activity_vertical_margin">
 
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="110dp"
+        android:layout_height="130dp"
 
         android:id="@+id/signature_pad_container_destination">
 
@@ -24,9 +25,18 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="3dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="8dp"
+                android:layout_above="@+id/signature_padForDriverSign_destination" />
+
+
             <com.github.gcacace.signaturepad.views.SignaturePad
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:background="@color/mdtp_white"
                 android:id="@+id/signature_padForDriverSign_destination" />
 
             <TextView

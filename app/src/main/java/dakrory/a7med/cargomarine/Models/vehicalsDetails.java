@@ -27,7 +27,43 @@ public class vehicalsDetails {
     private carDetails data;
 
 
+    @SerializedName("allshippers")
+    private List<modelIdAndName> allshippers;
 
+
+
+    public static class modelIdAndName {
+        public modelIdAndName(String name, int id) {
+            this.name = name;
+            this.id = id;
+        }
+
+
+        @SerializedName("name")
+        private String name;
+
+
+        @SerializedName("id")
+        private int id;
+
+
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+    }
 
     public static class urlItem{
         public urlItem(String url, int type, CallBackViewChanger callBackViewChanger) {
@@ -166,6 +202,10 @@ public class vehicalsDetails {
 
         @SerializedName("bodyStyle")
         private String bodyStyle="";
+
+
+        @SerializedName("keyExist")
+        private boolean keyExist=false;
 
 
         @SerializedName("engineType")
@@ -663,6 +703,23 @@ public class vehicalsDetails {
         public void setConsigneeId(int consigneeId) {
             this.consigneeId = consigneeId;
         }
+
+
+        public boolean isKeyExist() {
+            return keyExist;
+        }
+
+        public void setKeyExist(boolean keyExist) {
+            this.keyExist = keyExist;
+        }
+    }
+
+    public List<modelIdAndName> getAllshippers() {
+        return allshippers;
+    }
+
+    public void setAllshippers(List<modelIdAndName> allshippers) {
+        this.allshippers = allshippers;
     }
 
     public String getError() {

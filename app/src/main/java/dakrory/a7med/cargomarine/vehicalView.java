@@ -9,12 +9,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -54,6 +56,7 @@ import java.util.Date;
 import java.util.List;
 
 import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
+import dakrory.a7med.cargomarine.CustomViews.CustomAdapterForPersonModel;
 import dakrory.a7med.cargomarine.CustomViews.vehicalImagesAdapter;
 import dakrory.a7med.cargomarine.CustomViews.vehicalPdfsAdapter;
 import dakrory.a7med.cargomarine.Models.userData;
@@ -123,11 +126,13 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     EditText driverPhoneEdit;
     EditText companyTransNameEdit;
     EditText engineTypeEdit;
+    CheckBox keyExistEdit;
 
 
     EditText mainUserName;
     EditText main2UserName;
-    EditText shipperUserName;
+    Spinner shipperUserName;
+    CustomAdapterForPersonModel shipperUserNameAdapter;
     EditText vendorUserName;
     EditText customerUserName;
     EditText consigneeUserName;
@@ -185,6 +190,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         carData.setImages(new ArrayList<vehicalsDetails.urlItem>());
         carData.setDocs(new ArrayList<vehicalsDetails.urlItem>());
         carData.setPdfs(new ArrayList<vehicalsDetails.urlItem>());
+        carData.setAllshippers(new ArrayList<vehicalsDetails.modelIdAndName>());
 
 
         defineViewsAndIntegrate();
@@ -357,7 +363,6 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                             dataOfCar.setMainTwoId(thisAccountUserData.getUserDetails().getMainTwoId());
                             Log.v("AhmedDakrory", "Done ya : " + dataOfCar.getMainTwoId());
                         }
-
                         carData.setData(dataOfCar);
                         setTextData(carData.getData());
 
@@ -371,6 +376,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
                     loaderPanel.setVisibility(View.GONE);
                     Toast.makeText(vehicalView.this, getString(R.string.ProblemErrorOnServerAddNewCar), Toast.LENGTH_LONG).show();
+                    Log.v("AhmedDakroryTwo", t.toString());
                 }
             });
         }else {
@@ -396,6 +402,12 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         carData.getData().setDriverPhone(driverPhoneEdit.getText().toString());
         carData.getData().setCompanyTransName(companyTransNameEdit.getText().toString());
         carData.getData().setEngineType(engineTypeEdit.getText().toString());
+        carData.getData().setKeyExist(keyExistEdit.isChecked());
+
+        carData.getData().setShipperId(carData.getAllshippers().get(shipperUserName.getSelectedItemPosition()).getId());
+
+
+
 
 
         loaderPanel.setVisibility(View.VISIBLE);
@@ -425,10 +437,16 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
                     idOfCar = carData.getData().getId();
                     setTextData(carData.getData());
+
+                    carData.getAllshippers().addAll(vDetails.getAllshippers());
+
                     loaderPanel.setVisibility(View.GONE);
                     Log.v("AhmedDakrory33", String.valueOf(vDetails.getData().getUuid() + ", " + vDetails.getData().getId() + ", " + vDetails.getData().getStateOut()));
                     adapterForImages.notifyDataSetChanged();
                     adapterForDocs.notifyDataSetChanged();
+                    adapterForPdfs.notifyDataSetChanged();
+                    shipperUserNameAdapter.notifyDataSetChanged();
+                    carData.getData().setShipperId(carData.getAllshippers().get(shipperUserName.getSelectedItemPosition()).getId());
                 }
 
                 @Override
@@ -465,6 +483,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         driverPhoneEdit.setKeyListener(null);
         companyTransNameEdit.setKeyListener(null);
         engineTypeEdit.setKeyListener(null);
+        keyExistEdit.setKeyListener(null);
 
 
         saveAllNewResultsFloatingActionButton.hide();
@@ -482,7 +501,6 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         //Persons
         mainUserName.setKeyListener(null);
         main2UserName.setKeyListener(null);
-        shipperUserName.setKeyListener(null);
         vendorUserName.setKeyListener(null);
         customerUserName.setKeyListener(null);
         consigneeUserName.setKeyListener(null);
@@ -525,6 +543,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         driverPhoneEdit= (EditText)findViewById(R.id.driverPhoneEdit);
         companyTransNameEdit= (EditText)findViewById(R.id.companyTransNameEdit);
         engineTypeEdit= (EditText)findViewById(R.id.engineTypeEdit);
+        keyExistEdit = (CheckBox) findViewById(R.id.keyExistEdit);
 
 
 
@@ -532,7 +551,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
         mainUserName= (EditText)findViewById(R.id.MainUserEdit);
         main2UserName= (EditText)findViewById(R.id.MainUser2Edit);
-        shipperUserName= (EditText)findViewById(R.id.shipperNameEdit);
+        shipperUserName= (Spinner) findViewById(R.id.shipperNameEdit);
         vendorUserName= (EditText)findViewById(R.id.vendorEdit);
         customerUserName= (EditText)findViewById(R.id.customerEdit);
         consigneeUserName= (EditText)findViewById(R.id.consigneeEdit);
@@ -573,6 +592,9 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
 
 
+        shipperUserNameAdapter = new CustomAdapterForPersonModel(vehicalView.this,
+                R.layout.listitems_names_layout, R.id.title, carData.getAllshippers());
+        shipperUserName.setAdapter(shipperUserNameAdapter);
 
 
 
@@ -622,13 +644,15 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                         carData.setData(car_data.getData());
 
                         carData.getImages().addAll(car_data.getImages());
-                        Log.v("AhmedDakrory", "Size of Images" + carData.getImages().size());
-
+//                        Log.v("AhmedDakrory", "Size of Images" + carData.getImages().size());
+//
+//                        Log.v("AhmedTest",String.valueOf(car_data.getAllshippers().size()));
+                        carData.getAllshippers().addAll(car_data.getAllshippers());
                         adapterForImages.notifyDataSetChanged();
 
 
                         carData.getDocs().addAll(car_data.getDocs());
-                        Log.v("AhmedDakrory", "Size of Images" + carData.getDocs().size());
+//                        Log.v("AhmedDakrory", "Size of Images" + carData.getDocs().size());
                         adapterForDocs.notifyDataSetChanged();
 
                         carData.getPdfs().addAll(car_data.getPdfs());
@@ -637,6 +661,17 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
                         setTextData(carData.getData());
                         loaderPanel.setVisibility(View.GONE);
+
+
+                        shipperUserNameAdapter.notifyDataSetChanged();
+
+                        for(int i=0;i<carData.getAllshippers().size();i++){
+                            if(carData.getData().getShipperId()==carData.getAllshippers().get(i).getId()){
+                                shipperUserName.setSelection(i);
+
+                                return;
+                            }
+                        }
                     }
                 }
 
@@ -644,6 +679,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                 public void onFailure(Call<vehicalsDetails> call, Throwable t) {
 
                     loaderPanel.setVisibility(View.GONE);
+                    Log.v("AhmedTest",String.valueOf(t.getMessage()));
                     Toast.makeText(vehicalView.this, getString(R.string.ProblemOnHandleData), Toast.LENGTH_LONG).show();
                 }
             });
@@ -670,6 +706,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     }
 
     private void setTextData(vehicalsDetails.carDetails data) {
+
          vinEdit.setText(String.valueOf(data.getUuid()));
          ModelEdit.setText(String.valueOf(data.getModel()));
          MakeEdit.setText(String.valueOf(data.getMake()));
@@ -684,29 +721,21 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         driverPhoneEdit.setText(String.valueOf(data.getDriverPhone()));
         companyTransNameEdit.setText(String.valueOf(data.getCompanyTransName()));
         engineTypeEdit.setText(String.valueOf(data.getEngineType()));
+        keyExistEdit.setChecked(data.isKeyExist());
 
 
         try{
             Log.v("AhmedDakrory","Image Loading");
             String imageDriverSign = Constants.ImageBaseUrl +data.getUrlOfDriverSignture();
-            final URL url = new URL(imageDriverSign);
+//            final URL url = new URL(imageDriverSign);
             TimeStampForSigniture.setText(data.getDateOfDriverSignture());
-            Thread thread = new Thread(new Runnable() {
 
-                @Override
-                public void run() {
-                    try  {
-                        //Your code goes here
+            String[] urls = {imageDriverSign};
+            new RetrieveFeedTask().execute(urls);
 
-                        Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                        mSignaturePadForDriver.setSignatureBitmap(image);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
 
-            thread.start();
+
+
 
         }catch (Exception ex){
 
@@ -714,7 +743,8 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         }
         setTextUsernameToField(mainUserName,data.getUserfirstName(),data.getUserlastName());
         setTextUsernameToField(main2UserName,data.getMainTwofirstName(),data.getMainTwolastName());
-        setTextUsernameToField(shipperUserName,data.getShipperfirstName(),data.getShipperlastName());
+
+
         setTextUsernameToField(vendorUserName,data.getVendorfirstName(),data.getVendorlastName());
         setTextUsernameToField(customerUserName,data.getCustomerfirstName(),data.getCustomerlastName());
         setTextUsernameToField(consigneeUserName,data.getConsigneefirstName(),data.getConsigneelastName());
@@ -731,6 +761,45 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
 
     }
+
+
+
+    class RetrieveFeedTask extends AsyncTask<String, Void, String> {
+
+        private Exception exception;
+
+        protected String doInBackground(String... urls) {
+
+
+
+                try  {
+                    //Your code goes here
+                    final URL url = new URL(urls[0]);
+                    final Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            mSignaturePadForDriver.setSignatureBitmap(image);
+                            Log.v("AhmedDakrorySig",String.valueOf("Done"));
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.v("AhmedDakrorySig",String.valueOf(e.getMessage()));
+                    Log.v("AhmedDakrorySig",String.valueOf(e));
+                    e.printStackTrace();
+                }
+
+                return "";
+
+        }
+
+        protected void onPostExecute(Void feed) {
+            // TODO: check this.exception
+            // TODO: do something with the feed
+        }
+    }
+
 
     private void setDateRelease(String releaseDate) {
 
@@ -884,7 +953,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         File file = new File("/sdcard/Download/"+fileNameToSave+"/seconds"+".jpeg");
         try {
             outStream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
             outStream.close();
 
             Log.v("AhmedDakrory","File maked2");
