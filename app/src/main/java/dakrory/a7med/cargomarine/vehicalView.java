@@ -404,8 +404,11 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         carData.getData().setEngineType(engineTypeEdit.getText().toString());
         carData.getData().setKeyExist(keyExistEdit.isChecked());
 
-        carData.getData().setShipperId(carData.getAllshippers().get(shipperUserName.getSelectedItemPosition()).getId());
+        try {
+            carData.getData().setShipperId(carData.getAllshippers().get(shipperUserName.getSelectedItemPosition()).getId());
+        }catch (Exception ex){
 
+        }
 
 
 
