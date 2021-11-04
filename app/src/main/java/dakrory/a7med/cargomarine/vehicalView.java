@@ -779,10 +779,13 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                                try {
+                                    mSignaturePadForDriver.setSignatureBitmap(image);
+                                    Log.v("AhmedDakrorySig", String.valueOf("Done"));
+                                }catch (Exception ex){
 
-                            mSignaturePadForDriver.setSignatureBitmap(image);
-                            Log.v("AhmedDakrorySig",String.valueOf("Done"));
-                        }
+                                }
+                            }
                     });
                 } catch (Exception e) {
                     Log.v("AhmedDakrorySig",String.valueOf(e.getMessage()));
