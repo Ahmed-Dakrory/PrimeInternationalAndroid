@@ -449,7 +449,11 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                     adapterForDocs.notifyDataSetChanged();
                     adapterForPdfs.notifyDataSetChanged();
                     shipperUserNameAdapter.notifyDataSetChanged();
-                    carData.getData().setShipperId(carData.getAllshippers().get(shipperUserName.getSelectedItemPosition()).getId());
+                    try {
+                        carData.getData().setShipperId(carData.getAllshippers().get(shipperUserName.getSelectedItemPosition()).getId());
+                    }catch (Exception ex){
+
+                    }
                 }
 
                 @Override
