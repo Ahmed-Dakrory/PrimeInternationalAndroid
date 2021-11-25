@@ -98,8 +98,8 @@ public class MainApp extends AppCompatActivity
         userNameTextView.setText(thisAccountUserData.getUserDetails().getFirstName()+" "+thisAccountUserData.getUserDetails().getLastName());
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(5, TimeUnit.SECONDS)
-                .connectTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS)
                 .build();
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")

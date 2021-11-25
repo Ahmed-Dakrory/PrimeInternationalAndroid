@@ -208,6 +208,11 @@ public class vehicalsDetails {
         private boolean keyExist=false;
 
 
+
+        @SerializedName("titleExist")
+        private boolean titleExist=false;
+
+
         @SerializedName("engineType")
         private String engineType="";
 
@@ -704,6 +709,13 @@ public class vehicalsDetails {
             this.consigneeId = consigneeId;
         }
 
+        public boolean isTitleExist() {
+            return titleExist;
+        }
+
+        public void setTitleExist(boolean titleExist) {
+            this.titleExist = titleExist;
+        }
 
         public boolean isKeyExist() {
             return keyExist;

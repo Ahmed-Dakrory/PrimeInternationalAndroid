@@ -127,6 +127,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     EditText companyTransNameEdit;
     EditText engineTypeEdit;
     CheckBox keyExistEdit;
+    CheckBox titleExistEdit;
 
 
     EditText mainUserName;
@@ -403,6 +404,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         carData.getData().setCompanyTransName(companyTransNameEdit.getText().toString());
         carData.getData().setEngineType(engineTypeEdit.getText().toString());
         carData.getData().setKeyExist(keyExistEdit.isChecked());
+        carData.getData().setTitleExist(titleExistEdit.isChecked());
 
         try {
             carData.getData().setShipperId(carData.getAllshippers().get(shipperUserName.getSelectedItemPosition()).getId());
@@ -491,6 +493,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         companyTransNameEdit.setKeyListener(null);
         engineTypeEdit.setKeyListener(null);
         keyExistEdit.setKeyListener(null);
+        titleExistEdit.setKeyListener(null);
 
 
         saveAllNewResultsFloatingActionButton.hide();
@@ -551,6 +554,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         companyTransNameEdit= (EditText)findViewById(R.id.companyTransNameEdit);
         engineTypeEdit= (EditText)findViewById(R.id.engineTypeEdit);
         keyExistEdit = (CheckBox) findViewById(R.id.keyExistEdit);
+        titleExistEdit = (CheckBox) findViewById(R.id.titleExistEdit);
 
 
 
@@ -729,6 +733,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         companyTransNameEdit.setText(String.valueOf(data.getCompanyTransName()));
         engineTypeEdit.setText(String.valueOf(data.getEngineType()));
         keyExistEdit.setChecked(data.isKeyExist());
+        titleExistEdit.setChecked(data.isTitleExist());
 
 
         try{
