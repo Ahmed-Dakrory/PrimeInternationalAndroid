@@ -323,6 +323,18 @@ public class vehicalsDetails {
         private String CarType="";
 
 
+        @SerializedName("numberOfKeys")
+        private int numberOfKeys;
+
+
+        public int getNumberOfKeys() {
+            return numberOfKeys;
+        }
+
+        public void setNumberOfKeys(int numberOfKeys) {
+            this.numberOfKeys = numberOfKeys;
+        }
+
         public String getCarType() {
             return CarType;
         }

@@ -20,6 +20,17 @@
         <item>Sent For Payment</item>
     </string-array>
 
+
+
+    <string-array name="numberOfKeys">
+        <item>No Keys</item>
+        <item>1 keys</item>
+        <item>2 keys</item>
+        <item>3 keys</item>
+        <item>4 Keys</item>
+    </string-array>
+
+
     <string-array name="releaseType">
         <item>Not Released</item>
         <item>RELEASE TO CUSTOMER</item>

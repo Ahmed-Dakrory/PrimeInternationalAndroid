@@ -433,6 +433,36 @@
         android:background="?android:attr/listDivider" />
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dataH"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/marginTopTextEdit"
+            android:layout_height="match_parent"
+            android:text="@string/KeyNumbers"
+            android:textSize="@dimen/sizeBold"
+            android:gravity="center"/>
+        <Spinner
+            android:entries="@array/numberOfKeys"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/sizeSmall"
+            android:layout_gravity="center"
+            android:id="@+id/numberOfKeys">
+
+        </Spinner>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sepHight"
+        android:foreground="#ACABAB"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="3dp"
+        android:background="?android:attr/listDivider" />
+
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -85,4 +85,5 @@
     <string name="CompanytransportationNameText">Transportation Company Name</string>
     <string name="keyExistText">Is Key Exists</string>
     <string name="titleExistText">Are Title Exists?</string>
+    <string name="KeyNumbers">Number of Keys</string>
 </resources>

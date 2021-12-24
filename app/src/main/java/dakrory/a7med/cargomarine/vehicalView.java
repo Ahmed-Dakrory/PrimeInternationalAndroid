@@ -46,7 +46,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -117,6 +119,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     EditText MakeEdit;
     EditText YearEdit;
     Spinner typeSelect;
+    Spinner numberOfKeys;
     EditText descriptionEdit;
     EditText assemlyCountryEdit;
     EditText colorEdit;
@@ -394,6 +397,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         carData.getData().setMake(MakeEdit.getText().toString());
         carData.getData().setYear(YearEdit.getText().toString());
         carData.getData().setCarType(typeSelect.getSelectedItem().toString());
+        carData.getData().setNumberOfKeys(numberOfKeys.getSelectedItemPosition());
         carData.getData().setDescription(descriptionEdit.getText().toString());
         carData.getData().setAssemlyCountry(assemlyCountryEdit.getText().toString());
         carData.getData().setColor(colorEdit.getText().toString());
@@ -483,6 +487,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         MakeEdit.setKeyListener(null);
         YearEdit.setKeyListener(null);
         typeSelect.setSelection(0);
+        numberOfKeys.setSelection(0);
         descriptionEdit.setKeyListener(null);
         assemlyCountryEdit.setKeyListener(null);
         colorEdit.setKeyListener(null);
@@ -544,6 +549,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         MakeEdit= (EditText)findViewById(R.id.makeEdit);
         YearEdit= (EditText)findViewById(R.id.yearEdit);
         typeSelect = (Spinner) findViewById(R.id.typeSelect);
+        numberOfKeys = (Spinner) findViewById(R.id.numberOfKeys);
         descriptionEdit= (EditText)findViewById(R.id.descriptionEdit);
         assemlyCountryEdit= (EditText)findViewById(R.id.assemlyCountryEdit);
         colorEdit= (EditText)findViewById(R.id.colorEdit);
@@ -722,7 +728,8 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
          ModelEdit.setText(String.valueOf(data.getModel()));
          MakeEdit.setText(String.valueOf(data.getMake()));
          YearEdit.setText(String.valueOf(data.getYear()));
-         typeSelect.setSelection(getIndex(typeSelect,String.valueOf(data.getCarType())));
+        typeSelect.setSelection(getIndex(typeSelect,String.valueOf(data.getCarType())));
+        numberOfKeys.setSelection(data.getNumberOfKeys());
          descriptionEdit.setText(String.valueOf(data.getDescription()));
          assemlyCountryEdit.setText(String.valueOf(data.getAssemlyCountry()));
          colorEdit.setText(String.valueOf(data.getColor()));
@@ -960,12 +967,15 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
 
     public static File bitmapToFile(Context context, Bitmap bitmap, String fileNameToSave) { // File name like "image.png"
-        File f3=new File("/sdcard/Download/"+fileNameToSave+"/");
+        File f3=new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES)+"/"+fileNameToSave+"/");
         if(!f3.exists())
             f3.mkdirs();
         OutputStream outStream = null;
         Log.v("AhmedDakrory",f3.getPath());
-        File file = new File("/sdcard/Download/"+fileNameToSave+"/seconds"+".jpeg");
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES)+"/"+fileNameToSave+"/seconds"+".jpeg");
+
         try {
             outStream = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
@@ -1297,8 +1307,12 @@ if(carData.getData().getId()!=0) {
                 final Uri imageUri = data.getData();
                 String selectedFilePath = FilePath.getPath(this, imageUri);
                 final File file = new File(selectedFilePath);
+                final File file2 = compressBitmap(file,  4, 70);
+                Log.v("AhmedDakrory","Ahmed Hi");
+                Log.v("AhmedDakrory",String.valueOf(file.length()));
+                Log.v("AhmedDakrory",String.valueOf(file2.length()));
                 Log.v("AhmedDakrory", "Type: "+Constants.TypeImageForServer);
-                uploadFileAndAddToAdapter(file,Constants.TypeImageForServer);
+                uploadFileAndAddToAdapter(file2,Constants.TypeImageForServer);
                 Log.v("AhmedDakrory", imageUri.getPath());
             }
         }
@@ -1329,7 +1343,11 @@ if(carData.getData().getId()!=0) {
                     //Log.v("AhmedDakrory","Code: "+requestCode);
                     if(list.get(0)!=null) {
                         File file = list.get(0);
-                        uploadFileAndAddToAdapter(file,i);
+                        final File file2 = compressBitmap(file,  4, 70);
+                        Log.v("AhmedDakrory","Ahmed Hi");
+                        Log.v("AhmedDakrory",String.valueOf(file.length()));
+                        Log.v("AhmedDakrory",String.valueOf(file2.length()));
+                        uploadFileAndAddToAdapter(file2,i);
 
                     }
                 }
@@ -1349,6 +1367,40 @@ if(carData.getData().getId()!=0) {
             });
 
         }
+    }
+
+    public File compressBitmap(File file, int sampleSize, int quality) {
+        try {
+
+            String filePath = file.getPath();
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+
+            File f3=new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES)+"/TempImages/");
+            if(!f3.exists())
+                f3.mkdirs();
+            OutputStream outputStream = null;
+            File fileNew = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES)+"/TempImages/seconds"+".jpeg");
+
+            outputStream = new FileOutputStream(fileNew);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.close();
+            long lengthInKb = file.length() / 1024; //in kb
+            int SIZE_LIMIT = 1500;
+            if (lengthInKb > SIZE_LIMIT) {
+                compressBitmap(fileNew, (sampleSize*2), (quality/4));
+            }
+
+            bitmap.recycle();
+            return fileNew;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.v("AhmedDakrory","Error: "+String.valueOf(e.toString()));
+        }
+        return file;
     }
 
     public  Retrofit getClient(String vin) {
