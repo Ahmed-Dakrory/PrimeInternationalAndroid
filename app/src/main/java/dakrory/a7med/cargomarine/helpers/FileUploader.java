@@ -13,10 +13,12 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import dakrory.a7med.cargomarine.R;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okio.BufferedSink;
 import retrofit2.Call;
@@ -49,11 +51,17 @@ public class FileUploader {
                 .setLenient()
                 .create();
 
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
 
         //creating retrofit object
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Api.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
                 .build();
 
         //creating our api
@@ -111,11 +119,16 @@ public class FileUploader {
                 .setLenient()
                 .create();
 
-
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
         //creating retrofit object
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Api.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
                 .build();
 
         //creating our api
@@ -177,10 +190,17 @@ public class FileUploader {
                 .create();
 
 
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+
         //creating retrofit object
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Api.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
                 .build();
 
         //creating our api
@@ -241,10 +261,17 @@ public class FileUploader {
                 .create();
 
 
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+
         //creating retrofit object
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Api.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
                 .build();
 
         //creating our api

@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
 import dakrory.a7med.cargomarine.CustomViews.CustomAdapterForPersonModel;
@@ -607,8 +608,11 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         recyclerViewPdfs.setLayoutManager(gridLayoutManager);
         recyclerViewPdfs.setAdapter(adapterForPdfs);
 
-
-
+        List<vehicalsDetails.modelIdAndName> allWithNull=carData.getAllshippers();
+        Log.v("AhmedDakrory1",String.valueOf(allWithNull.size()));
+        allWithNull.add(0,new vehicalsDetails.modelIdAndName("No One Selected",-1));
+        carData.setAllshippers(allWithNull);
+        Log.v("AhmedDakrory2",String.valueOf(allWithNull.size()));
         shipperUserNameAdapter = new CustomAdapterForPersonModel(vehicalView.this,
                 R.layout.listitems_names_layout, R.id.title, carData.getAllshippers());
         shipperUserName.setAdapter(shipperUserNameAdapter);
@@ -1296,9 +1300,8 @@ if(carData.getData().getId()!=0) {
                 final Uri imageUri = data.getData();
                 String selectedFilePath = FilePath.getPath(this, imageUri);
                 final File file = new File(selectedFilePath);
-
-                Log.v("AhmedDakrory", "Type: "+Constants.TypeDocForServer);
-                uploadFileAndAddToAdapter(file,Constants.TypeDocForServer);
+                final File file2 = compressBitmap(file,  5, 75);
+                uploadFileAndAddToAdapter(file2,Constants.TypeDocForServer);
                 Log.v("AhmedDakrory", imageUri.getPath());
             }
         }
@@ -1307,11 +1310,7 @@ if(carData.getData().getId()!=0) {
                 final Uri imageUri = data.getData();
                 String selectedFilePath = FilePath.getPath(this, imageUri);
                 final File file = new File(selectedFilePath);
-                final File file2 = compressBitmap(file,  4, 70);
-                Log.v("AhmedDakrory","Ahmed Hi");
-                Log.v("AhmedDakrory",String.valueOf(file.length()));
-                Log.v("AhmedDakrory",String.valueOf(file2.length()));
-                Log.v("AhmedDakrory", "Type: "+Constants.TypeImageForServer);
+                final File file2 = compressBitmap(file,  5, 75);
                 uploadFileAndAddToAdapter(file2,Constants.TypeImageForServer);
                 Log.v("AhmedDakrory", imageUri.getPath());
             }
@@ -1407,8 +1406,11 @@ if(carData.getData().getId()!=0) {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.URL_TO_GET_VIN_DATA+vin)

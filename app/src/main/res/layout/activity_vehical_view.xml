@@ -246,17 +246,19 @@
 
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#A3FFFFFF"
-    android:id="@+id/loaderPanel">
-    <ProgressBar
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
-</RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loaderPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#A3FFFFFF">
+
+        <ProgressBar
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
 <com.google.android.material.floatingactionbutton.FloatingActionButton
     android:layout_width="155dp"
     android:layout_height="155dp"
