@@ -270,6 +270,10 @@ public class vehicalsDetails {
         private String containerLink="";
 
 
+        @SerializedName("weight")
+        private String weight="";
+
+
         @SerializedName("eta")
         private String eta="";
 
@@ -326,6 +330,13 @@ public class vehicalsDetails {
         @SerializedName("numberOfKeys")
         private int numberOfKeys;
 
+        public String getWeight() {
+            return weight;
+        }
+
+        public void setWeight(String weight) {
+            this.weight = weight;
+        }
 
         public int getNumberOfKeys() {
             return numberOfKeys;

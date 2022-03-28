@@ -350,10 +350,22 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                     vinDetails car = response.body();
                     if (car != null) {
                         vehicalsDetails.carDetails dataOfCar = new vehicalsDetails.carDetails();
+
                         dataOfCar.setState(0);
                         dataOfCar.setUuid(vinNew);
                         dataOfCar.setMake(car.Results.get(0).Make);
                         dataOfCar.setModel(car.Results.get(0).Model);
+                        String weight = "";
+                        try {
+                            weight = car.Results.get(0).GVWR;
+                            weight = weight.substring(weight.lastIndexOf("("));
+
+                        }catch(Error err) {
+
+                        }catch(Exception exc) {
+
+                        }
+                        dataOfCar.setWeight(weight);
                         dataOfCar.setYear(car.Results.get(0).ModelYear);
                         dataOfCar.setAssemlyCountry(car.Results.get(0).PlantCountry);
                         dataOfCar.setBodyStyle(car.Results.get(0).DriveType);
