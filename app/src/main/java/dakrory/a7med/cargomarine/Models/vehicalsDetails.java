@@ -17,6 +17,10 @@ public class vehicalsDetails {
     @SerializedName("images")
     private List<urlItem> images;
 
+
+    @SerializedName("images3D")
+    private List<urlItem> images3D;
+
     @SerializedName("docs")
     private List<urlItem> docs;
 
@@ -765,6 +769,13 @@ public class vehicalsDetails {
         this.error = error;
     }
 
+    public List<urlItem> getImages3D() {
+        return images3D;
+    }
+
+    public void setImages3D(List<urlItem> images3D) {
+        this.images3D = images3D;
+    }
 
     public List<urlItem> getImages() {
         return images;

@@ -14,9 +14,11 @@ public class Constants {
     public static String ImageUrl_Type="ImageType_INTENT";
     public static String ImageBaseUrl="https://primeshippingllc.com/images?file=";
     public static String PdfBaseUrl="https://primeshippingllc.com/images/?file=";
+    public static String Base3DUrl="http://143.244.151.25/images?file=";
     public static final int TypeImageForServer = 0;
     public static final int TypeDocForServer = 1;
     public static final int TypePdfForServer = 2;
+    public static final int Type3DForServer = 4;
     public static final int TypeSignitureForDriverForServer = 5;
     public static final int TypeCrashPointsForServer = 6;
     public static final int TypeSignitureForDriverDestinationForServer = 7;

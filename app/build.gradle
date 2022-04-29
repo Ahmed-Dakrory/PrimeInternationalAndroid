@@ -10,6 +10,9 @@ android {
         versionCode 1
         versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
     }
     buildTypes {
         release {
@@ -17,15 +20,30 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    useLibrary 'org.apache.http.legacy'
 }
 
 repositories {
     maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local' }
+    maven { url "https://jitpack.io" }
     mavenCentral()
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.github.lespinsideg:SimplePanorama:0.3.1'
     implementation 'androidx.appcompat:appcompat:1.2.0-alpha02'
     implementation 'com.google.android.material:material:1.0.0-alpha1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
@@ -58,4 +76,8 @@ dependencies {
 
     implementation 'es.voghdev.pdfviewpager:library:1.1.0'
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+
+
+
+    implementation("io.github.thanosfisherman.wifiutils:wifiutils:1.6.6")
 }

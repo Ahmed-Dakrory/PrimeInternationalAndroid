@@ -13,4 +13,13 @@
     <dimen name="signitureBitmap">350dp</dimen>
     <dimen name="fontCircule">25dp</dimen>
     <dimen name="smallnote">15dp</dimen>
+
+
+
+
+    <dimen name="list_divider_height">2px</dimen>
+    <dimen name="common_margin">16dp</dimen>
+    <dimen name="common_height">100dp</dimen>
+    <dimen name="thumbnail_height">90dp</dimen>
+    <dimen name="thumbnail_width">90dp</dimen>
 </resources>

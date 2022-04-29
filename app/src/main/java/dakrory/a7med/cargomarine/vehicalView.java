@@ -60,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 
 import dakrory.a7med.cargomarine.CustomViews.CallBackViewChanger;
 import dakrory.a7med.cargomarine.CustomViews.CustomAdapterForPersonModel;
+import dakrory.a7med.cargomarine.CustomViews.vehical3DImagesAdapter;
 import dakrory.a7med.cargomarine.CustomViews.vehicalImagesAdapter;
 import dakrory.a7med.cargomarine.CustomViews.vehicalPdfsAdapter;
 import dakrory.a7med.cargomarine.Models.userData;
@@ -89,16 +90,18 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     RecyclerView recyclerViewImages;
     RecyclerView recyclerViewDocs;
     RecyclerView recyclerViewPdfs;
+    RecyclerView recyclerView3DImages;
 
     RelativeLayout layoutForImages;
     RelativeLayout layoutForDocs;
     RelativeLayout layoutForPdfs;
+    RelativeLayout layoutFor3DImages;
 
 
 
 
     FloatingActionButton addDamageFloatingButton;
-
+    FloatingActionButton add3DFloatingButton;
 
     FloatingActionButton addImageFloatingButton;
     FloatingActionButton addDocFloatingButton;
@@ -109,10 +112,14 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     vehicalImagesAdapter adapterForImages;
     vehicalImagesAdapter adapterForDocs;
     vehicalPdfsAdapter adapterForPdfs;
+    vehical3DImagesAdapter adapterFor3Dimages;
+
 
     Button imagesButton;
     Button DocsButton;
     Button PdfsButton;
+    Button Images3DButton;
+
 
 
     EditText vinEdit;
@@ -195,6 +202,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         carData.setImages(new ArrayList<vehicalsDetails.urlItem>());
         carData.setDocs(new ArrayList<vehicalsDetails.urlItem>());
         carData.setPdfs(new ArrayList<vehicalsDetails.urlItem>());
+        carData.setImages3D(new ArrayList<vehicalsDetails.urlItem>());
         carData.setAllshippers(new ArrayList<vehicalsDetails.modelIdAndName>());
 
 
@@ -209,6 +217,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
 
         addDamageFloatingButton.setOnClickListener(this);
+        add3DFloatingButton.setOnClickListener(this);
         addImageFloatingButton.setOnClickListener(this);
         addDocFloatingButton.setOnClickListener(this);
         addPdfFloatingButton.setOnClickListener(this);
@@ -218,6 +227,8 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         imagesButton.setOnClickListener(this);
         DocsButton.setOnClickListener(this);
         PdfsButton.setOnClickListener(this);
+        Images3DButton.setOnClickListener(this);
+
 
         setReleaseDateButton.setOnClickListener(this);
 
@@ -456,6 +467,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                     carData.getImages().addAll(vDetails.getImages());
                     carData.getDocs().addAll(vDetails.getDocs());
                     carData.getPdfs().addAll(vDetails.getPdfs());
+                    carData.getImages3D().addAll(vDetails.getImages3D());
 
                     idOfCar = carData.getData().getId();
                     setTextData(carData.getData());
@@ -467,6 +479,8 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                     adapterForImages.notifyDataSetChanged();
                     adapterForDocs.notifyDataSetChanged();
                     adapterForPdfs.notifyDataSetChanged();
+                    adapterFor3Dimages.notifyDataSetChanged();
+
                     shipperUserNameAdapter.notifyDataSetChanged();
                     try {
                         carData.getData().setShipperId(carData.getAllshippers().get(shipperUserName.getSelectedItemPosition()).getId());
@@ -518,6 +532,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         addImageFloatingButton.hide();
         addDocFloatingButton.hide();
         addPdfFloatingButton.hide();
+        add3DFloatingButton.hide();
 
         releaseStateCheckBox.setEnabled(false);
         releaseTypeSpinner.setEnabled(false);
@@ -539,22 +554,26 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         recyclerViewImages = (RecyclerView) findViewById(R.id.recyclerViewForImages);
         recyclerViewDocs = (RecyclerView) findViewById(R.id.recyclerViewForDocs);
         recyclerViewPdfs = (RecyclerView) findViewById(R.id.recyclerViewForPdfs);
-
+        recyclerView3DImages = (RecyclerView) findViewById(R.id.recyclerViewFor3DImages);
 
         layoutForDocs = (RelativeLayout) findViewById(R.id.layoutForDocs);
         layoutForImages = (RelativeLayout) findViewById(R.id.layoutForImages);
         layoutForPdfs = (RelativeLayout) findViewById(R.id.layoutForPdfs);
+        layoutFor3DImages = (RelativeLayout) findViewById(R.id.layoutFor3DImages);
+
 
         addDamageFloatingButton=(FloatingActionButton)findViewById(R.id.setAllDamages);
         addImageFloatingButton=(FloatingActionButton)findViewById(R.id.addImageFloating);
         addDocFloatingButton=(FloatingActionButton)findViewById(R.id.addDocFloating);
         addPdfFloatingButton=(FloatingActionButton)findViewById(R.id.addPdfFloating);
+        add3DFloatingButton=(FloatingActionButton)findViewById(R.id.setAll3D);
         saveAllNewResultsFloatingActionButton=(FloatingActionButton)findViewById(R.id.saveAllNewResults);
 
 
         imagesButton = (Button) findViewById(R.id.ImagesButton);
         DocsButton = (Button) findViewById(R.id.DocumentsButton);
         PdfsButton = (Button) findViewById(R.id.PdfsButton);
+        Images3DButton = (Button) findViewById(R.id.threeDImagesButton);
 
 
         vinEdit= (EditText)findViewById(R.id.vinEdit);
@@ -615,10 +634,19 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
         Log.v("AhmedDakrory","Size of Pdfs"+carData.getPdfs().size());
         adapterForPdfs = new vehicalPdfsAdapter(recyclerViewPdfs,carData.getPdfs(),vehicalView.this);
+        adapterFor3Dimages = new vehical3DImagesAdapter(recyclerView3DImages,carData.getImages3D(),vehicalView.this);
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(vehicalView.this,4);
         recyclerViewPdfs.setHasFixedSize(true);
         recyclerViewPdfs.setLayoutManager(gridLayoutManager);
         recyclerViewPdfs.setAdapter(adapterForPdfs);
+
+
+
+        GridLayoutManager gridLayoutManager2 = new GridLayoutManager(vehicalView.this,4);
+        recyclerView3DImages.setHasFixedSize(true);
+        recyclerView3DImages.setLayoutManager(gridLayoutManager2);
+        recyclerView3DImages.setAdapter(adapterFor3Dimages);
 
         List<vehicalsDetails.modelIdAndName> allWithNull=carData.getAllshippers();
         Log.v("AhmedDakrory1",String.valueOf(allWithNull.size()));
@@ -691,6 +719,11 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                         carData.getPdfs().addAll(car_data.getPdfs());
                         Log.v("AhmedDakrory", "Size of Pdfs" + carData.getPdfs().size());
                         adapterForPdfs.notifyDataSetChanged();
+
+
+                        carData.getImages3D().addAll(car_data.getImages3D());
+                        Log.v("AhmedDakrory", "Size of 3D" + carData.getImages3D().size());
+                        adapterFor3Dimages.notifyDataSetChanged();
 
                         setTextData(carData.getData());
                         loaderPanel.setVisibility(View.GONE);
@@ -936,14 +969,22 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             layoutForImages.setVisibility(View.VISIBLE);
             layoutForDocs.setVisibility(View.GONE);
             layoutForPdfs.setVisibility(View.GONE);
+            layoutFor3DImages.setVisibility(View.GONE);
         }else if(v.getId()==R.id.DocumentsButton){
             layoutForImages.setVisibility(View.GONE);
             layoutForDocs.setVisibility(View.VISIBLE);
             layoutForPdfs.setVisibility(View.GONE);
+            layoutFor3DImages.setVisibility(View.GONE);
         }else if(v.getId()==R.id.PdfsButton){
             layoutForImages.setVisibility(View.GONE);
             layoutForDocs.setVisibility(View.GONE);
             layoutForPdfs.setVisibility(View.VISIBLE);
+            layoutFor3DImages.setVisibility(View.GONE);
+        }else if(v.getId()==R.id.threeDImagesButton){
+            layoutForImages.setVisibility(View.GONE);
+            layoutForDocs.setVisibility(View.GONE);
+            layoutForPdfs.setVisibility(View.GONE);
+            layoutFor3DImages.setVisibility(View.VISIBLE);
         }else if(v.getId()==R.id.addImageFloating){
             Log.v("AhmedDakrory","ButtonImage");
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -954,6 +995,10 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             Intent openDamage = new Intent(vehicalView.this,damageActivity.class);
             openDamage.putExtra("TYPE",typeSelect.getSelectedItem().toString());
             startActivity(openDamage);
+        }else if(v.getId()==R.id.setAll3D){
+            Log.v("AhmedDakrory","ButtonImage");
+            storage3D(Constants.Type3DForServer);
+
         }else if(v.getId()==R.id.addDocFloating){
             Log.v("AhmedDakrory","ButtonDoc");
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1072,6 +1117,26 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             startActivityForResult(photoPickerIntent, typeForImageOrDoc);
         }
     }
+
+
+
+    private void storage3D(int typeFor3D) {
+
+        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+
+
+            ActivityCompat.requestPermissions(vehicalView.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    3);
+        }else {
+            Intent open3D = new Intent(vehicalView.this,allImagesActivity.class);
+            open3D.putExtra("Data",carData.getData().getUuid().toString());
+            startActivityForResult(open3D, typeFor3D);
+        }
+    }
+
+
 
 
     @Override
@@ -1298,6 +1363,51 @@ if(carData.getData().getId()!=0) {
         recyclerViewPdfs.scrollToPosition(adapterForPdfs.getItemCount() - 1);
     }
 
+    else if (typeForImageOrDoc == Constants.Type3DForServer) {
+        Log.v("AhmedDakrory","Akka Details");
+        Log.v("AhmedDakrory",file.getPath().toString());
+        carData.getImages3D().add(new vehicalsDetails.urlItem(file.getPath(), vehicalsDetails.TYPE_FILE, new CallBackViewChanger() {
+            @Override
+            public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
+                new FileUploader().uploadFile(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
+                    @Override
+                    public void onError(Throwable t) {
+                        Toast.makeText(vehicalView.this, "Some error occurred...", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFinish(Response<MyResponse> response) {
+                        Log.v("AhmedDakrory:", "Finish");
+                        MyResponse response1 = response.body();
+                        loader.setVisibility(View.GONE);
+                        overlayView.setVisibility(View.GONE);
+                        markView.setTextColor(vehicalView.this.getResources().getColor(R.color.colorGreenSign));
+
+
+                        File myFile = new File(file.getPath().toString());
+                        if(myFile.exists())
+                            myFile.delete();
+                        Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onProgressUpdate(int currentpercent, int totalpercent) {
+                        Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
+
+                        loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
+                    }
+                }, typeForImageOrDoc);
+            }
+        }));
+
+
+
+
+        adapterFor3Dimages.notifyItemInserted(adapterFor3Dimages.getItemCount() - 1);
+        recyclerView3DImages.scrollToPosition(adapterFor3Dimages.getItemCount() - 1);
+    }
+
+
     }else{
         Toast.makeText(this,"Problem For Car",Toast.LENGTH_LONG).show();
     }
@@ -1336,6 +1446,17 @@ if(carData.getData().getId()!=0) {
                 Log.v("AhmedDakrory", "Type: "+Constants.TypePdfForServer);
                 uploadFileAndAddToAdapter(file,Constants.TypePdfForServer);
                 Log.v("AhmedDakrory", imageUri.getPath());
+            }
+        }else if(requestCode == Constants.Type3DForServer){
+            Log.v("AhmedDakrory", "NewType: "+Constants.Type3DForServer);
+            if(resultCode == RESULT_OK) {
+                final Intent imageUri = data;
+                Uri urlImage3D = imageUri.getData();
+                Log.v("AhmedDakrory", urlImage3D.toString());
+//                String selectedFilePath = FilePath.getPath(this, urlImage3D);
+                final File file = new File(urlImage3D.toString());
+                Log.v("AhmedDakrory", "Type: "+Constants.Type3DForServer);
+                uploadFileAndAddToAdapter(file,Constants.Type3DForServer);
             }
         }
         else if(requestCode!=100) {

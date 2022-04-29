@@ -43,7 +43,7 @@
     <string name="arrowImage">arrowImage</string>
     <string name="emptyImagePlaceHolder">emptyImagePlaceHolder</string>
     <string name="Images">Images</string>
-    <string name="Docs">Documents</string>
+    <string name="Docs">DOC</string>
     <string name="VinText">Vin: </string>
     <string name="ModelText">Model: </string>
     <string name="MakeText">Make: </string>
@@ -86,4 +86,43 @@
     <string name="keyExistText">Is Key Exists</string>
     <string name="titleExistText">Are Title Exists?</string>
     <string name="KeyNumbers">Number of Keys</string>
+
+
+
+
+
+    <string name="three_d_image">3D</string>
+
+
+
+
+    <string name="theta_ip_address">192.168.1.1</string>
+    <string name="label_btn_shoot">shoot</string>
+    <string name="text_camera_notconnected">Not connected</string>
+    <string name="text_camera_standby">Standby</string>
+    <string name="text_camera_synthesizing">Image synthesizing</string>
+
+    <string name="menu_configuration">inertia</string>
+    <string name="menu_connection">connection</string>
+    <string name="rotate_inertia">rotation inertia</string>
+    <string name="inertia_0">none</string>
+    <string name="inertia_50">weak</string>
+    <string name="inertia_100">strong</string>
+    <string name="delete_dialog_message">Delete this file?</string>
+    <string name="dialog_positive_button">OK</string>
+    <string name="label_btn_image_size">Image Size</string>
+    <string name="image_size_2048x1024">2048 x 1024</string>
+    <string name="image_size_5376x2688">5376 x 2688</string>
+    <string name="title_activity_panorama_view">PanoramaView</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="HintForOpenWifi">Please Connect to the Wifi for Camera</string>
+
+
 </resources>
