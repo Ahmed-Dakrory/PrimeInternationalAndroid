@@ -88,7 +88,17 @@ public class allImagesActivity extends Activity {
     private void handleAllImages() {
 
 
+        File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"PrimeShippingCarServices");
+
+        if (!folder.exists()) {
+            //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
+            folder.mkdir();
+        }
+
         String targetPath = Environment.getExternalStorageDirectory() + File.separator +"PrimeShippingCarServices";
+
+
+
         allImages = new ArrayList<imageDetails>();
         File targetDirector = new File(targetPath);
 

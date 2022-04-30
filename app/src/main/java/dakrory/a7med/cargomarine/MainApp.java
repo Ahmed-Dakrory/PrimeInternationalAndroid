@@ -204,6 +204,10 @@ public class MainApp extends AppCompatActivity
             LoginActivity.thisAccountCredData= null;
             startActivity(goToLogIn);
             finish();
+        }else if(id == R.id.threeDList){
+            Intent goToLogIn = new Intent(MainApp.this,allImagesActivity.class);
+            startActivity(goToLogIn);
+//            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

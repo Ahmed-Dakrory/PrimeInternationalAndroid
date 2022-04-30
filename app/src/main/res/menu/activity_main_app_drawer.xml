@@ -9,6 +9,11 @@
             android:icon="@drawable/ic_directions_car_black_24dp"
             android:title="@string/FreightVehicals" />
 
+        <item
+            android:id="@+id/threeDList"
+            android:icon="@mipmap/theta"
+            android:title="@string/CamerathreeDList" />
+
     </group>
 
     <item android:title="@string/Communicate">
