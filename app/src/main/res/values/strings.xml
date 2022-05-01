@@ -88,12 +88,7 @@
     <string name="KeyNumbers">Number of Keys</string>
 
 
-
-
-
     <string name="three_d_image">3D</string>
-
-
 
 
     <string name="theta_ip_address">192.168.1.1</string>
@@ -126,4 +121,6 @@
     <string name="CamerathreeDList">3D List</string>
 
 
+    <string name="capture_button_alt">Capture</string>
+    <string name="unknown">UNKNOWN</string>
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#717171"
-    tools:context="com.dakrori.camera.CameraActivity">
+    tools:context="dakrory.a7med.cargomarine.CameraActivity">
 
 
 

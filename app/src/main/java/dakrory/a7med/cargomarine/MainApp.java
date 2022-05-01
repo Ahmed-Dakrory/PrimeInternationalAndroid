@@ -205,7 +205,7 @@ public class MainApp extends AppCompatActivity
             startActivity(goToLogIn);
             finish();
         }else if(id == R.id.threeDList){
-            Intent goToLogIn = new Intent(MainApp.this,allImagesActivity.class);
+            Intent goToLogIn = new Intent(MainApp.this,exteriorCam.class);
             startActivity(goToLogIn);
 //            finish();
         }
