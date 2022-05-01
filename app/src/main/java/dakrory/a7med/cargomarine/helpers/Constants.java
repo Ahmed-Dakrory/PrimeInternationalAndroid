@@ -24,5 +24,5 @@ public class Constants {
     public static final int TypeSignitureForDriverDestinationForServer = 7;
 
 
-
+    public static final int Type3DExteriorForServer=9;
 }

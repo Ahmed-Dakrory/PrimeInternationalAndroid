@@ -24,6 +24,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="visible"
                 android:id="@+id/layoutForImages">
                 <androidx.recyclerview.widget.RecyclerView
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -136,15 +137,30 @@
 
 
                 </androidx.recyclerview.widget.RecyclerView>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/setAll3D"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:backgroundTint="#80FFFFFF"
+                    android:src="@mipmap/theta" />
+
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:src="@mipmap/theta"
+                    android:src="@mipmap/save"
                     android:backgroundTint="#80FFFFFF"
-                    android:id="@+id/setAll3D"
+                    android:id="@+id/setExteriorImage"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:layout_margin="20dp"/>
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="100dp"/>
             </RelativeLayout>
 
 

@@ -212,6 +212,10 @@ public class vehicalsDetails {
         private boolean keyExist=false;
 
 
+        @SerializedName("exteriorExists")
+        private boolean exteriorExists=false;
+
+
 
         @SerializedName("titleExist")
         private boolean titleExist=false;
@@ -364,6 +368,15 @@ public class vehicalsDetails {
 
         public void setDateOfCrashImage(String dateOfCrashImage) {
             this.dateOfCrashImage = dateOfCrashImage;
+        }
+
+
+        public boolean isExteriorExists() {
+            return exteriorExists;
+        }
+
+        public void setExteriorExists(boolean exteriorExists) {
+            this.exteriorExists = exteriorExists;
         }
 
         public String getUrlOfCrashImage() {

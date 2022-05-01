@@ -2,6 +2,7 @@ package dakrory.a7med.cargomarine;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -92,6 +96,9 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     RecyclerView recyclerViewPdfs;
     RecyclerView recyclerView3DImages;
 
+
+    dialogWithProgress mainDialog;
+
     RelativeLayout layoutForImages;
     RelativeLayout layoutForDocs;
     RelativeLayout layoutForPdfs;
@@ -106,6 +113,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     FloatingActionButton addImageFloatingButton;
     FloatingActionButton addDocFloatingButton;
     FloatingActionButton addPdfFloatingButton;
+    FloatingActionButton setExteriorImage;
 
     FloatingActionButton saveAllNewResultsFloatingActionButton;
 
@@ -219,6 +227,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         addDamageFloatingButton.setOnClickListener(this);
         add3DFloatingButton.setOnClickListener(this);
         addImageFloatingButton.setOnClickListener(this);
+        setExteriorImage.setOnClickListener(this);
         addDocFloatingButton.setOnClickListener(this);
         addPdfFloatingButton.setOnClickListener(this);
         saveAllNewResultsFloatingActionButton.setOnClickListener(this);
@@ -530,6 +539,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
         saveAllNewResultsFloatingActionButton.hide();
         addImageFloatingButton.hide();
+        setExteriorImage.hide();
         addDocFloatingButton.hide();
         addPdfFloatingButton.hide();
         add3DFloatingButton.hide();
@@ -564,6 +574,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
         addDamageFloatingButton=(FloatingActionButton)findViewById(R.id.setAllDamages);
         addImageFloatingButton=(FloatingActionButton)findViewById(R.id.addImageFloating);
+        setExteriorImage = (FloatingActionButton)findViewById(R.id.setExteriorImage);
         addDocFloatingButton=(FloatingActionButton)findViewById(R.id.addDocFloating);
         addPdfFloatingButton=(FloatingActionButton)findViewById(R.id.addPdfFloating);
         add3DFloatingButton=(FloatingActionButton)findViewById(R.id.setAll3D);
@@ -995,6 +1006,8 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             Intent openDamage = new Intent(vehicalView.this,damageActivity.class);
             openDamage.putExtra("TYPE",typeSelect.getSelectedItem().toString());
             startActivity(openDamage);
+        }else if(v.getId()==R.id.setExteriorImage){
+            storage3DExteriorImage(Constants.Type3DExteriorForServer);
         }else if(v.getId()==R.id.setAll3D){
             Log.v("AhmedDakrory","ButtonImage");
             storage3D(Constants.Type3DForServer);
@@ -1026,8 +1039,27 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         }
     }
 
+    private void storage3DExteriorImage(int type3DExteriorForServer) {
 
-    public static File bitmapToFile(Context context, Bitmap bitmap, String fileNameToSave) { // File name like "image.png"
+
+            if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED){
+
+
+                ActivityCompat.requestPermissions(vehicalView.this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        3);
+            }else {
+                Intent open3D = new Intent(vehicalView.this,exteriorCam.class);
+                open3D.putExtra("Data",carData.getData().getUuid().toString());
+                startActivityForResult(open3D, type3DExteriorForServer);
+            }
+        }
+
+
+
+
+        public static File bitmapToFile(Context context, Bitmap bitmap, String fileNameToSave) { // File name like "image.png"
         File f3=new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES)+"/"+fileNameToSave+"/");
         if(!f3.exists())
@@ -1405,6 +1437,64 @@ if(carData.getData().getId()!=0) {
 
         adapterFor3Dimages.notifyItemInserted(adapterFor3Dimages.getItemCount() - 1);
         recyclerView3DImages.scrollToPosition(adapterFor3Dimages.getItemCount() - 1);
+    }else if (typeForImageOrDoc == Constants.Type3DExteriorForServer) {
+
+        mainDialog=new vehicalView.dialogWithProgress(vehicalView.this);
+        mainDialog.dialog.show();
+        mainDialog.setPercentage(0);
+
+        new FileUploader().uploadFile(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
+            @Override
+            public void onError(Throwable t) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        mainDialog.dialog.dismiss();
+                    }
+                });
+                Log.v("AhmedDakrory","Error: "+String.valueOf(t.toString()));
+            }
+
+            @Override
+            public void onFinish(Response<MyResponse> response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        mainDialog.dialog.dismiss();
+                    }
+                });
+                Log.v("AhmedDakrory","Pers: "+String.valueOf("Loaded"));
+                MyResponse response1 = response.body();
+
+                Log.v("AhmedDakrory","Pers: "+response1.getMessage());
+                Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onProgressUpdate(int currentpercent, int totalpercent) {
+                Log.v("AhmedDakrory","Pers: "+String.valueOf(currentpercent));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        mainDialog.dialog.show();
+                        try {
+                            mainDialog.setPercentage((int) (((currentpercent))));
+                        }catch (Error error){
+
+                        }catch (Exception exc){
+
+                        }
+                    }
+                });
+
+            }
+        },typeForImageOrDoc);
+
+
     }
 
 
@@ -1457,6 +1547,17 @@ if(carData.getData().getId()!=0) {
                 final File file = new File(urlImage3D.toString());
                 Log.v("AhmedDakrory", "Type: "+Constants.Type3DForServer);
                 uploadFileAndAddToAdapter(file,Constants.Type3DForServer);
+            }
+        }else if(requestCode == Constants.Type3DExteriorForServer){
+            Log.v("AhmedDakrory", "NewType: "+Constants.Type3DExteriorForServer);
+            if(resultCode == RESULT_OK) {
+                final Intent imageUri = data;
+                Uri urlImage3D = imageUri.getData();
+                Log.v("AhmedDakrory", urlImage3D.toString());
+//                String selectedFilePath = FilePath.getPath(this, urlImage3D);
+                final File file = new File(urlImage3D.toString());
+                Log.v("AhmedDakrory", "Type: "+Constants.Type3DExteriorForServer);
+                uploadFileAndAddToAdapter(file,Constants.Type3DExteriorForServer);
             }
         }
         else if(requestCode!=100) {
@@ -1592,4 +1693,51 @@ if(carData.getData().getId()!=0) {
             );
         }
     }
+
+
+    class dialogWithProgress extends Dialog {
+
+        final Dialog dialog ;
+        ProgressBar text;
+        TextView text2;
+        public dialogWithProgress(@NonNull Context context) {
+            super(context);
+            dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(false);
+            dialog.setContentView(R.layout.dialog_progress);
+            text = (ProgressBar) dialog.findViewById(R.id.progress_horizontal);
+            text2 = dialog.findViewById(R.id.value123);
+
+
+
+
+
+
+            Window window = dialog.getWindow();
+            window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+
+        }
+
+
+        public Dialog getDialog() {
+            return dialog;
+        }
+
+        public void setPercentage(int percentage){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    text.setProgress(percentage);
+                    text2.setText(String.valueOf(percentage));
+                }
+            });
+
+
+
+
+        }
+    }
+
 }
