@@ -115,91 +115,107 @@ public class exteriorCam extends AppCompatActivity {
                 builderInner.setPositiveButton("upload", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Thread t1=new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+                        try {
+                            Thread t1 = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    List<Bitmap> bitmapList = new ArrayList<Bitmap>();
 
-                                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"PrimeShippingCarServices");
-                                boolean success = true;
-                                if (!folder.exists()) {
-                                    //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
-                                    success = folder.mkdir();
-                                }
-
-                                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"PrimeShippingCarServices"+ File.separator +CarVin);
-                                success = true;
-                                if (!folder.exists()) {
-                                    //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
-                                    success = folder.mkdir();
-                                }
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mainDialog=new dialogWithProgress(exteriorCam.this);
-                                        mainDialog.dialog.show();
-                                        mainDialog.setPercentage(0);
-
+                                    File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "PrimeShippingCarServices");
+                                    boolean success = true;
+                                    if (!folder.exists()) {
+                                        //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
+                                        success = folder.mkdir();
                                     }
-                                });
 
-                                File[] files = folder.listFiles();
-                                Arrays.sort(files);
-                                int allFilelength = files.length;
-                                int ii=0;
-                                for (int file_index=0;file_index<files.length;file_index++) {
-                                    File file = new File(folder.toString()+ File.separator +String.valueOf(file_index+1)+".png");
+                                    folder = new File(Environment.getExternalStorageDirectory() + File.separator + "PrimeShippingCarServices" + File.separator + CarVin);
+                                    success = true;
+                                    if (!folder.exists()) {
+                                        //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
+                                        success = folder.mkdir();
+                                    }
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mainDialog = new dialogWithProgress(exteriorCam.this);
+                                            mainDialog.dialog.show();
+                                            mainDialog.setPercentage(0);
 
-                                    if(file.exists()) {
-                                        Log.v("AhmedDakrory", file.getName());
+                                        }
+                                    });
 
-                                        File newFile = compressBitmap(file, 5, 75);
-                                        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                                        Bitmap bitmap = BitmapFactory.decodeFile(newFile.getAbsolutePath(), bmOptions);
-                                        bitmapList.add(bitmap);
-                                        ii++;
-                                        int finalIi = ii;
+                                    File[] files = folder.listFiles();
+                                    Arrays.sort(files);
+                                    int allFilelength = files.length;
+                                    int ii = 0;
+                                    for (int file_index = 0; file_index < files.length; file_index++) {
+                                        File file = new File(folder.toString() + File.separator + String.valueOf(file_index + 1) + ".png");
+
+                                        if (file.exists()) {
+                                            Log.v("AhmedDakrory", file.getName());
+
+                                            File newFile = compressBitmap(file, 5, 75);
+                                            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                                            Bitmap bitmap = BitmapFactory.decodeFile(newFile.getAbsolutePath(), bmOptions);
+                                            bitmapList.add(bitmap);
+                                            ii++;
+                                            int finalIi = ii;
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    mainDialog.dialog.show();
+//                                                Log.v("AhmedDakrory", String.valueOf((((finalIi)* 100) / allFilelength )));
+                                                    mainDialog.setPercentage((int) (((finalIi) * 100) / allFilelength));
+                                                }
+                                            });
+
+                                        }
+                                    }
+
+                                    if(bitmapList.size()>0) {
+                                        Bitmap mainBitmap = combinAllImages(bitmapList);
+
+                                        lengthOfImages = ii;
+                                        try (FileOutputStream out = new FileOutputStream(folder.toString() + File.separator + "last_$" + String.valueOf(lengthOfImages) + "_$" + ".png")) {
+                                            mainBitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                                            // PNG is a lossless format, the compression factor (100) is ignored
+
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        File finalFolder = folder;
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                mainDialog.dialog.show();
-//                                                Log.v("AhmedDakrory", String.valueOf((((finalIi)* 100) / allFilelength )));
-                                                mainDialog.setPercentage((int) (((finalIi)* 100) / allFilelength ));
+
+                                                mainDialog.dialog.dismiss();
+                                                Intent data = new Intent();
+                                                //---set the data to pass back---
+                                                data.setData(Uri.parse(finalFolder.toString() + File.separator + "last_$" + String.valueOf(lengthOfImages) + "_$" + ".png"));
+                                                setResult(RESULT_OK, data);
+                                                //---close the activity---
+                                                finish();
                                             }
                                         });
+                                    }else{
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(exteriorCam.this,"No Images Loaded",Toast.LENGTH_LONG).show();
+                                                mainDialog.dialog.dismiss();
 
+                                            }
+                                        });
                                     }
                                 }
-                                Bitmap mainBitmap = combinAllImages(bitmapList);
+                            });
 
-                                lengthOfImages = ii;
-                                try (FileOutputStream out = new FileOutputStream(folder.toString()+ File.separator +"last_$"+String.valueOf(lengthOfImages)+"_$"+".png")) {
-                                    mainBitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
-                                    // PNG is a lossless format, the compression factor (100) is ignored
+                            t1.start();
+                        }catch (Exception exc){
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                File finalFolder = folder;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
+                        }catch (Error err){
 
-                                        mainDialog.dialog.dismiss();
-                                        Intent data = new Intent();
-                                        //---set the data to pass back---
-                                        data.setData(Uri.parse(finalFolder.toString()+ File.separator +"last_$"+String.valueOf(lengthOfImages)+"_$"+".png"));
-                                        setResult(RESULT_OK, data);
-                                        //---close the activity---
-                                        finish();
-                                    }
-                                });
-
-                            }
-                        });
-
-                        t1.start();
-
+                        }
 
                     }
                 });

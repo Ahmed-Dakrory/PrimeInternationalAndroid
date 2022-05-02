@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -54,6 +56,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -88,7 +91,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class vehicalView extends Activity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class vehicalView extends Activity implements View.OnClickListener,View.OnTouchListener, DatePickerDialog.OnDateSetListener {
 
 
     RecyclerView recyclerViewImages;
@@ -97,14 +100,20 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     RecyclerView recyclerView3DImages;
 
 
+    int mCurrentImageIndex=0;
+    List<Bitmap> animBitmaps;
+    int numberOfImages;
+
     dialogWithProgress mainDialog;
 
     RelativeLayout layoutForImages;
     RelativeLayout layoutForDocs;
     RelativeLayout layoutForPdfs;
     RelativeLayout layoutFor3DImages;
+    RelativeLayout layoutFor3DExteriorImages;
 
 
+    ImageView imageExterior;
 
 
     FloatingActionButton addDamageFloatingButton;
@@ -114,6 +123,8 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     FloatingActionButton addDocFloatingButton;
     FloatingActionButton addPdfFloatingButton;
     FloatingActionButton setExteriorImage;
+    FloatingActionButton beforeViewOfEXT;
+    FloatingActionButton nextViewOFExt;
 
     FloatingActionButton saveAllNewResultsFloatingActionButton;
 
@@ -127,6 +138,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     Button DocsButton;
     Button PdfsButton;
     Button Images3DButton;
+    Button Images3DExteriorButton;
 
 
 
@@ -199,6 +211,9 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     public static TextView markDriverSignView;
 
 
+    ProgressBar loaderOfExteriorImage;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,6 +243,8 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         add3DFloatingButton.setOnClickListener(this);
         addImageFloatingButton.setOnClickListener(this);
         setExteriorImage.setOnClickListener(this);
+        beforeViewOfEXT.setOnTouchListener(this);
+        nextViewOFExt.setOnTouchListener(this);
         addDocFloatingButton.setOnClickListener(this);
         addPdfFloatingButton.setOnClickListener(this);
         saveAllNewResultsFloatingActionButton.setOnClickListener(this);
@@ -237,7 +254,7 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         DocsButton.setOnClickListener(this);
         PdfsButton.setOnClickListener(this);
         Images3DButton.setOnClickListener(this);
-
+        Images3DExteriorButton.setOnClickListener(this);
 
         setReleaseDateButton.setOnClickListener(this);
 
@@ -423,7 +440,6 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
     }
 
     private void addNewCarToServer() {
-
         Log.v("AhmedDakrory","Done ya : "+carData.getData().getMainTwoId());
         carData.getData().setUuid(vinEdit.getText().toString());
         carData.getData().setModel(ModelEdit.getText().toString());
@@ -515,6 +531,10 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                 }
             });
             }
+
+
+
+
     }
 
     private void setALLEditableFieldsAccess() {
@@ -537,9 +557,13 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         titleExistEdit.setKeyListener(null);
 
 
+        nextViewOFExt.hide();
+        beforeViewOfEXT.hide();
         saveAllNewResultsFloatingActionButton.hide();
         addImageFloatingButton.hide();
         setExteriorImage.hide();
+        nextViewOFExt.hide();
+        beforeViewOfEXT.hide();
         addDocFloatingButton.hide();
         addPdfFloatingButton.hide();
         add3DFloatingButton.hide();
@@ -570,21 +594,27 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         layoutForImages = (RelativeLayout) findViewById(R.id.layoutForImages);
         layoutForPdfs = (RelativeLayout) findViewById(R.id.layoutForPdfs);
         layoutFor3DImages = (RelativeLayout) findViewById(R.id.layoutFor3DImages);
+        layoutFor3DExteriorImages = (RelativeLayout) findViewById(R.id.layoutFor3DExteriorImages);
 
 
         addDamageFloatingButton=(FloatingActionButton)findViewById(R.id.setAllDamages);
         addImageFloatingButton=(FloatingActionButton)findViewById(R.id.addImageFloating);
         setExteriorImage = (FloatingActionButton)findViewById(R.id.setExteriorImage);
+        nextViewOFExt = (FloatingActionButton)findViewById(R.id.nextViewOFExt);
+        beforeViewOfEXT = (FloatingActionButton)findViewById(R.id.beforeViewOfEXT);
         addDocFloatingButton=(FloatingActionButton)findViewById(R.id.addDocFloating);
         addPdfFloatingButton=(FloatingActionButton)findViewById(R.id.addPdfFloating);
         add3DFloatingButton=(FloatingActionButton)findViewById(R.id.setAll3D);
         saveAllNewResultsFloatingActionButton=(FloatingActionButton)findViewById(R.id.saveAllNewResults);
 
 
+        imageExterior = (ImageView) findViewById(R.id.imageExterior);
+
         imagesButton = (Button) findViewById(R.id.ImagesButton);
         DocsButton = (Button) findViewById(R.id.DocumentsButton);
         PdfsButton = (Button) findViewById(R.id.PdfsButton);
         Images3DButton = (Button) findViewById(R.id.threeDImagesButton);
+        Images3DExteriorButton = (Button) findViewById(R.id.Images3DExteriorButton);
 
 
         vinEdit= (EditText)findViewById(R.id.vinEdit);
@@ -684,6 +714,9 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         TimeStampForSigniture = (TextView) findViewById(R.id.TimeStampForSigniture);
 
 
+        loaderOfExteriorImage = (ProgressBar) findViewById(R.id.loaderOfExteriorImage);
+
+
     }
 
     private void getAllDataToAdapter() {
@@ -723,6 +756,8 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                         adapterForImages.notifyDataSetChanged();
 
 
+                        setImageExteriorToHolder(carData.getData().getExteriorImg());
+
                         carData.getDocs().addAll(car_data.getDocs());
 //                        Log.v("AhmedDakrory", "Size of Images" + carData.getDocs().size());
                         adapterForDocs.notifyDataSetChanged();
@@ -749,6 +784,9 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                                 return;
                             }
                         }
+
+
+
                     }
                 }
 
@@ -768,6 +806,70 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
                     Toast.makeText(vehicalView.this,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
                 }
             });
+        }
+
+
+    }
+
+    private void setImageExteriorToHolder(String exteriorImg) {
+
+        Log.v("AhmedDakrory","DataStartHere");
+//        Log.v("AhmedDakrory",exteriorImg);
+        if(exteriorImg!=null && !exteriorImg.equals("")) {
+            loaderOfExteriorImage.setVisibility(View.VISIBLE);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.v("AhmedDakrory","ShowLoader");
+                    URL url = null;
+                    try {
+                        url = new URL(Constants.ImageBaseUrl + exteriorImg);
+                        Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+                        Log.v("AhmedDakrory","NumOld3"+String.valueOf(exteriorImg));
+                        String[] aar = exteriorImg.split("_");
+
+                        String num = aar[1].substring(1, aar[1].length());
+                        Log.v("AhmedDakrory","Num"+String.valueOf(num));
+                        numberOfImages = Integer.valueOf(num);
+                        int bitmapWidth = bmp.getWidth() / numberOfImages;
+                        int bitmapHeight = bmp.getHeight();
+
+//list which holds individual bitmaps.
+                        animBitmaps = new ArrayList<>(numberOfImages);
+
+
+                        //split your bitmap in to individual bitmaps
+                        for (int index = 0; index < numberOfImages; index++) {
+                            animBitmaps.add(Bitmap.createBitmap(bmp, index * bitmapWidth, 0, bitmapWidth, bitmapHeight));
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                imageExterior.setImageBitmap(animBitmaps.get(mCurrentImageIndex));
+
+
+                                nextViewOFExt.show();
+                                beforeViewOfEXT.show();
+
+                                loaderOfExteriorImage.setVisibility(View.GONE);
+                            }
+                        });
+
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }).start();
+
+        }else{
+            Log.v("AhmedDakrory","GONEIMAGEEX");
+            loaderOfExteriorImage.setVisibility(View.GONE);
         }
     }
 
@@ -841,6 +943,16 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
 
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent motionEvent) {
+        if(v.getId()==R.id.nextViewOFExt){
+
+            goNextForBitmapExterior();
+        }else if(v.getId()==R.id.beforeViewOfEXT){
+            goBeforeForBitmapExterior();
+        }
+        return false;
+    }
 
 
     class RetrieveFeedTask extends AsyncTask<String, Void, String> {
@@ -980,22 +1092,32 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             layoutForImages.setVisibility(View.VISIBLE);
             layoutForDocs.setVisibility(View.GONE);
             layoutForPdfs.setVisibility(View.GONE);
+            layoutFor3DExteriorImages.setVisibility(View.GONE);
             layoutFor3DImages.setVisibility(View.GONE);
         }else if(v.getId()==R.id.DocumentsButton){
             layoutForImages.setVisibility(View.GONE);
             layoutForDocs.setVisibility(View.VISIBLE);
             layoutForPdfs.setVisibility(View.GONE);
+            layoutFor3DExteriorImages.setVisibility(View.GONE);
             layoutFor3DImages.setVisibility(View.GONE);
         }else if(v.getId()==R.id.PdfsButton){
             layoutForImages.setVisibility(View.GONE);
             layoutForDocs.setVisibility(View.GONE);
             layoutForPdfs.setVisibility(View.VISIBLE);
+            layoutFor3DExteriorImages.setVisibility(View.GONE);
             layoutFor3DImages.setVisibility(View.GONE);
         }else if(v.getId()==R.id.threeDImagesButton){
             layoutForImages.setVisibility(View.GONE);
             layoutForDocs.setVisibility(View.GONE);
             layoutForPdfs.setVisibility(View.GONE);
+            layoutFor3DExteriorImages.setVisibility(View.GONE);
             layoutFor3DImages.setVisibility(View.VISIBLE);
+        }else if(v.getId()==R.id.Images3DExteriorButton){
+            layoutForImages.setVisibility(View.GONE);
+            layoutForDocs.setVisibility(View.GONE);
+            layoutForPdfs.setVisibility(View.GONE);
+            layoutFor3DImages.setVisibility(View.GONE);
+            layoutFor3DExteriorImages.setVisibility(View.VISIBLE);
         }else if(v.getId()==R.id.addImageFloating){
             Log.v("AhmedDakrory","ButtonImage");
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1008,6 +1130,11 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
             startActivity(openDamage);
         }else if(v.getId()==R.id.setExteriorImage){
             storage3DExteriorImage(Constants.Type3DExteriorForServer);
+        }else if(v.getId()==R.id.nextViewOFExt){
+            
+            goNextForBitmapExterior();
+        }else if(v.getId()==R.id.beforeViewOfEXT){
+            goBeforeForBitmapExterior();
         }else if(v.getId()==R.id.setAll3D){
             Log.v("AhmedDakrory","ButtonImage");
             storage3D(Constants.Type3DForServer);
@@ -1037,6 +1164,28 @@ public class vehicalView extends Activity implements View.OnClickListener, DateP
         }else if(v.getId()==R.id.clear_buttonForDriverSign){
             mSignaturePadForDriver.clear();
         }
+    }
+
+    private void goNextForBitmapExterior() {
+        if(animBitmaps!=null) {
+            mCurrentImageIndex++;
+            //if current index is greater than the number of images, reset it to 0
+            if (mCurrentImageIndex > numberOfImages - 1) {
+                mCurrentImageIndex = 0;
+            }
+            imageExterior.setImageBitmap(animBitmaps.get(mCurrentImageIndex));
+        }
+    }
+
+    private void goBeforeForBitmapExterior() {
+    if(animBitmaps!=null) {
+        mCurrentImageIndex--;
+        //if current index is greater than the number of images, reset it to 0
+        if (mCurrentImageIndex < 0) {
+            mCurrentImageIndex = numberOfImages-1;
+        }
+        imageExterior.setImageBitmap(animBitmaps.get(mCurrentImageIndex));
+    }
     }
 
     private void storage3DExteriorImage(int type3DExteriorForServer) {
@@ -1462,7 +1611,25 @@ if(carData.getData().getId()!=0) {
                     @Override
                     public void run() {
 
+                        File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"PrimeShippingCarServices"+ File.separator +carData.getData().getUuid());
+                        if (dir.isDirectory())
+                        {
+                            String[] children = dir.list();
+                            for (int i = 0; i < children.length; i++)
+                            {
+                                new File(dir, children[i]).delete();
+                            }
+                        }
+                        if(dir.exists())
+                            dir.delete();
+
                         mainDialog.dialog.dismiss();
+                        getAllDataToAdapter();
+
+
+
+
+
                     }
                 });
                 Log.v("AhmedDakrory","Pers: "+String.valueOf("Loaded"));

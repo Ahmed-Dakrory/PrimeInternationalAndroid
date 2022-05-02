@@ -208,6 +208,10 @@ public class vehicalsDetails {
         private String bodyStyle="";
 
 
+        @SerializedName("exteriorImg")
+        private String exteriorImg="";
+
+
         @SerializedName("keyExist")
         private boolean keyExist=false;
 
@@ -395,7 +399,13 @@ public class vehicalsDetails {
             this.crashPointsJson = crashPointsJson;
         }
 
+        public String getExteriorImg() {
+            return exteriorImg;
+        }
 
+        public void setExteriorImg(String exteriorImg) {
+            this.exteriorImg = exteriorImg;
+        }
 
         public String getType() {
             return type;
