@@ -151,6 +151,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
     EditText descriptionEdit;
     EditText assemlyCountryEdit;
     EditText colorEdit;
+    EditText weightEdit;
     EditText engineLitersEdit;
     EditText bodyStyleEdit;
     EditText driverNameEdit;
@@ -458,6 +459,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         carData.getData().setEngineType(engineTypeEdit.getText().toString());
         carData.getData().setKeyExist(keyExistEdit.isChecked());
         carData.getData().setTitleExist(titleExistEdit.isChecked());
+        carData.getData().setWeight(weightEdit.getText().toString());
 
         try {
             carData.getData().setShipperId(carData.getAllshippers().get(shipperUserName.getSelectedItemPosition()).getId());
@@ -547,6 +549,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         descriptionEdit.setKeyListener(null);
         assemlyCountryEdit.setKeyListener(null);
         colorEdit.setKeyListener(null);
+        weightEdit.setKeyListener(null);
         engineLitersEdit.setKeyListener(null);
         bodyStyleEdit.setKeyListener(null);
         driverNameEdit.setKeyListener(null);
@@ -626,6 +629,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         descriptionEdit= (EditText)findViewById(R.id.descriptionEdit);
         assemlyCountryEdit= (EditText)findViewById(R.id.assemlyCountryEdit);
         colorEdit= (EditText)findViewById(R.id.colorEdit);
+        weightEdit = (EditText)findViewById(R.id.weightEdit);
         engineLitersEdit= (EditText)findViewById(R.id.engineLitersEdit);
         bodyStyleEdit= (EditText)findViewById(R.id.bodyStyleEdit);
         driverNameEdit= (EditText)findViewById(R.id.driverNameEdit);
@@ -895,6 +899,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
          descriptionEdit.setText(String.valueOf(data.getDescription()));
          assemlyCountryEdit.setText(String.valueOf(data.getAssemlyCountry()));
          colorEdit.setText(String.valueOf(data.getColor()));
+        weightEdit.setText(String.valueOf(data.getWeight()));
          engineLitersEdit.setText(String.valueOf(data.getEngineLiters()));
         bodyStyleEdit.setText(String.valueOf(data.getBodyStyle()));
         driverNameEdit.setText(String.valueOf(data.getDriverName()));

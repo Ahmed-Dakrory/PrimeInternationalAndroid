@@ -87,7 +87,7 @@ public class exteriorCam extends AppCompatActivity {
 
         thisIntent = getIntent();
         CarVin = thisIntent.getStringExtra("Data");
-        Log.v("AhmedDakrory",CarVin);
+//        Log.v("AhmedDakrory",CarVin);
         container = findViewById(R.id.camera_container);
         save_image = findViewById(R.id.save_image);
         text_view = findViewById(R.id.text_prediction);

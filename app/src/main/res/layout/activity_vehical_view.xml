@@ -307,16 +307,16 @@
         </LinearLayout>
 
         <com.alespero.expandablecardview.ExpandableCardView
+            android:id="@+id/vechicalDataList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/buttonsLayout"
-            android:id="@+id/vechicalDataList"
-            app:title="@string/VehicalData"
+            app:animationDuration="300"
+            app:expandOnClick="true"
             app:icon="@drawable/ic_directions_car_black_24dp"
             app:inner_view="@layout/car_data_layout"
-            app:expandOnClick="true"
-            app:animationDuration="300"
-            app:startExpanded="false">
+            app:startExpanded="false"
+            app:title="@string/VehicalData">
 
 
         </com.alespero.expandablecardview.ExpandableCardView>
