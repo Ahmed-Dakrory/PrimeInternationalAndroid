@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Prime International</string>
+    <string name="app_name">NY Cargo</string>
     <!-- Strings related to login -->
     <string name="prompt_userName">UserName</string>
     <string name="prompt_password">Password</string>
@@ -17,7 +17,7 @@
     <string name="string_upload_image">upload image</string>
     <string name="string_view_image">view image</string>
     <string name="title_activity_start_main">StartMain</string>
-    <string name="title_activity_main_app">PrimeShipping</string>
+    <string name="title_activity_main_app">NY Cargo LLC</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Username</string>

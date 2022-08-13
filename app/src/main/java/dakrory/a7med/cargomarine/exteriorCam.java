@@ -26,19 +26,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.util.Log;
 import android.util.Size;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +65,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class exteriorCam extends AppCompatActivity {
+public class exteriorCam extends AppCompatActivity  implements SensorEventListener {
 
     private static final String TAG = exteriorCam.class.getSimpleName();
 
@@ -79,6 +86,25 @@ public class exteriorCam extends AppCompatActivity {
     int lengthOfImages = 0;
     int inc=1;
     Intent thisIntent;
+
+
+    private float lastX, lastY, lastZ;
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+
+    private float deltaXMax = 0;
+    private float deltaYMax = 0;
+    private float deltaZMax = 0;
+
+    private float deltaX = 0;
+    private float deltaY = 0;
+    private float deltaZ = 0;
+
+    private float vibrateThreshold = 2;
+
+    private ImageView rasterImage;
+    public Vibrator v;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +119,8 @@ public class exteriorCam extends AppCompatActivity {
         text_view = findViewById(R.id.text_prediction);
         camera_capture_button = findViewById(R.id.camera_capture_button);
         view_finder = findViewById(R.id.view_finder);
+        rasterImage = findViewById(R.id.rasterImage);
+
 
         executor = Executors.newSingleThreadExecutor();
 
@@ -121,14 +149,14 @@ public class exteriorCam extends AppCompatActivity {
                                 public void run() {
                                     List<Bitmap> bitmapList = new ArrayList<Bitmap>();
 
-                                    File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "PrimeShippingCarServices");
+                                    File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "nycargoCarServices");
                                     boolean success = true;
                                     if (!folder.exists()) {
                                         //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
                                         success = folder.mkdir();
                                     }
 
-                                    folder = new File(Environment.getExternalStorageDirectory() + File.separator + "PrimeShippingCarServices" + File.separator + CarVin);
+                                    folder = new File(Environment.getExternalStorageDirectory() + File.separator + "nycargoCarServices" + File.separator + CarVin);
                                     success = true;
                                     if (!folder.exists()) {
                                         //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
@@ -228,14 +256,14 @@ public class exteriorCam extends AppCompatActivity {
         camera_capture_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"PrimeShippingCarServices");
+                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarServices");
                 boolean success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
                     success = folder.mkdir();
                 }
 
-                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"PrimeShippingCarServices"+ File.separator +CarVin);
+                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarServices"+ File.separator +CarVin);
                 success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
@@ -260,6 +288,24 @@ public class exteriorCam extends AppCompatActivity {
         if(checkPermission()) {
             startCamera();
         }
+
+
+
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+            // success! we have an accelerometer
+
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+//            vibrateThreshold = accelerometer.getMaximumRange() / 2;
+        } else {
+            // fai! we dont have an accelerometer!
+        }
+
+        //initialize vibration
+        v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
     }
 
     private boolean checkPermission() {
@@ -273,6 +319,19 @@ public class exteriorCam extends AppCompatActivity {
         }
         return true;
     }
+
+
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    //onPause() unregister the accelerometer for stop listening the events
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -444,8 +503,58 @@ public class exteriorCam extends AppCompatActivity {
         return file;
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
 
+        // display the current x,y,z accelerometer values
+        displayCurrentValues();
+        // display the max x,y,z accelerometer values
+        displayMaxValues();
 
+        // get the change of the x,y,z values of the accelerometer
+        deltaX = Math.abs(lastX - event.values[0]);
+        deltaY = Math.abs(lastY - event.values[1]);
+        deltaZ = Math.abs(lastZ - event.values[2]);
+
+        // if the change is below 2, it is just plain noise
+        if (deltaZ < vibrateThreshold)
+            deltaZ = 0;
+        if (deltaY < vibrateThreshold)
+            deltaY = 0;
+        if ( (deltaY != 0) || (deltaZ != 0)) {
+
+            Log.v("AccelerometerZ",String.valueOf("Vibrate"));
+            v.vibrate(50);
+            rasterImage.setImageResource(R.mipmap.red_raster);
+        }else{
+
+            rasterImage.setImageResource(R.mipmap.blue_raster);
+        }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    public void displayCurrentValues() {
+        Log.v("AccelerometerY",String.valueOf(Float.toString(deltaY)));
+        Log.v("AccelerometerZ",String.valueOf(Float.toString(deltaZ)));
+    }
+
+    // display the max x,y,z accelerometer values
+    public void displayMaxValues() {
+        if (deltaX > deltaXMax) {
+            deltaXMax = deltaX;
+        }
+        if (deltaY > deltaYMax) {
+            deltaYMax = deltaY;
+        }
+        if (deltaZ > deltaZMax) {
+            deltaZMax = deltaZ;
+        }
+    }
 
     class dialogWithProgress extends Dialog {
 

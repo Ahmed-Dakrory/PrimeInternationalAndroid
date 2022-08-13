@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#344D64">
+        android:background="@color/colorPrimary">
 
         <ImageView
             android:layout_width="90dp"
@@ -26,9 +26,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="2dp"
+            android:layout_marginBottom="150dp"
             android:alpha="0.2"
-            android:src="@mipmap/logo"></ImageView>
+            android:src="@mipmap/logo_main"></ImageView>
 
     </RelativeLayout>
 
@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/TextLabel"
-                android:textColorHint="#F3F2F2">
+                android:textColorHint="#838383">
 
                 <AutoCompleteTextView
                     android:id="@+id/userName"
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_userName"
                     android:textColorHint="#AFABAB"
-                    android:textColor="#D6D2D2"
+                    android:textColor="#4E4141"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/TextLabel"
-                android:textColorHint="#F3F2F2">
+                android:textColorHint="#838383">
 
                 <EditText
                     android:id="@+id/password"
@@ -90,7 +90,7 @@
                     android:hint="@string/prompt_password"
                     android:imeActionId="6"
                     android:textColorHint="#AFABAB"
-                    android:textColor="#D6D2D2"
+                    android:textColor="#4E4141"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"

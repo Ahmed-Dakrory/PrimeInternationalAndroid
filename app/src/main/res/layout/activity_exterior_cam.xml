@@ -17,6 +17,20 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"/>
 
+    <ImageView
+
+        android:id="@+id/rasterImage"
+        android:src="@mipmap/blue_raster"
+        android:scaleType="matrix"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:foregroundGravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ImageView>
+
+
     <TextView
         android:id="@+id/text_prediction"
         android:layout_width="wrap_content"
@@ -57,5 +71,6 @@
 
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="@string/capture_button_alt" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -644,7 +644,7 @@ public class CameraActivity extends Activity{
 
 
 							int count;
-							File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"PrimeShippingCarServices");
+							File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarServices");
 							boolean success = true;
 							if (!folder.exists()) {
 								//Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
@@ -679,7 +679,7 @@ public class CameraActivity extends Activity{
 
 									String Imagename = urlImage.split("/")[urlImage.split("/").length-1];
 									// Output stream to write file
-									OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory().toString() +File.separator +"PrimeShippingCarServices"+File.separator +Imagename);
+									OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory().toString() +File.separator +"nycargoCarServices"+File.separator +Imagename);
 
 									byte data[] = new byte[1024];
 

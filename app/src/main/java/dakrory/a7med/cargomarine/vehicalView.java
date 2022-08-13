@@ -1616,7 +1616,7 @@ if(carData.getData().getId()!=0) {
                     @Override
                     public void run() {
 
-                        File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"PrimeShippingCarServices"+ File.separator +carData.getData().getUuid());
+                        File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarServices"+ File.separator +carData.getData().getUuid());
                         if (dir.isDirectory())
                         {
                             String[] children = dir.list();
