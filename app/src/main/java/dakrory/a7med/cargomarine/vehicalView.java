@@ -213,7 +213,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
 
     ProgressBar loaderOfExteriorImage;
-
+    EasyImage easyImage ;
 
 
     @Override
@@ -231,13 +231,9 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
 
         defineViewsAndIntegrate();
-
-        EasyImage.configuration(this)
-                .setImagesFolderName("Cargo Marine") // images folder name, default is "EasyImage"
-                .setCopyTakenPhotosToPublicGalleryAppFolder(false)
-                .setCopyPickedImagesToPublicGalleryAppFolder(false)
-                .setAllowMultiplePickInGallery(false); // if you want to use internal memory for storying images - default
-
+//        easyImage = new EasyImage.Builder(this).setFolderName("Cargo Marine") // images folder name, default is "EasyImage"
+//                .setCopyImagesToPublicGalleryFolder(false)
+//                .allowMultiple(true);
 
 
         addDamageFloatingButton.setOnClickListener(this);
@@ -1333,60 +1329,180 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
     }
     private void captureImage(int typeForImageOrDoc) {
 
-        if(ContextCompat.checkSelfPermission(vehicalView.this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED&&ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
+        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(vehicalView.this,
-                    new String[]{Manifest.permission.CAMERA},
-                    2);
+
 
             ActivityCompat.requestPermissions(vehicalView.this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     3);
         }else {
-            EasyImage.openCameraForImage(this,typeForImageOrDoc);
+            Intent openImageOrDoc= new Intent(vehicalView.this,multiple_capture.class);
+            openImageOrDoc.putExtra("Data",carData.getData().getUuid().toString());
+            startActivityForResult(openImageOrDoc, typeForImageOrDoc);
         }
+
+
+
     }
+
+
+    public void upload_file_number(File dir,String[] children,int i,int typeForImageOrDoc){
+
+        boolean finalEnd_image = false;
+        if(i==children.length-1){
+            finalEnd_image = true;
+        }
+
+        boolean finalEnd_image1 = finalEnd_image;
+        final int[] typeForImageOrDocf = {typeForImageOrDoc};
+        new FileUploader().uploadFile(new File(dir, children[i]).getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
+            @Override
+            public void onError(Throwable t) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        mainDialog.dialog.dismiss();
+                    }
+                });
+                Log.v("AhmedDakrory","Error: "+String.valueOf(t.toString()));
+            }
+
+            @Override
+            public void onFinish(Response<MyResponse> response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        File dir_delete = new File(dir, children[i]);
+
+                        if (dir_delete.isDirectory())
+                        {
+
+                            dir_delete.delete();
+
+                        }
+                        if(dir_delete.exists())
+                            dir_delete.delete();
+//                        Log.v("AhmedDakrory","Pers: "+String.valueOf(i)+" , "+String.valueOf(children.length-1)+" , "+String.valueOf((float) ((((i*100 /(children.length-1)) ))))+" , "+String.valueOf((int)(float) ((((i*100 /(children.length-1)) )))));
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                mainDialog.dialog.show();
+                                try {
+                                    mainDialog.setPercentage((int) ((((i*100 /(children.length-1)) ))));
+
+
+                                }catch (Error error){
+
+                                }catch (Exception exc){
+
+                                }
+                            }
+                        });
+
+                        if (finalEnd_image1){
+
+                            mainDialog.dialog.dismiss();
+                            getAllDataToAdapter();
+//                            if(typeForImageOrDocf[0] ==Constants.TypeDocForServer){
+//
+//                                adapterForImages.notifyItemInserted(adapterForDocs.getItemCount() - 1);
+//                                recyclerViewImages.scrollToPosition(adapterForDocs.getItemCount() - 1);
+//                            }else if(typeForImageOrDocf[0] ==Constants.TypeImageForServer){
+//
+//                                adapterForImages.notifyItemInserted(adapterForImages.getItemCount() - 1);
+//                                recyclerViewImages.scrollToPosition(adapterForImages.getItemCount() - 1);
+//                            }
+                        }else{
+
+                            upload_file_number(dir,children,i+1,typeForImageOrDoc);
+                        }
+
+
+
+
+
+                    }
+                });
+                Log.v("AhmedDakrory","Pers: "+String.valueOf("Loaded"));
+                MyResponse response1 = response.body();
+                if (finalEnd_image1) {
+                    Log.v("AhmedDakrory", "Pers: " + response1.getMessage());
+                    Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onProgressUpdate(int currentpercent, int totalpercent) {
+//                        Log.v("AhmedDakrory","Pers: "+String.valueOf(currentpercent));
+
+            }
+        },typeForImageOrDoc);
+
+
+    }
+
+
     public  void uploadFileAndAddToAdapter(final File file, final int typeForImageOrDoc) {
-if(carData.getData().getId()!=0) {
+        if(carData.getData().getId()!=0) {
     Log.v("AhmedDakrory", typeForImageOrDoc + " :Ok");
     if (typeForImageOrDoc == Constants.TypeImageForServer) {
 
         Log.v("AhmedDakrory", typeForImageOrDoc + " :Ok 3");
         Log.v("AhmedDakrory", carData.getData().getId() + " :Ok 3");
-        carData.getImages().add(new vehicalsDetails.urlItem(file.getPath(), vehicalsDetails.TYPE_FILE, new CallBackViewChanger() {
-            @Override
-            public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
-                new FileUploader().uploadFile(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
-                    @Override
-                    public void onError(Throwable t) {
-                        Toast.makeText(vehicalView.this, "Some error occurred...", Toast.LENGTH_LONG).show();
-                    }
 
-                    @Override
-                    public void onFinish(Response<MyResponse> response) {
-                        Log.v("AhmedDakrory:", "Finish");
-                        MyResponse response1 = response.body();
-                        loader.setVisibility(View.GONE);
-                        overlayView.setVisibility(View.GONE);
-                        markView.setTextColor(vehicalView.this.getResources().getColor(R.color.colorGreenSign));
+        boolean end_image = false;
+        mainDialog=new vehicalView.dialogWithProgress(vehicalView.this);
+        mainDialog.dialog.show();
+        mainDialog.setPercentage(0);
+        File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+        if (dir.isDirectory())
+        {
+            String[] children = dir.list();
+            upload_file_number(dir,children,0,typeForImageOrDoc);
 
-                        Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onProgressUpdate(int currentpercent, int totalpercent) {
-
-                        loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
-                        // Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
-                    }
-                }, typeForImageOrDoc);
-            }
-        }));
+        }
 
 
-        adapterForImages.notifyItemInserted(adapterForImages.getItemCount() - 1);
-        recyclerViewImages.scrollToPosition(adapterForImages.getItemCount() - 1);
+
+//
+//        carData.getImages().add(new vehicalsDetails.urlItem(file.getPath(), vehicalsDetails.TYPE_FILE, new CallBackViewChanger() {
+//            @Override
+//            public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
+//                new FileUploader().uploadFile(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
+//                    @Override
+//                    public void onError(Throwable t) {
+//                        Toast.makeText(vehicalView.this, "Some error occurred...", Toast.LENGTH_LONG).show();
+//                    }
+//
+//                    @Override
+//                    public void onFinish(Response<MyResponse> response) {
+//                        Log.v("AhmedDakrory:", "Finish");
+//                        MyResponse response1 = response.body();
+//                        loader.setVisibility(View.GONE);
+//                        overlayView.setVisibility(View.GONE);
+//                        markView.setTextColor(vehicalView.this.getResources().getColor(R.color.colorGreenSign));
+//
+//                        Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+//                    }
+//
+//                    @Override
+//                    public void onProgressUpdate(int currentpercent, int totalpercent) {
+//
+//                        loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
+//                        // Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
+//                    }
+//                }, typeForImageOrDoc);
+//            }
+//        }));
+//
+//
     }
 
     else if (typeForImageOrDoc == Constants.TypeCrashPointsForServer) {
@@ -1476,40 +1592,56 @@ if(carData.getData().getId()!=0) {
         viewChanger1.setViewToPercentage(loaderDriverSign,overlayViewDriverSign,markDriverSignView);
 
         //Update Map
-    }else if (typeForImageOrDoc == Constants.TypeDocForServer) {
-        carData.getDocs().add(new vehicalsDetails.urlItem(file.getPath(), vehicalsDetails.TYPE_FILE, new CallBackViewChanger() {
-            @Override
-            public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
-                new FileUploader().uploadFile(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
-                    @Override
-                    public void onError(Throwable t) {
-                        Toast.makeText(vehicalView.this, "Some error occurred...", Toast.LENGTH_LONG).show();
-                    }
+    }
 
-                    @Override
-                    public void onFinish(Response<MyResponse> response) {
-                        Log.v("AhmedDakrory:", "Finish");
-                        MyResponse response1 = response.body();
-                        loader.setVisibility(View.GONE);
-                        overlayView.setVisibility(View.GONE);
-                        markView.setTextColor(vehicalView.this.getResources().getColor(R.color.colorGreenSign));
+    else if (typeForImageOrDoc == Constants.TypeDocForServer) {
 
-                        Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+        Log.v("AhmedDakrory", typeForImageOrDoc + " :Ok 3");
+        Log.v("AhmedDakrory", carData.getData().getId() + " :Ok 3");
 
-                    @Override
-                    public void onProgressUpdate(int currentpercent, int totalpercent) {
+        boolean end_image = false;
+        mainDialog=new vehicalView.dialogWithProgress(vehicalView.this);
+        mainDialog.dialog.show();
+        mainDialog.setPercentage(0);
+        File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+        if (dir.isDirectory())
+        {
+            String[] children = dir.list();
 
-                        loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
-                        //Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
-                    }
-                }, typeForImageOrDoc);
-            }
-        }));
+            upload_file_number(dir,children,0,typeForImageOrDoc);
+        }
+
+//        carData.getDocs().add(new vehicalsDetails.urlItem(file.getPath(), vehicalsDetails.TYPE_FILE, new CallBackViewChanger() {
+//            @Override
+//            public void setViewToPercentage(final AdCircleProgress loader, final TextView overlayView, final TextView markView) {
+//                new FileUploader().uploadFile(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
+//                    @Override
+//                    public void onError(Throwable t) {
+//                        Toast.makeText(vehicalView.this, "Some error occurred...", Toast.LENGTH_LONG).show();
+//                    }
+//
+//                    @Override
+//                    public void onFinish(Response<MyResponse> response) {
+//                        Log.v("AhmedDakrory:", "Finish");
+//                        MyResponse response1 = response.body();
+//                        loader.setVisibility(View.GONE);
+//                        overlayView.setVisibility(View.GONE);
+//                        markView.setTextColor(vehicalView.this.getResources().getColor(R.color.colorGreenSign));
+//
+//                        Toast.makeText(vehicalView.this, response1.getMessage(), Toast.LENGTH_LONG).show();
+//                    }
+//
+//                    @Override
+//                    public void onProgressUpdate(int currentpercent, int totalpercent) {
+//
+//                        loader.setProgress(Float.parseFloat(String.valueOf(currentpercent)));
+//                        //Log.v("AhmedDakrory:", String.valueOf(currentpercent) + " / " + String.valueOf(totalpercent));
+//                    }
+//                }, typeForImageOrDoc);
+//            }
+//        }));
 
 
-        adapterForDocs.notifyItemInserted(adapterForDocs.getItemCount() - 1);
-        recyclerViewDocs.scrollToPosition(adapterForDocs.getItemCount() - 1);
     }
 
 
@@ -1591,7 +1723,8 @@ if(carData.getData().getId()!=0) {
 
         adapterFor3Dimages.notifyItemInserted(adapterFor3Dimages.getItemCount() - 1);
         recyclerView3DImages.scrollToPosition(adapterFor3Dimages.getItemCount() - 1);
-    }else if (typeForImageOrDoc == Constants.Type3DExteriorForServer) {
+    }
+    else if (typeForImageOrDoc == Constants.Type3DExteriorForServer) {
 
         mainDialog=new vehicalView.dialogWithProgress(vehicalView.this);
         mainDialog.dialog.show();
@@ -1681,22 +1814,42 @@ if(carData.getData().getId()!=0) {
         Log.v("AhmedDakrory","Returned");
         if(requestCode == Constants.TypeDocForServer){
             if(resultCode == RESULT_OK) {
-                final Uri imageUri = data.getData();
-                String selectedFilePath = FilePath.getPath(this, imageUri);
-                final File file = new File(selectedFilePath);
-                final File file2 = compressBitmap(file,  5, 75);
-                uploadFileAndAddToAdapter(file2,Constants.TypeDocForServer);
-                Log.v("AhmedDakrory", imageUri.getPath());
+//                final Uri imageUri = data.getData();
+//                String selectedFilePath = FilePath.getPath(this, imageUri);
+//                final File file = new File(selectedFilePath);
+//                final File file2 = compressBitmap(file,  5, 75);
+//                uploadFileAndAddToAdapter(file2,Constants.TypeDocForServer);
+//                Log.v("AhmedDakrory", imageUri.getPath());
+
+
+                final Intent imageUri = data;
+                Uri imageUri2 = imageUri.getData();
+                Log.v("AhmedDakrory", imageUri2.toString());
+//                String selectedFilePath = FilePath.getPath(this, urlImage3D);
+                final File file = new File(imageUri2.toString());
+                Log.v("AhmedDakrory", "Type: "+Constants.TypeDocForServer);
+                uploadFileAndAddToAdapter(file,Constants.TypeDocForServer);
+
             }
         }
         else if(requestCode == Constants.TypeImageForServer){
             if(resultCode == RESULT_OK) {
-                final Uri imageUri = data.getData();
-                String selectedFilePath = FilePath.getPath(this, imageUri);
-                final File file = new File(selectedFilePath);
-                final File file2 = compressBitmap(file,  5, 75);
-                uploadFileAndAddToAdapter(file2,Constants.TypeImageForServer);
-                Log.v("AhmedDakrory", imageUri.getPath());
+
+                final Intent imageUri = data;
+                Uri imageUri2 = imageUri.getData();
+                Log.v("AhmedDakrory", imageUri2.toString());
+//                String selectedFilePath = FilePath.getPath(this, urlImage3D);
+                final File file = new File(imageUri2.toString());
+                Log.v("AhmedDakrory", "Type: "+Constants.TypeImageForServer);
+                uploadFileAndAddToAdapter(file,Constants.TypeImageForServer);
+
+
+//                final Uri imageUri = data.getData();
+//                String selectedFilePath = FilePath.getPath(this, imageUri);
+//                final File file = new File(selectedFilePath);
+//                final File file2 = compressBitmap(file,  5, 75);
+//                uploadFileAndAddToAdapter(file2,Constants.TypeImageForServer);
+//                Log.v("AhmedDakrory", imageUri.getPath());
             }
         }
         else if(requestCode == Constants.TypePdfForServer){
@@ -1735,41 +1888,41 @@ if(carData.getData().getId()!=0) {
         else if(requestCode!=100) {
             Log.v("AhmedDakrory", "Ok");
 
-            EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
-
-                @Override
-                public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
-                    //Some error handling
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onImagesPicked(@NonNull final List<File> list, EasyImage.ImageSource imageSource, int i) {
-                    //Log.v("AhmedDakrory","Code: "+requestCode);
-                    if(list.get(0)!=null) {
-                        File file = list.get(0);
-                        final File file2 = compressBitmap(file,  4, 70);
-                        Log.v("AhmedDakrory","Ahmed Hi");
-                        Log.v("AhmedDakrory",String.valueOf(file.length()));
-                        Log.v("AhmedDakrory",String.valueOf(file2.length()));
-                        uploadFileAndAddToAdapter(file2,i);
-
-                    }
-                }
-
-
-
-                @Override
-                public void onCanceled(EasyImage.ImageSource source, int type) {
-                    //Cancel handling, you might wanna remove taken photo if it was canceled
-                    if (source == EasyImage.ImageSource.CAMERA_IMAGE) {
-                        File photoFile = EasyImage.lastlyTakenButCanceledPhoto(vehicalView.this);
-                        if (photoFile != null) photoFile.delete();
-                    }
-                }
-
-
-            });
+//            easyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
+//
+//                @Override
+//                public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+//                    //Some error handling
+//                    e.printStackTrace();
+//                }
+//
+//                @Override
+//                public void onImagesPicked(@NonNull final List<File> list, EasyImage.ImageSource imageSource, int i) {
+//                    //Log.v("AhmedDakrory","Code: "+requestCode);
+//                    if(list.get(0)!=null) {
+//                        File file = list.get(0);
+//                        final File file2 = compressBitmap(file,  4, 70);
+//                        Log.v("AhmedDakrory","Ahmed Hi");
+//                        Log.v("AhmedDakrory",String.valueOf(file.length()));
+//                        Log.v("AhmedDakrory",String.valueOf(file2.length()));
+//                        uploadFileAndAddToAdapter(file2,i);
+//
+//                    }
+//                }
+//
+//
+//
+//                @Override
+//                public void onCanceled(EasyImage.ImageSource source, int type) {
+//                    //Cancel handling, you might wanna remove taken photo if it was canceled
+//                    if (source == EasyImage.ImageSource.CAMERA_IMAGE) {
+//                        File photoFile = EasyImage.lastlyTakenButCanceledPhoto(vehicalView.this);
+//                        if (photoFile != null) photoFile.delete();
+//                    }
+//                }
+//
+//
+//            });
 
         }
     }
