@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -50,14 +51,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,8 +86,6 @@ import dakrory.a7med.cargomarine.helpers.modelsFunctions;
 import dakrory.a7med.cargomarine.layoutManagers.ZoomCenterCardLayoutManager;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import pl.aprilapps.easyphotopicker.DefaultCallback;
-import pl.aprilapps.easyphotopicker.EasyImage;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -213,7 +215,6 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
 
     ProgressBar loaderOfExteriorImage;
-    EasyImage easyImage ;
 
 
     @Override
@@ -231,9 +232,6 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
 
         defineViewsAndIntegrate();
-//        easyImage = new EasyImage.Builder(this).setFolderName("Cargo Marine") // images folder name, default is "EasyImage"
-//                .setCopyImagesToPublicGalleryFolder(false)
-//                .allowMultiple(true);
 
 
         addDamageFloatingButton.setOnClickListener(this);
@@ -1295,6 +1293,8 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         }else {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
+            photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            photoPickerIntent.putExtra("Type_Of_Return","SELECT_INTERNAL");
             Log.v("AhmedDakrory","Type1: "+typeForImageOrDoc);
             startActivityForResult(photoPickerIntent, typeForImageOrDoc);
         }
@@ -1398,8 +1398,9 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
 
                                 }catch (Error error){
-
+                                    Log.v("AhmedDakroryError",String.valueOf(error));
                                 }catch (Exception exc){
+                                    Log.v("AhmedDakroryExc",String.valueOf(exc));
 
                                 }
                             }
@@ -1814,42 +1815,119 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         Log.v("AhmedDakrory","Returned");
         if(requestCode == Constants.TypeDocForServer){
             if(resultCode == RESULT_OK) {
-//                final Uri imageUri = data.getData();
-//                String selectedFilePath = FilePath.getPath(this, imageUri);
-//                final File file = new File(selectedFilePath);
-//                final File file2 = compressBitmap(file,  5, 75);
-//                uploadFileAndAddToAdapter(file2,Constants.TypeDocForServer);
-//                Log.v("AhmedDakrory", imageUri.getPath());
+
+                String TYPE = data.getStringExtra("Type_Of_Return");
+
+                if(TYPE!=null){
+                    String imageUri2 = data.getStringExtra("DATA");
+
+                    Log.v("AhmedDakrory", imageUri2.toString());
+                    final File file = new File(imageUri2.toString());
+                    Log.v("AhmedDakrory", "Type: "+Constants.TypeDocForServer);
+                    uploadFileAndAddToAdapter(file,Constants.TypeDocForServer);
+
+                }else{
+                    Log.v("AhmedDakrory","Ahmed");
+
+                    if(data.getClipData() != null) {
+                        int count = data.getClipData().getItemCount(); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
+                        final File file = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+
+                        for(int i = 0; i < count; i++) {
+                            Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                            Bitmap bitmap = null;
+                            try {
+                                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            //do something with the image (save it to some directory or whatever you need to do with it here)
 
 
-                final Intent imageUri = data;
-                Uri imageUri2 = imageUri.getData();
-                Log.v("AhmedDakrory", imageUri2.toString());
-//                String selectedFilePath = FilePath.getPath(this, urlImage3D);
-                final File file = new File(imageUri2.toString());
-                Log.v("AhmedDakrory", "Type: "+Constants.TypeDocForServer);
-                uploadFileAndAddToAdapter(file,Constants.TypeDocForServer);
+                            File auxFile = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid()+File.separator+"Image_"+String.valueOf(i)+".jpg");
+                            OutputStream os = null;
+                            try {
+                                os = new BufferedOutputStream(new FileOutputStream(auxFile));
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                                os.close();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+
+
+                        }
+
+                        uploadFileAndAddToAdapter(file,Constants.TypeDocForServer);
+                    }
+
+
+                }
+
+
+
 
             }
         }
         else if(requestCode == Constants.TypeImageForServer){
             if(resultCode == RESULT_OK) {
+                String TYPE = data.getStringExtra("Type_Of_Return");
 
-                final Intent imageUri = data;
-                Uri imageUri2 = imageUri.getData();
-                Log.v("AhmedDakrory", imageUri2.toString());
-//                String selectedFilePath = FilePath.getPath(this, urlImage3D);
-                final File file = new File(imageUri2.toString());
-                Log.v("AhmedDakrory", "Type: "+Constants.TypeImageForServer);
-                uploadFileAndAddToAdapter(file,Constants.TypeImageForServer);
+                if(TYPE!=null){
+                    String imageUri2 = data.getStringExtra("DATA");
+
+                    Log.v("AhmedDakrory", imageUri2.toString());
+                    final File file = new File(imageUri2.toString());
+                    Log.v("AhmedDakrory", "Type: "+Constants.TypeImageForServer);
+                    uploadFileAndAddToAdapter(file,Constants.TypeImageForServer);
+
+                }else{
+                    Log.v("AhmedDakrory","Ahmed");
+
+                    if(data.getClipData() != null) {
+                        int count = data.getClipData().getItemCount(); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
+                        final File file = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+
+                        for(int i = 0; i < count; i++) {
+                            Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                            Bitmap bitmap = null;
+                            try {
+                                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            //do something with the image (save it to some directory or whatever you need to do with it here)
 
 
-//                final Uri imageUri = data.getData();
-//                String selectedFilePath = FilePath.getPath(this, imageUri);
-//                final File file = new File(selectedFilePath);
-//                final File file2 = compressBitmap(file,  5, 75);
-//                uploadFileAndAddToAdapter(file2,Constants.TypeImageForServer);
-//                Log.v("AhmedDakrory", imageUri.getPath());
+                            File auxFile = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid()+File.separator+"Image_"+String.valueOf(i)+".jpg");
+                            OutputStream os = null;
+                            try {
+                                os = new BufferedOutputStream(new FileOutputStream(auxFile));
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                                os.close();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+
+
+
+                        }
+
+                        uploadFileAndAddToAdapter(file,Constants.TypeImageForServer);
+                    }
+
+
+                }
+
+
             }
         }
         else if(requestCode == Constants.TypePdfForServer){
@@ -1888,44 +1966,10 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         else if(requestCode!=100) {
             Log.v("AhmedDakrory", "Ok");
 
-//            easyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
-//
-//                @Override
-//                public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
-//                    //Some error handling
-//                    e.printStackTrace();
-//                }
-//
-//                @Override
-//                public void onImagesPicked(@NonNull final List<File> list, EasyImage.ImageSource imageSource, int i) {
-//                    //Log.v("AhmedDakrory","Code: "+requestCode);
-//                    if(list.get(0)!=null) {
-//                        File file = list.get(0);
-//                        final File file2 = compressBitmap(file,  4, 70);
-//                        Log.v("AhmedDakrory","Ahmed Hi");
-//                        Log.v("AhmedDakrory",String.valueOf(file.length()));
-//                        Log.v("AhmedDakrory",String.valueOf(file2.length()));
-//                        uploadFileAndAddToAdapter(file2,i);
-//
-//                    }
-//                }
-//
-//
-//
-//                @Override
-//                public void onCanceled(EasyImage.ImageSource source, int type) {
-//                    //Cancel handling, you might wanna remove taken photo if it was canceled
-//                    if (source == EasyImage.ImageSource.CAMERA_IMAGE) {
-//                        File photoFile = EasyImage.lastlyTakenButCanceledPhoto(vehicalView.this);
-//                        if (photoFile != null) photoFile.delete();
-//                    }
-//                }
-//
-//
-//            });
 
         }
     }
+
 
     public File compressBitmap(File file, int sampleSize, int quality) {
         try {

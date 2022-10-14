@@ -144,7 +144,8 @@ public class multiple_capture extends AppCompatActivity  implements SensorEventL
 
                                 Intent data = new Intent();
                                 //---set the data to pass back---
-                                data.setData(Uri.parse(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +CarVin));
+                                data.putExtra("Type_Of_Return","CAMERA");
+                                data.putExtra("DATA",Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +CarVin);
                                 setResult(RESULT_OK, data);
                                 //---close the activity---
                                 finish();
@@ -177,12 +178,12 @@ public class multiple_capture extends AppCompatActivity  implements SensorEventL
                 }
                 if(success) {
                     Bitmap bm = view_finder.getBitmap();
-                    bm = resize(bm, 640, 480);
+                    bm = resize(bm, 640, 410);
                     Log.v("AhmedDakrory", String.valueOf(bm.getHeight()));
 
                     try (FileOutputStream out = new FileOutputStream(folder.toString()+ File.separator +inc+".png")) {
-                        bm.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
-                        // PNG is a lossless format, the compression factor (100) is ignored
+                        bm.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
+
                         inc++;
                     } catch (IOException e) {
                         e.printStackTrace();

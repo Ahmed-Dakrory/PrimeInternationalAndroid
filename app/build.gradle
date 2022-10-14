@@ -65,7 +65,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.4.1'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.github.jkwiecien:EasyImage:2.1.0'
     implementation 'com.github.tajchert:nammu:1.1.1'
     implementation 'com.github.Adilhusen:circle-progress-ad-android-:1.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
