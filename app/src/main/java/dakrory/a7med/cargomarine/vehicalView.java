@@ -1394,7 +1394,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
                                 mainDialog.dialog.show();
                                 try {
-                                    mainDialog.setPercentage((int) ((((i*100 /(children.length-1)) ))));
+                                    mainDialog.setPercentage((int) 100,"File number "+String.valueOf(i+1)+"/"+String.valueOf(children.length)+" Loading ");
 
 
                                 }catch (Error error){
@@ -1443,6 +1443,25 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
             public void onProgressUpdate(int currentpercent, int totalpercent) {
 //                        Log.v("AhmedDakrory","Pers: "+String.valueOf(currentpercent));
 
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        mainDialog.dialog.show();
+                        try {
+                            mainDialog.setPercentage((int) currentpercent,"File number "+String.valueOf(i+1)+"/"+String.valueOf(children.length)+" Loading ");
+
+
+                        }catch (Error error){
+                            Log.v("AhmedDakroryError",String.valueOf(error));
+                        }catch (Exception exc){
+                            Log.v("AhmedDakroryExc",String.valueOf(exc));
+
+                        }
+                    }
+                });
+
+
             }
         },typeForImageOrDoc);
 
@@ -1461,7 +1480,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         boolean end_image = false;
         mainDialog=new vehicalView.dialogWithProgress(vehicalView.this);
         mainDialog.dialog.show();
-        mainDialog.setPercentage(0);
+        mainDialog.setPercentage(0,"");
         File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
         if (dir.isDirectory())
         {
@@ -1603,7 +1622,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         boolean end_image = false;
         mainDialog=new vehicalView.dialogWithProgress(vehicalView.this);
         mainDialog.dialog.show();
-        mainDialog.setPercentage(0);
+        mainDialog.setPercentage(0,"");
         File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
         if (dir.isDirectory())
         {
@@ -1729,7 +1748,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
         mainDialog=new vehicalView.dialogWithProgress(vehicalView.this);
         mainDialog.dialog.show();
-        mainDialog.setPercentage(0);
+        mainDialog.setPercentage(0,"");
 
         new FileUploader().uploadFile(file.getPath(), carData.getData().getId(), vehicalView.this, new FileUploader.FileUploaderCallback() {
             @Override
@@ -1788,7 +1807,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
                         mainDialog.dialog.show();
                         try {
-                            mainDialog.setPercentage((int) (((currentpercent))));
+                            mainDialog.setPercentage((int) (((currentpercent))),"");
                         }catch (Error error){
 
                         }catch (Exception exc){
@@ -1817,6 +1836,21 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
             if(resultCode == RESULT_OK) {
 
                 String TYPE = data.getStringExtra("Type_Of_Return");
+
+
+                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages");
+                boolean success = true;
+                if (!folder.exists()) {
+                    //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
+                    success = folder.mkdir();
+                }
+
+                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+                success = true;
+                if (!folder.exists()) {
+                    //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
+                    success = folder.mkdir();
+                }
 
                 if(TYPE!=null){
                     String imageUri2 = data.getStringExtra("DATA");
@@ -1875,6 +1909,20 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         }
         else if(requestCode == Constants.TypeImageForServer){
             if(resultCode == RESULT_OK) {
+                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages");
+                boolean success = true;
+                if (!folder.exists()) {
+                    //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
+                    success = folder.mkdir();
+                }
+
+                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+                success = true;
+                if (!folder.exists()) {
+                    //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
+                    success = folder.mkdir();
+                }
+
                 String TYPE = data.getStringExtra("Type_Of_Return");
 
                 if(TYPE!=null){
@@ -2094,12 +2142,12 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
             return dialog;
         }
 
-        public void setPercentage(int percentage){
+        public void setPercentage(int percentage,String s){
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     text.setProgress(percentage);
-                    text2.setText(String.valueOf(percentage));
+                    text2.setText(s+String.valueOf(percentage));
                 }
             });
 

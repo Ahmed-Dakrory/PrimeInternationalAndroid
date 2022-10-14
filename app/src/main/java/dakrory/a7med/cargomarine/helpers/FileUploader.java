@@ -322,7 +322,7 @@ public class FileUploader {
     public class PRRequestBody extends RequestBody {
         private File mFile;
         private int type = 0;
-        private static final int DEFAULT_BUFFER_SIZE = 999;
+        private static final int DEFAULT_BUFFER_SIZE = 5;
 
         public PRRequestBody(final File file,int type) {
             mFile = file;
@@ -373,7 +373,7 @@ public class FileUploader {
 
     public class PRRequestBodyForDriverSigniture extends RequestBody {
         private File mFile;
-        private static final int DEFAULT_BUFFER_SIZE = 999;
+        private static final int DEFAULT_BUFFER_SIZE = 5;
 
         public PRRequestBodyForDriverSigniture(final File file) {
             mFile = file;
