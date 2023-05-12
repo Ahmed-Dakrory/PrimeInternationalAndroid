@@ -125,4 +125,6 @@
     <string name="unknown">UNKNOWN</string>
     <string name="Ext">EXT</string>
     <string name="weightText">Weight</string>
+    <string name="fuelTypeSecondaryText">Fuel Secondary</string>
+    <string name="fuelTypePrimaryText">Fuel Primary</string>
 </resources>

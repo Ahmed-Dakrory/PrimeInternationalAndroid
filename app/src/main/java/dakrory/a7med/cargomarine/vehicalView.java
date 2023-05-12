@@ -151,6 +151,8 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
     Spinner typeSelect;
     Spinner numberOfKeys;
     EditText descriptionEdit;
+    EditText fuelTypePrimaryEdit;
+    EditText fuelTypeSecondaryEdit;
     EditText assemlyCountryEdit;
     EditText colorEdit;
     EditText weightEdit;
@@ -399,6 +401,8 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
                         }
                         dataOfCar.setWeight(weight);
                         dataOfCar.setYear(car.Results.get(0).ModelYear);
+                        dataOfCar.setFuelTypePrimary(car.Results.get(0).FuelTypePrimary);
+                        dataOfCar.setFuelTypeSecondary(car.Results.get(0).FuelTypeSecondary);
                         dataOfCar.setAssemlyCountry(car.Results.get(0).PlantCountry);
                         dataOfCar.setBodyStyle(car.Results.get(0).DriveType);
                         dataOfCar.setEngineLiters(car.Results.get(0).DisplacementL);
@@ -443,6 +447,8 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         carData.getData().setCarType(typeSelect.getSelectedItem().toString());
         carData.getData().setNumberOfKeys(numberOfKeys.getSelectedItemPosition());
         carData.getData().setDescription(descriptionEdit.getText().toString());
+        carData.getData().setFuelTypePrimary(fuelTypePrimaryEdit.getText().toString());
+        carData.getData().setFuelTypeSecondary(fuelTypeSecondaryEdit.getText().toString());
         carData.getData().setAssemlyCountry(assemlyCountryEdit.getText().toString());
         carData.getData().setColor(colorEdit.getText().toString());
         carData.getData().setEngineLiters(engineLitersEdit.getText().toString());
@@ -541,6 +547,8 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         typeSelect.setSelection(0);
         numberOfKeys.setSelection(0);
         descriptionEdit.setKeyListener(null);
+        fuelTypePrimaryEdit.setKeyListener(null);
+        fuelTypeSecondaryEdit.setKeyListener(null);
         assemlyCountryEdit.setKeyListener(null);
         colorEdit.setKeyListener(null);
         weightEdit.setKeyListener(null);
@@ -621,6 +629,8 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         typeSelect = (Spinner) findViewById(R.id.typeSelect);
         numberOfKeys = (Spinner) findViewById(R.id.numberOfKeys);
         descriptionEdit= (EditText)findViewById(R.id.descriptionEdit);
+        fuelTypePrimaryEdit= (EditText)findViewById(R.id.fuelTypePrimaryEdit);
+        fuelTypeSecondaryEdit= (EditText)findViewById(R.id.fuelTypeSecondaryEdit);
         assemlyCountryEdit= (EditText)findViewById(R.id.assemlyCountryEdit);
         colorEdit= (EditText)findViewById(R.id.colorEdit);
         weightEdit = (EditText)findViewById(R.id.weightEdit);
@@ -890,7 +900,9 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
          YearEdit.setText(String.valueOf(data.getYear()));
         typeSelect.setSelection(getIndex(typeSelect,String.valueOf(data.getCarType())));
         numberOfKeys.setSelection(data.getNumberOfKeys());
-         descriptionEdit.setText(String.valueOf(data.getDescription()));
+        descriptionEdit.setText(String.valueOf(data.getDescription()));
+        fuelTypePrimaryEdit.setText(String.valueOf(data.getFuelTypePrimary()));
+        fuelTypeSecondaryEdit.setText(String.valueOf(data.getFuelTypeSecondary()));
          assemlyCountryEdit.setText(String.valueOf(data.getAssemlyCountry()));
          colorEdit.setText(String.valueOf(data.getColor()));
         weightEdit.setText(String.valueOf(data.getWeight()));

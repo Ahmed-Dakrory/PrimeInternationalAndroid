@@ -42,9 +42,13 @@ public class vinDetails {
 	    	 
 	    	 @SerializedName("EngineConfiguration")
 	 	    public String EngineConfiguration;
-	    	 
-	    	 @SerializedName("FuelTypePrimary")
-	 	    public String FuelTypePrimary;
+
+			@SerializedName("FuelTypePrimary")
+			public String FuelTypePrimary;
+
+
+			@SerializedName("FuelTypeSecondary")
+			public String FuelTypeSecondary;
 	    	 
 
 	    	 @SerializedName("GVWR")

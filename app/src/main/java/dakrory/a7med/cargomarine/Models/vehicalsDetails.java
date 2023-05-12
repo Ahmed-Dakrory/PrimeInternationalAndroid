@@ -277,6 +277,15 @@ public class vehicalsDetails {
         private String description="";
 
 
+        @SerializedName("fuelTypePrimary")
+        private String fuelTypePrimary="";
+
+
+        @SerializedName("fuelTypeSecondary")
+        private String fuelTypeSecondary="";
+        
+
+
 
         @SerializedName("containerLink")
         private String containerLink="";
@@ -685,6 +694,22 @@ public class vehicalsDetails {
 
         public void setDescription(String description) {
             this.description = description;
+        }
+
+        public String getFuelTypePrimary() {
+            return fuelTypePrimary;
+        }
+
+        public void setFuelTypePrimary(String fuelTypePrimary) {
+            this.fuelTypePrimary = fuelTypePrimary;
+        }
+
+        public String getFuelTypeSecondary() {
+            return fuelTypeSecondary;
+        }
+
+        public void setFuelTypeSecondary(String fuelTypeSecondary) {
+            this.fuelTypeSecondary = fuelTypeSecondary;
         }
 
         public String getContainerLink() {
