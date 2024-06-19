@@ -127,4 +127,10 @@
     <string name="weightText">Weight</string>
     <string name="fuelTypeSecondaryText">Fuel Secondary</string>
     <string name="fuelTypePrimaryText">Fuel Primary</string>
+    <string name="containerList">Containers</string>
+    <string name="containerImage">Container Image</string>
+    <string name="Container_NumberText">Container Number</string>
+    <string name="ProblemErrorOnServerAddNewContainer">Server Problem On Add Container</string>
+    <string name="ContainerData">Container Data</string>
+    <string name="ContainerStates">Container Other Data</string>
 </resources>

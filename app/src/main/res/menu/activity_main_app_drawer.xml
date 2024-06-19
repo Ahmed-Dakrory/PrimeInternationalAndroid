@@ -10,6 +10,11 @@
             android:title="@string/FreightVehicals" />
 
         <item
+            android:id="@+id/containerList"
+            android:icon="@mipmap/emptybox"
+            android:title="@string/containerList" />
+
+        <item
             android:id="@+id/threeDList"
             android:icon="@mipmap/theta"
             android:title="@string/CamerathreeDList" />

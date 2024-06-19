@@ -1,5 +1,7 @@
 package dakrory.a7med.cargomarine.helpers;
 
+import dakrory.a7med.cargomarine.Models.containersDataAllList;
+import dakrory.a7med.cargomarine.Models.containersDetails;
 import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.userImage;
 import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
@@ -33,6 +35,12 @@ public interface Api {
 
 
     @Multipart
+    @POST("Api.php?apicall=uploadImageContainer")
+    Call<MyResponse> uploadImageContainer(@Part MultipartBody.Part file, @Part("containerId") int containerId, @Part("type") int type);
+
+
+
+    @Multipart
     @POST("Api.php?apicall=uploadSignitureOfDriver")
     Call<MyResponse> uploadSignitureOfDriver(@Part MultipartBody.Part file, @Part("carId") int carId);
 
@@ -57,6 +65,11 @@ public interface Api {
     @FormUrlEncoded
     @POST("Api.php?apicall=getAllCarsForMainAccount")
     Call<vehicalsDataAllList> getAllCarsForMainUser(@Field("mainId") int mainId, @Field("page") int page, @Field("N_items") int N_items, @Field("type") int type);
+
+
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getAllContainersForMainAccount")
+    Call<containersDataAllList> getAllContainersForMainUser(@Field("mainId") int mainId, @Field("page") int page, @Field("N_items") int N_items);
 
 
     @FormUrlEncoded
@@ -94,8 +107,19 @@ public interface Api {
     @POST("Api.php?apicall=insertNewCar")
     Call<vehicalsDetails> insertNewCar(@Body vehicalsDetails.carDetails carData);
 
+
+    @POST("Api.php?apicall=insertNewContainer")
+    Call<containersDetails> insertNewContainer(@Body containersDetails.containerDetails containerData);
+
+
+
     @GET("?format=json")
     Call<vinDetails> getCarDetailsfromVin();
+
+
+    @FormUrlEncoded
+    @POST("Api.php?apicall=getContainerData")
+    Call<containersDetails> getAllDetailsForContainer(@Field("id") int id);
 
 }
 

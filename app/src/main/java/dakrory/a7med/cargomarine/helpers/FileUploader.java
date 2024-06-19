@@ -102,6 +102,73 @@ public class FileUploader {
 
 
 
+    public void uploadFileContainer(String fileName, int containerId, final Activity activity, final FileUploaderCallback fileUploaderCallback,int type) {
+
+        this.fileUploaderCallback=fileUploaderCallback;
+        File file  = new File(fileName);
+        //creating a file
+        totalFileLength = totalFileLength + file.length();
+        PRRequestBody fileBody = new PRRequestBody(file,type);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), fileBody);
+
+
+        Log.v("AhmedDakrory:","Start Upload2");
+        //The gson builder
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+
+        //creating retrofit object
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Api.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
+
+        //creating our api
+        Api api = retrofit.create(Api.class);
+
+        Log.v("AhmedDakrory:","Start Upload3");
+        //creating a call and calling the upload image method
+        Call<MyResponse> call = api.uploadImageContainer(filePart, containerId,type);
+        if(modelsFunctions.checkNetworkStatus(activity)) {
+            //finally performing the call
+            call.enqueue(new Callback<MyResponse>() {
+                @Override
+                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                    fileUploaderCallback.onFinish(response);
+                    Log.v("AhmedDakrory:", "Start Response");
+                }
+
+                @Override
+                public void onFailure(Call<MyResponse> responseCall, Throwable t) {
+
+                    fileUploaderCallback.onError(t);
+                    Log.v("AhmedDakrory:", "Start Error");
+                    Log.v("AhmedDakrory:", t.getMessage());
+                    Log.v("AhmedDakrory:", t.toString());
+                    Toast.makeText(activity.getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }else{
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity,R.string.PleaseCheckNetworkConnection,Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
+
+
     //Responsible for upload Signiture Image
     public void uploadSignitureOfDriverDestination(String fileName, int carId, final Activity activity, final FileUploaderCallback fileUploaderCallback) {
 

@@ -53,6 +53,9 @@
             android:name=".vehicalView"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".containerView"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".allImagesActivity"
             android:exported="true"></activity>
         <activity

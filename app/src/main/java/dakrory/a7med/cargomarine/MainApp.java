@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.userImage;
 import dakrory.a7med.cargomarine.fragmentsMainApp.UserDetails;
+import dakrory.a7med.cargomarine.fragmentsMainApp.containers;
 import dakrory.a7med.cargomarine.fragmentsMainApp.vehicals;
 import dakrory.a7med.cargomarine.helpers.Api;
 import dakrory.a7med.cargomarine.helpers.modelsFunctions;
@@ -49,6 +50,7 @@ public class MainApp extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Fragment vehicalsFragment;
+    Fragment containersFragment;
     Fragment userDetailsFragment;
 
     TextView userNameTextView;
@@ -65,6 +67,7 @@ public class MainApp extends AppCompatActivity
         setContentView(R.layout.activity_main_app);
 
         vehicalsFragment = vehicals.newInstance();
+        containersFragment = containers.newInstance();
         userDetailsFragment= UserDetails.newInstance();
 
 
@@ -95,7 +98,14 @@ public class MainApp extends AppCompatActivity
         userDataImageLoader = (ProgressBar) headerView.findViewById(R.id.userDataImageLoader);
         userDataImage = (ImageView) headerView.findViewById(R.id.userDataImage);
         userNameTextView = (TextView)headerView.findViewById(R.id.userNameData);
-        userNameTextView.setText(thisAccountUserData.getUserDetails().getFirstName()+" "+thisAccountUserData.getUserDetails().getLastName());
+        try{
+            userNameTextView.setText(thisAccountUserData.getUserDetails().getFirstName()+" "+thisAccountUserData.getUserDetails().getLastName());
+
+        }catch (Error er){
+
+        }catch (Exception exception){
+
+        }
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(15, TimeUnit.SECONDS)
@@ -199,6 +209,10 @@ public class MainApp extends AppCompatActivity
             // Handle the camera action
 
             setFragmentNow(vehicalsFragment);
+        }else if (id == R.id.containerList) {
+            // Handle the camera action
+
+            setFragmentNow(containersFragment);
         }else if(id == R.id.logOut){
             Intent goToLogIn = new Intent(MainApp.this,LoginActivity.class);
             LoginActivity.thisAccountCredData= null;
@@ -220,6 +234,7 @@ public class MainApp extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         vehicalsFragment.onActivityResult(requestCode, resultCode, data);
+        containersFragment.onActivityResult(requestCode, resultCode, data);
         Log.v("AhmedDakrory","Done1");
     }
 }

@@ -10,6 +10,7 @@ public class Constants {
     public static final int ADD_NEW_VEHICAL_REQ_CODE = 55;
     public static final String MIME_PDF ="text/html" ;
     public static final int RESULT_LOAD_IMG = 33;
+    public static final int ADD_NEW_CONTAINER_REQ_CODE = 34;
     public static String ImageUrl_INTENT="ImageUrl_INTENT";
     public static String ImageUrl_Type="ImageType_INTENT";
     public static String ImageBaseUrl="https://primeshippingllc.com/images?file=";
@@ -25,4 +26,7 @@ public class Constants {
 
 
     public static final int Type3DExteriorForServer=9;
+    public static final String Container_NUMBER_Add_New = "CONTAINER_NUMBER" ;
+
+    public static String ContainerIdData="ContainerID";
 }
