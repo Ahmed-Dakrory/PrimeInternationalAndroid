@@ -329,8 +329,8 @@ public class vehicals extends Fragment {
         alertDialog.setPositiveButton("Done",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                       String vin = input.getText().toString();
-                        addNewCarWithVin(vin);
+                       String vin1 = input.getText().toString();
+                        addNewCarWithVin(vin1);
                     }
                 });
 
@@ -344,10 +344,11 @@ public class vehicals extends Fragment {
         alertDialog.show();
     }
 
-    private void addNewCarWithVin(String vin) {
+    private void addNewCarWithVin(String vin_data) {
         Intent addNewCar=new Intent(getActivity(), vehicalView.class);
         addNewCar.putExtra(Constants.SET_MODE_INTENT,Constants.MODE_ADD_NEW);
-        addNewCar.putExtra(Constants.Car_VIN_Add_New,vin);
+        Log.v("AhmedDakrory5","Before"+String.valueOf(vin_data));
+        addNewCar.putExtra(Constants.Car_VIN_Add_New,vin_data);
         startActivityForResult(addNewCar,Constants.ADD_NEW_VEHICAL_REQ_CODE);
     }
 
@@ -452,17 +453,21 @@ public class vehicals extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         Log.v("AhmedDakrory","Done3");
+        Log.v("AhmedDakrory_requestCode","Vehical"+String.valueOf(requestCode));
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             //if qrcode has nothing in it
+            Log.v("AhmedDakrory_QR","Vehical"+String.valueOf(requestCode));
             if (result.getContents() == null) {
                 Toast.makeText(getActivity(), "Result Not Found", Toast.LENGTH_LONG).show();
             } else {
-                String vin = getVinNumber( result.getContents());
+
+                Log.v("AhmedDakrory_MAIN_VIN","Vehical"+String.valueOf(result.getContents()));
+                String vin_new = getVinNumber( result.getContents());
                // Toast.makeText(getActivity(), vin, Toast.LENGTH_LONG).show();
 
-                Log.v("AhmedDakrory", vin); // Prints scan results
-                addNewCarWithVin(vin);
+                Log.v("AhmedDakrory","Main:  "+ vin_new); // Prints scan results
+                addNewCarWithVin(vin_new);
 
             }
         } else {

@@ -344,19 +344,23 @@ public class containers extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.v("AhmedDakrory","Done3");
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        Log.v("AhmedDakrory_requestCode","Container__"+String.valueOf(requestCode));
         if (result != null) {
             //if qrcode has nothing in it
             if (result.getContents() == null) {
-                Toast.makeText(getActivity(), "Result Not Found", Toast.LENGTH_LONG).show();
             } else {
                 String container_number = result.getContents();
                // Toast.makeText(getActivity(), number, Toast.LENGTH_LONG).show();
 
                 Log.v("AhmedDakrory", container_number); // Prints scan results
-                addNewContainerWithNumber(container_number);
+                try {
+                    addNewContainerWithNumber(container_number);
+                }catch(Error er){
 
+                }catch(Exception exc){
+
+                }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
