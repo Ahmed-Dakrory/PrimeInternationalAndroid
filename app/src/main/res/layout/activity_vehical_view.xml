@@ -311,11 +311,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/buttonsLayout"
-            app:animationDuration="300"
             app:expandOnClick="true"
             app:icon="@drawable/ic_directions_car_black_24dp"
             app:inner_view="@layout/car_data_layout"
-            app:startExpanded="false"
             app:title="@string/VehicalData">
 
 
@@ -326,11 +324,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/vechicalDataList"
-            app:animationDuration="300"
             app:expandOnClick="true"
             app:icon="@drawable/ic_person_black_24dp"
             app:inner_view="@layout/persons_data_layout"
-            app:startExpanded="false"
             app:title="@string/HolderData">
 
 
@@ -344,9 +340,7 @@
             app:title="@string/ShipmentStates"
             app:icon="@drawable/ic_assignment_turned_in_black_24dp"
             app:inner_view="@layout/shipment_state"
-            app:expandOnClick="true"
-            app:animationDuration="300"
-            app:startExpanded="false">
+            app:expandOnClick="true">
 
 
         </com.alespero.expandablecardview.ExpandableCardView>
@@ -358,11 +352,9 @@
             android:layout_below="@+id/shipmentDetails"
             android:layout_alignParentStart="true"
             android:layout_marginStart="0dp"
-            app:animationDuration="300"
             app:expandOnClick="true"
             app:icon="@drawable/ic_check_black_24dp"
             app:inner_view="@layout/driver_signiture"
-            app:startExpanded="false"
             app:title="@string/DriverSigniture">
 
 

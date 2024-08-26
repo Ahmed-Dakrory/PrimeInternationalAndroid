@@ -1,1 +1,27 @@
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io"
+            credentials { username authToken }}
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://oss.jfrog.org/artifactory/oss-snapshot-local' }
+        jcenter()
+
+        maven {
+            url "https://maven.google.com"
+        }
+        maven { url "https://jitpack.io"
+            credentials { username authToken }}
+        mavenCentral()
+    }
+}
 include ':app'
