@@ -26,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
-import dakrory.a7med.cargomarine.BuildConfig;
 import dakrory.a7med.cargomarine.Models.vehicalsDetails;
 import dakrory.a7med.cargomarine.R;
 import dakrory.a7med.cargomarine.ThetaHandler.PanoramaView;

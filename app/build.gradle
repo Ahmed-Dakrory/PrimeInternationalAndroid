@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 34
+    buildToolsVersion "34.0.0"
     defaultConfig {
+        namespace 'dakrory.a7med.cargomarine'
         applicationId "dakrory.a7med.primeinternational"
         minSdkVersion 23
-        targetSdkVersion 29
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -31,6 +32,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig = true
     }
     useLibrary 'org.apache.http.legacy'
 
