@@ -88,6 +88,7 @@ public class vehicals extends Fragment implements DatePickerDialog.OnDateSetList
     private int page=0;
     private int N_item=10;
     Spinner spinner;
+    String date_to_submit="";
     int stateSelected=0;//For All Cars
 
     //Variables for Pagination
@@ -179,7 +180,7 @@ public class vehicals extends Fragment implements DatePickerDialog.OnDateSetList
                 vehicalItemsFull.clear();
 
                 stateSelected = position;
-                PerformPagination(stateSelected);
+                PerformPagination(stateSelected,date_to_submit);
             }
 
             @Override
@@ -220,7 +221,7 @@ public class vehicals extends Fragment implements DatePickerDialog.OnDateSetList
         emptyImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PerformPagination(stateSelected);
+                PerformPagination(stateSelected,date_to_submit);
             }
         });
 
@@ -242,7 +243,7 @@ public class vehicals extends Fragment implements DatePickerDialog.OnDateSetList
 
                     if(!isLoading&&(totalItemCount-visibleItemCount)<=(pastVisibleItems+view_threshold)){
                         page =page +10;
-                        PerformPagination(stateSelected);
+                        PerformPagination(stateSelected,date_to_submit);
                         isLoading=true;
                     }
                 }
@@ -388,29 +389,29 @@ public class vehicals extends Fragment implements DatePickerDialog.OnDateSetList
         startActivityForResult(addNewCar,Constants.ADD_NEW_VEHICAL_REQ_CODE);
     }
 
-    private void PerformPagination(int type) {
+    private void PerformPagination(int type,String date_selected) {
 
 
             //WareHouse
             loaderRecy.setVisibility(View.VISIBLE);
         Call<vehicalsDataAllList> call = null;
             if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN) {
-                 call = api.getAllCarsForMainUser(userDataOfThisAccount.getUserDetails().getMainUserId(), page, N_item, type);
+                 call = api.getAllCarsForMainUser(userDataOfThisAccount.getUserDetails().getMainUserId(), page, N_item, type,date_selected);
 
             }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_MAIN2) {
-                call = api.getAllCarsForMainTwoAccount(userDataOfThisAccount.getUserDetails().getMainTwoId(), page, N_item, type);
+                call = api.getAllCarsForMainTwoAccount(userDataOfThisAccount.getUserDetails().getMainTwoId(), page, N_item, type,date_selected);
 
             }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_SHIPPER) {
-                 call = api.getAllCarsForShipperAccount(userDataOfThisAccount.getUserDetails().getShipperId(), page, N_item, type);
+                 call = api.getAllCarsForShipperAccount(userDataOfThisAccount.getUserDetails().getShipperId(), page, N_item, type,date_selected);
 
             }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_VENDOR) {
-              call = api.getAllCarsForVendorAccount(userDataOfThisAccount.getUserDetails().getVendorId(), page, N_item, type);
+              call = api.getAllCarsForVendorAccount(userDataOfThisAccount.getUserDetails().getVendorId(), page, N_item, type,date_selected);
 
             }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_CUSTOMER) {
-               call = api.getAllCarsForCustomerAccount(userDataOfThisAccount.getUserDetails().getCustomerId(), page, N_item, type);
+               call = api.getAllCarsForCustomerAccount(userDataOfThisAccount.getUserDetails().getCustomerId(), page, N_item, type,date_selected);
 
             }else if(userDataOfThisAccount.getUserDetails().getRole() == userData.dataClassOfUser.ROLE_CONGSIGNEE) {
-                 call = api.getAllCarsForConsigneeAccount(userDataOfThisAccount.getUserDetails().getConsigneeId(), page, N_item, type);
+                 call = api.getAllCarsForConsigneeAccount(userDataOfThisAccount.getUserDetails().getConsigneeId(), page, N_item, type,date_selected);
 
             }
         if(modelsFunctions.checkNetworkStatus(getActivity())) {
@@ -520,7 +521,7 @@ public class vehicals extends Fragment implements DatePickerDialog.OnDateSetList
                vehicalItems.clear();
                vehicalItemsFull.clear();
 
-               PerformPagination(stateSelected);
+               PerformPagination(stateSelected,date_to_submit);
 
            }
            }
@@ -529,6 +530,18 @@ public class vehicals extends Fragment implements DatePickerDialog.OnDateSetList
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = "You picked the following date: "+dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
+        date_to_submit = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
         dateRangeTextView.setText(date);
+
+
+        page = 0;
+        //Variables for Pagination
+        isLoading =true;
+        pastVisibleItems = 0; visibleItemCount=0; totalItemCount=0; previous_total = 0;
+        view_threshold = 10;
+        vehicalItems.clear();
+        vehicalItemsFull.clear();
+
+        PerformPagination(stateSelected,date_to_submit);
     }
 }
