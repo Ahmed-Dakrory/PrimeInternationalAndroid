@@ -489,21 +489,21 @@ public class containerView extends Activity implements View.OnClickListener, Dat
 
     private void storageImage(int typeForImageOrDoc) {
 
-        if(ContextCompat.checkSelfPermission(containerView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-
-
-            ActivityCompat.requestPermissions(containerView.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    3);
-        }else {
+//        if(ContextCompat.checkSelfPermission(containerView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED){
+//
+//
+//            ActivityCompat.requestPermissions(containerView.this,
+//                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    3);
+//        }else {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
             photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             photoPickerIntent.putExtra("Type_Of_Return","SELECT_INTERNAL");
             Log.v("AhmedDakrory","Type1: "+typeForImageOrDoc);
             startActivityForResult(photoPickerIntent, typeForImageOrDoc);
-        }
+//        }
     }
 
 
@@ -521,18 +521,18 @@ public class containerView extends Activity implements View.OnClickListener, Dat
     private void captureImage(int typeForImageOrDoc) {
 
 
-        if(ContextCompat.checkSelfPermission(containerView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-
-
-            ActivityCompat.requestPermissions(containerView.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    3);
-        }else {
+//        if(ContextCompat.checkSelfPermission(containerView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED){
+//
+//
+//            ActivityCompat.requestPermissions(containerView.this,
+//                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    3);
+//        }else {
             Intent openImageOrDoc= new Intent(containerView.this,multiple_capture.class);
             openImageOrDoc.putExtra("Data",String.valueOf(containerData.getData().getId()));
             startActivityForResult(openImageOrDoc, typeForImageOrDoc);
-        }
+//        }
 
 
 
@@ -676,7 +676,7 @@ public class containerView extends Activity implements View.OnClickListener, Dat
                 Log.v("AhmedDakrory", containerData.getData().getId() + " :Ok 6");
                 mainDialog.setPercentage(0, "");
                 Log.v("AhmedDakrory", containerData.getData().getId() + " :Ok 7");
-                File dir = new File(Environment.getExternalStorageDirectory() + File.separator + "nycargoCarMainImages" + File.separator + containerData.getData().getId());
+                File dir = new File(getExternalFilesDir(null) + File.separator + "nycargoCarMainImages" + File.separator + containerData.getData().getId());
 
                 Log.v("AhmedDakrory",String.valueOf(dir.isDirectory()));
                 Log.v("AHMED_DARKRORY3",String.valueOf(dir));
@@ -699,13 +699,13 @@ public class containerView extends Activity implements View.OnClickListener, Dat
         Log.v("AhmedDakrory","Returned3");
         if(requestCode == Constants.TypeImageForServer){
             if(resultCode == RESULT_OK) {
-                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages");
+                File folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages");
                 boolean success = true;
                 if (!folder.exists()) {
                     success = folder.mkdir();
                 }
 
-                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +containerData.getData().getId());
+                folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +containerData.getData().getId());
                 success = true;
                 if (!folder.exists()) {
                     success = folder.mkdir();
@@ -726,7 +726,7 @@ public class containerView extends Activity implements View.OnClickListener, Dat
 
                     if(data.getClipData() != null) {
                         int count = data.getClipData().getItemCount(); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
-                        final File file = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +containerData.getData().getId());
+                        final File file = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +containerData.getData().getId());
 
                         for(int i = 0; i < count; i++) {
                             Uri imageUri = data.getClipData().getItemAt(i).getUri();
@@ -739,7 +739,7 @@ public class containerView extends Activity implements View.OnClickListener, Dat
                             //do something with the image (save it to some directory or whatever you need to do with it here)
 
 
-                            File auxFile = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +containerData.getData().getId()+File.separator+"Image_"+String.valueOf(i)+".jpg");
+                            File auxFile = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +containerData.getData().getId()+File.separator+"Image_"+String.valueOf(i)+".jpg");
                             OutputStream os = null;
                             try {
                                 os = new BufferedOutputStream(new FileOutputStream(auxFile));

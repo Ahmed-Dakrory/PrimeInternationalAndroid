@@ -145,7 +145,7 @@ public class multiple_capture extends AppCompatActivity  implements SensorEventL
                                 Intent data = new Intent();
                                 //---set the data to pass back---
                                 data.putExtra("Type_Of_Return","CAMERA");
-                                data.putExtra("DATA",Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +CarVin);
+                                data.putExtra("DATA",getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +CarVin);
                                 setResult(RESULT_OK, data);
                                 //---close the activity---
                                 finish();
@@ -163,14 +163,14 @@ public class multiple_capture extends AppCompatActivity  implements SensorEventL
         camera_capture_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages");
+                File folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages");
                 boolean success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
                     success = folder.mkdir();
                 }
 
-                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +CarVin);
+                folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +CarVin);
                 success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();

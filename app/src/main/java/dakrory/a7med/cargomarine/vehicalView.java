@@ -1202,18 +1202,18 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
     private void storage3DExteriorImage(int type3DExteriorForServer) {
 
 
-            if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED){
-
-
-                ActivityCompat.requestPermissions(vehicalView.this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        3);
-            }else {
+//            if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+//                    != PackageManager.PERMISSION_GRANTED){
+//
+//
+//                ActivityCompat.requestPermissions(vehicalView.this,
+//                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                        3);
+//            }else {
                 Intent open3D = new Intent(vehicalView.this,exteriorCam.class);
                 open3D.putExtra("Data",carData.getData().getUuid().toString());
                 startActivityForResult(open3D, type3DExteriorForServer);
-            }
+//            }
         }
 
 
@@ -1261,14 +1261,14 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
     private void storagePdf(int typeForPdf) {
 
-        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-
-
-            ActivityCompat.requestPermissions(vehicalView.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    3);
-        }else {
+//        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED){
+//
+//
+//            ActivityCompat.requestPermissions(vehicalView.this,
+//                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    3);
+//        }else {
             String[] mimeTypes =
                     { "application/pdf"};
 
@@ -1290,44 +1290,48 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
             startActivityForResult(Intent.createChooser(intent,"ChooseFile"), typeForPdf);
             Log.v("AhmedDakrory","Type1: "+typeForPdf);
 
-        }
+//        }
     }
 
     private void storageImage(int typeForImageOrDoc) {
 
-        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-
-
-            ActivityCompat.requestPermissions(vehicalView.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    3);
-        }else {
+//        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED & ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_MEDIA_AUDIO)
+//                != PackageManager.PERMISSION_GRANTED & ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_MEDIA_IMAGES)
+//                != PackageManager.PERMISSION_GRANTED & ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_MEDIA_VIDEO)
+//                != PackageManager.PERMISSION_GRANTED & ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
+//                != PackageManager.PERMISSION_GRANTED){
+//
+//
+//            ActivityCompat.requestPermissions(vehicalView.this,
+//                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    3);
+//        }else {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
             photoPickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             photoPickerIntent.putExtra("Type_Of_Return","SELECT_INTERNAL");
             Log.v("AhmedDakrory","Type1: "+typeForImageOrDoc);
             startActivityForResult(photoPickerIntent, typeForImageOrDoc);
-        }
+//        }
     }
 
 
 
     private void storage3D(int typeFor3D) {
 
-        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-
-
-            ActivityCompat.requestPermissions(vehicalView.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    3);
-        }else {
+//        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED){
+//
+//
+//            ActivityCompat.requestPermissions(vehicalView.this,
+//                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    3);
+//        }else {
             Intent open3D = new Intent(vehicalView.this,allImagesActivity.class);
             open3D.putExtra("Data",carData.getData().getUuid().toString());
             startActivityForResult(open3D, typeFor3D);
-        }
+//        }
     }
 
 
@@ -1342,18 +1346,18 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
     private void captureImage(int typeForImageOrDoc) {
 
 
-        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-
-
-            ActivityCompat.requestPermissions(vehicalView.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    3);
-        }else {
+//        if(ContextCompat.checkSelfPermission(vehicalView.this,Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED){
+//
+//
+//            ActivityCompat.requestPermissions(vehicalView.this,
+//                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    3);
+//        }else {
             Intent openImageOrDoc= new Intent(vehicalView.this,multiple_capture.class);
             openImageOrDoc.putExtra("Data",carData.getData().getUuid().toString());
             startActivityForResult(openImageOrDoc, typeForImageOrDoc);
-        }
+//        }
 
 
 
@@ -1493,10 +1497,15 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         mainDialog=new vehicalView.dialogWithProgress(vehicalView.this);
         mainDialog.dialog.show();
         mainDialog.setPercentage(0,"");
-        File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+        File dir = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
         if (dir.isDirectory())
         {
             String[] children = dir.list();
+            for(int i =0;i<children.length;i++){
+
+                Log.v("AhmedDakrory",String.valueOf(children[i]));
+            }
+            Log.v("AhmedDakrory",String.valueOf(children));
             upload_file_number(dir,children,0,typeForImageOrDoc);
 
         }
@@ -1635,7 +1644,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
         mainDialog=new vehicalView.dialogWithProgress(vehicalView.this);
         mainDialog.dialog.show();
         mainDialog.setPercentage(0,"");
-        File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+        File dir = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
         if (dir.isDirectory())
         {
             String[] children = dir.list();
@@ -1781,7 +1790,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
                     @Override
                     public void run() {
 
-                        File dir = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarServices"+ File.separator +carData.getData().getUuid());
+                        File dir = new File(getExternalFilesDir(null) + File.separator +"nycargoCarServices"+ File.separator +carData.getData().getUuid());
                         if (dir.isDirectory())
                         {
                             String[] children = dir.list();
@@ -1844,20 +1853,23 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
     protected void onActivityResult(final int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v("AhmedDakrory","Returned");
+
         if(requestCode == Constants.TypeDocForServer){
             if(resultCode == RESULT_OK) {
 
                 String TYPE = data.getStringExtra("Type_Of_Return");
+                if(TYPE == null){
+                    TYPE="SELECT_INTERNAL";
+                }
 
-
-                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages");
+                File folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages");
                 boolean success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
                     success = folder.mkdir();
                 }
 
-                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+                folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
                 success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
@@ -1877,7 +1889,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
                     if(data.getClipData() != null) {
                         int count = data.getClipData().getItemCount(); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
-                        final File file = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+                        final File file = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
 
                         for(int i = 0; i < count; i++) {
                             Uri imageUri = data.getClipData().getItemAt(i).getUri();
@@ -1890,7 +1902,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
                             //do something with the image (save it to some directory or whatever you need to do with it here)
 
 
-                            File auxFile = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid()+File.separator+"Image_"+String.valueOf(i)+".jpg");
+                            File auxFile = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid()+File.separator+"Image_"+String.valueOf(i)+".jpg");
                             OutputStream os = null;
                             try {
                                 os = new BufferedOutputStream(new FileOutputStream(auxFile));
@@ -1920,15 +1932,17 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
             }
         }
         else if(requestCode == Constants.TypeImageForServer){
+            Log.v("AhmedDakrory","IMAGE_NOW");
             if(resultCode == RESULT_OK) {
-                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages");
+
+                File folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages");
                 boolean success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
                     success = folder.mkdir();
                 }
 
-                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+                folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
                 success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
@@ -1950,7 +1964,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
 
                     if(data.getClipData() != null) {
                         int count = data.getClipData().getItemCount(); //evaluate the count before the for loop --- otherwise, the count is evaluated every loop.
-                        final File file = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
+                        final File file = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid());
 
                         for(int i = 0; i < count; i++) {
                             Uri imageUri = data.getClipData().getItemAt(i).getUri();
@@ -1963,7 +1977,7 @@ public class vehicalView extends Activity implements View.OnClickListener,View.O
                             //do something with the image (save it to some directory or whatever you need to do with it here)
 
 
-                            File auxFile = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid()+File.separator+"Image_"+String.valueOf(i)+".jpg");
+                            File auxFile = new File(getExternalFilesDir(null) + File.separator +"nycargoCarMainImages"+ File.separator +carData.getData().getUuid()+File.separator+"Image_"+String.valueOf(i)+".jpg");
                             OutputStream os = null;
                             try {
                                 os = new BufferedOutputStream(new FileOutputStream(auxFile));

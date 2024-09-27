@@ -644,7 +644,7 @@ public class CameraActivity extends Activity{
 
 
 							int count;
-							File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarServices");
+							File folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarServices");
 							boolean success = true;
 							if (!folder.exists()) {
 								//Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
@@ -654,7 +654,7 @@ public class CameraActivity extends Activity{
 							try {
 								if (success) {
 
-									Log.v("AhmedDakrory",Environment.getExternalStorageDirectory().toString());
+									Log.v("AhmedDakrory",getExternalFilesDir(null).toString());
 									URL url = new URL(f_url[0]);
 
 									HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -679,7 +679,7 @@ public class CameraActivity extends Activity{
 
 									String Imagename = urlImage.split("/")[urlImage.split("/").length-1];
 									// Output stream to write file
-									OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory().toString() +File.separator +"nycargoCarServices"+File.separator +Imagename);
+									OutputStream output = new FileOutputStream(getExternalFilesDir(null).toString() +File.separator +"nycargoCarServices"+File.separator +Imagename);
 
 									byte data[] = new byte[1024];
 
@@ -737,7 +737,7 @@ public class CameraActivity extends Activity{
 //
 //			// Displaying downloaded image into image view
 //			// Reading image path from sdcard
-//			String imagePath = Environment.getExternalStorageDirectory().toString() + "/downloadedfile.jpg";
+//			String imagePath = getExternalFilesDir(null).toString() + "/downloadedfile.jpg";
 //			// setting downloaded into image view
 //			my_image.setImageDrawable(Drawable.createFromPath(imagePath));
 		}

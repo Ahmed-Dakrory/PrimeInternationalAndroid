@@ -149,14 +149,14 @@ public class exteriorCam extends AppCompatActivity  implements SensorEventListen
                                 public void run() {
                                     List<Bitmap> bitmapList = new ArrayList<Bitmap>();
 
-                                    File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "nycargoCarServices");
+                                    File folder = new File(getExternalFilesDir(null) + File.separator + "nycargoCarServices");
                                     boolean success = true;
                                     if (!folder.exists()) {
                                         //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
                                         success = folder.mkdir();
                                     }
 
-                                    folder = new File(Environment.getExternalStorageDirectory() + File.separator + "nycargoCarServices" + File.separator + CarVin);
+                                    folder = new File(getExternalFilesDir(null) + File.separator + "nycargoCarServices" + File.separator + CarVin);
                                     success = true;
                                     if (!folder.exists()) {
                                         //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
@@ -256,14 +256,14 @@ public class exteriorCam extends AppCompatActivity  implements SensorEventListen
         camera_capture_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarServices");
+                File folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarServices");
                 boolean success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
                     success = folder.mkdir();
                 }
 
-                folder = new File(Environment.getExternalStorageDirectory() + File.separator +"nycargoCarServices"+ File.separator +CarVin);
+                folder = new File(getExternalFilesDir(null) + File.separator +"nycargoCarServices"+ File.separator +CarVin);
                 success = true;
                 if (!folder.exists()) {
                     //Toast.makeText(MainActivity.this, "Directory Does Not Exist, Create It", Toast.LENGTH_SHORT).show();
