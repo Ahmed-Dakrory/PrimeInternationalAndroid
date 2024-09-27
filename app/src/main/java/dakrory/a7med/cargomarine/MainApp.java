@@ -39,6 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -91,7 +92,11 @@ public class MainApp extends AppCompatActivity
 
 
         initializeUserNameData(navigationView);
+
+
     }
+
+
 
     private void initializeUserNameData(NavigationView navigationView) {
         View headerView = navigationView.getHeaderView(0);

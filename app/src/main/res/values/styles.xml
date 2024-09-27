@@ -8,7 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="YourCustomCalendarTheme" parent="Theme.MaterialComponents.Light">
+        <!-- Other attributes -->
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!-- Additional customizations -->
+    </style>
+
     <style name="AppTheme.NoActionBar">
+        <item name="materialCalendarTheme">@style/YourCustomCalendarTheme</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

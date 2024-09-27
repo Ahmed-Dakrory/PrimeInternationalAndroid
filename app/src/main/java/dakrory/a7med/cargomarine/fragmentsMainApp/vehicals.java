@@ -17,6 +17,7 @@ import dakrory.a7med.cargomarine.LoginActivity;
 import dakrory.a7med.cargomarine.Models.userData;
 import dakrory.a7med.cargomarine.Models.vehicalsDataAllList;
 import dakrory.a7med.cargomarine.R;
+import dakrory.a7med.cargomarine.containerView;
 import dakrory.a7med.cargomarine.helpers.Api;
 import dakrory.a7med.cargomarine.helpers.Constants;
 import dakrory.a7med.cargomarine.helpers.modelsFunctions;
@@ -38,25 +39,32 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-public class vehicals extends Fragment {
+public class vehicals extends Fragment implements DatePickerDialog.OnDateSetListener {
 
     //qr code scanner object
     private IntentIntegrator qrScan;
@@ -65,6 +73,12 @@ public class vehicals extends Fragment {
     RecyclerView recyclerView;
     vehicalsAdapter adapter;
     ProgressBar loaderRecy;
+
+
+
+    private TextView dateRangeTextView;
+    private ImageButton pickDateRangeButton;
+
     ImageView emptyImage;
     FloatingActionButton addNewVehicalButton;
     List<vehicalsDataAllList.vehicalItemOfAllList> vehicalItems;
@@ -125,6 +139,13 @@ public class vehicals extends Fragment {
         emptyImage=(ImageView)getActivity().findViewById(R.id.emptyImage);
         spinner= (Spinner) getActivity().findViewById(R.id.spinnerVehicalState);
         addNewVehicalButton = (FloatingActionButton)getActivity().findViewById(R.id.addNewVehical);
+
+        dateRangeTextView = getActivity().findViewById(R.id.date_range_text_view);
+        pickDateRangeButton = getActivity().findViewById(R.id.pick_date_range_button);
+
+
+
+        pickDateRangeButton.setOnClickListener(view -> showDateRangePicker());
 
         if(allowEdit){
             addNewVehicalButton.show();
@@ -230,6 +251,21 @@ public class vehicals extends Fragment {
 
 
     }
+
+
+
+    private void showDateRangePicker() {
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                vehicals.this,
+                now.get(Calendar.YEAR), // Initial year selection
+                now.get(Calendar.MONTH), // Initial month selection
+                now.get(Calendar.DAY_OF_MONTH) // Inital day selection
+        );
+        dpd.show(getActivity().getFragmentManager(), "Release Date");
+    }
+
+
 
     private void addNewCar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -488,5 +524,11 @@ public class vehicals extends Fragment {
 
            }
            }
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String date = "You picked the following date: "+dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
+        dateRangeTextView.setText(date);
     }
 }

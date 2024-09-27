@@ -10,6 +10,7 @@
     <color name="orangeButton">#F1C424</color>
 
 
+    <color name="customBackgroundColor">#FFFAFAFA</color> <!-- Light gray -->
 
     <color name="mdtp_transparent_black">#25CDC3D7</color>
     <color name="purple_200">#FFBB86FC</color>
